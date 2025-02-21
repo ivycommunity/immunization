@@ -1,12 +1,20 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { useAuthStore } from './stores/auth';
+
+const authStore = useAuthStore
+
+onMounted(() => { authStore.getUser() })
 </script>
 
 <template>
   <header>
-      <nav>
-        <RouterLink to="/" class="nav-link">Home</RouterLink>
-      </nav>
+    <nav class="flex gap-5">
+      <p v-if="authStore.user"> {{ authStore.user.name }}</p>
+      <RouterLink :to="{ name: 'home' }" class="nav-link">Home</RouterLink>
+      <RouterLink :to="{ name: 'signin' }" class="nav-link">Sign in</RouterLink>
+      <RouterLink :to="{ name: 'signup' }" class="nav-link">Sign up</RouterLink>
+    </nav>
   </header>
 
   <RouterView />

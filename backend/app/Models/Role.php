@@ -3,26 +3,32 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Caregiver extends Model
+class Role extends Model
 {
     use HasFactory;
 
-    /**
+     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+
+     protected $table = 'roles';
+
+     /**
      * The attributes that are mass assignable.
      *
      * @var array<string>
      */
 
-    protected $fillable = [
-        'user_id',
-        'phone',
-        'relationship',
-    ];
+     protected $fillable = [
+        'roleId',
+        'role'
+     ];
 
-    /**
+     /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
@@ -33,16 +39,5 @@ class Caregiver extends Model
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Get the user that owns the Caregiver
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-
 }
+

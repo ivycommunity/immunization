@@ -15,39 +15,26 @@ class AuthController extends Controller
         $fields = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
+            'username' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
-            'role' => 'required|in:caregiver,hospital_staff',
-            'phone' => 'required|string|max:15',
-            'employee_id' => 'nullable|required_if:role,hospital_staff|numeric',
-            'position' => 'nullable|required_if:role,hospital_staff|string',
-            'relationship' => 'nullable|required_if:role,caregiver|string',
+            'role' => 'required|string|in:Healthcare Provider,Parent',// Validate role
         ]);
+
+        $roleMapping = [
+            'Healthcare Provider' => 2,
+            'Parent' => 3,
+        ];
 
         //Create a user
         $user = User::create([
             'first_name'=> $fields['first_name'],
             'last_name'=> $fields['last_name'],
+            'username'=> $fields['username'],
             'email' => $fields['email'],
             'password' => Hash::make($fields['password']),
-            'role'=> $fields['role'],
+            'role_id' => $roleMapping[$fields['role']],// Store role_id instead of role name
         ]);
-
-        //Insert role specific details
-        if ($fields['role'] === 'caregiver'){
-            Caregiver::create([
-                'user_id' => $user->id,
-                'phone' => $fields['phone'],
-                'relationship' => $fields['relationship'],
-            ]);
-        }elseif ($fields['role'] === 'hospital_staff'){
-            HospitalStaff::create([
-                'user_id' => $user->id,
-                'employee_id' => $fields['employee_id'],
-                'phone' => $fields['phone'],
-                'position' => $fields['position'],
-            ]);
-        }
 
         $token = $user->createToken($fields['first_name']);
 

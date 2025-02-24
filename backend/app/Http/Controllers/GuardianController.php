@@ -10,6 +10,14 @@ class GuardianController extends Controller
     //Retrieve all guardians
     public function getGuardians()
     {
+        $user = auth()->guard()->user();
+
+        if ($user->role == 'Guardian') {
+            return [
+                'message'=> 'Unauthorized'
+            ];
+        }
+
         $guardians = User::where('role', 'Guardian')->get();
         return [
             'guardians'=> $guardians
@@ -19,6 +27,14 @@ class GuardianController extends Controller
     //Retrieve a single guardian
     public function getGuardian($id)
     {
+        $user = auth()->guard()->user();
+
+        if ($user->role == 'Guardian') {
+            return [
+                'message'=> 'Unauthorized'
+            ];
+        }
+        
         $guardian = User::where('id', $id)
                         ->where('role', 'Guardian')
                         ->first();
@@ -74,8 +90,8 @@ class GuardianController extends Controller
     {
         $user = auth()->guard()->user(); //Retrieve the authenticated user
         
-        // Only healthcare providers can delete guardians
-        if ($user->role !== 'Healthcare Provider') {
+        // Only admins can delete guardians
+        if ($user->role !== 'Admin') {
             return [
                 'message'=> 'Unauthorized'
             ];
@@ -95,7 +111,6 @@ class GuardianController extends Controller
 
         return [
             'message'=> 'Guardian deleted successfully',
-            'guardian'=> $guardian,
         ];
     }
 

@@ -15,25 +15,38 @@ class AuthController extends Controller
         $fields = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'username' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
-            'role' => 'required|string|in:Healthcare Provider,Parent',// Validate role
+            'phone_number' => 'required|string',
+            'gender' => 'required|string',
+            'role' => 'required|string',
+            'nationality' => 'required|string',
+            'national_id' => 'required|integer|unique:users,national_id',
+            'date_of_birth' => 'required|date',
+            'address' => 'required|string',
+            'marital_status' => 'required|string',
+            'next_of_kin' => 'required|string',
+            'next_of_kin_contact' => 'required|string',
+            'no_of_children' => 'required|integer',
         ]);
-
-        $roleMapping = [
-            'Healthcare Provider' => 2,
-            'Parent' => 3,
-        ];
 
         //Create a user
         $user = User::create([
             'first_name'=> $fields['first_name'],
             'last_name'=> $fields['last_name'],
-            'username'=> $fields['username'],
             'email' => $fields['email'],
             'password' => Hash::make($fields['password']),
-            'role_id' => $roleMapping[$fields['role']],// Store role_id instead of role name
+            'phone_number' => $fields['phone_number'],
+            'gender'=> $fields['gender'],
+            'role'=> $fields['role'],
+            'nationality'=> $fields['nationality'],
+            'national_id'=> $fields['national_id'],
+            'date_of_birth'=> $fields['date_of_birth'],
+            'address'=> $fields['address'],
+            'marital_status'=> $fields['marital_status'],
+            'next_of_kin'=> $fields['next_of_kin'],
+            'next_of_kin_contact'=> $fields['next_of_kin_contact'],
+            'no_of_children'=> $fields['no_of_children'],
         ]);
 
         $token = $user->createToken($fields['first_name']);

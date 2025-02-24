@@ -20,12 +20,21 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'username',
         'first_name',
         'last_name',
         'email',
-        'role_id',
         'password',
+        'phone_number',
+        'gender',
+        'role',
+        'nationality',
+        'national_id',
+        'date_of_birth',
+        'address',
+        'marital_status',
+        'next_of_kin',
+        'next_of_kin_contact',
+        'no_of_children',
     ];
 
     /**
@@ -51,8 +60,10 @@ class User extends Authenticatable
         ];
     }
 
-    public function roles(): BelongsTo
+    public function babies(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->belongsTo(Role::class);
+        return $this->hasMany(Baby::class, 'guardian_id');
     }
+
+
 }

@@ -12,6 +12,7 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        // these fields should be modified a little
         $fields = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
@@ -33,6 +34,7 @@ class AuthController extends Controller
             'role'=> $fields['role'],
         ]);
 
+        // these fields can be set by the hospital staff
         //Insert role specific details
         if ($fields['role'] === 'caregiver'){
             Caregiver::create([
@@ -48,6 +50,8 @@ class AuthController extends Controller
                 'position' => $fields['position'],
             ]);
         }
+
+        //Dont create a token because the account will be created by the hospital staff
 
         $token = $user->createToken($fields['first_name']);
 

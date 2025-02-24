@@ -19,7 +19,7 @@ const formData = reactive({
 
 <template>
     <main>
-        <div class="flex h-screen my-25 justify-center items-center">
+        <div class="flex h-screen justify-center items-center">
             <div class="flex mx-12 flex-col gap-5 border border-slate-200 rounded-sm p-5 md:flex-row">
                 <div class="w-70 md:w-100">
                     <img src="@/assets/images/logo.png" alt="">
@@ -30,10 +30,10 @@ const formData = reactive({
                     <form @submit.prevent="authenticate('/signin', formData)">
                         <Input v-model="formData.email" type="email" label="Email Address" name="email"
                             placeholder="Enter your email" />
-                        <Error>{{ errors.email[0] }}</Error>
+                        <Error v-if="errors.email" :error="errors.email[0]" />
                         <Input v-model="formData.password" type="password" label="Password" name="password"
                             placeholder="Enter your password" />
-                        <Error>{{ errors.password[0] }}</Error>
+                        <Error v-if="errors.password" :error=" errors.password[0]" />
                         <div class="flex justify-center">
                             <GreenButton name="Sign in" />
                         </div>

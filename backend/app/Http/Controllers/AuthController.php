@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Caregiver;
-use App\Models\HospitalStaff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -12,11 +10,19 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        $user = auth()->guard()->user();
+
+        if (!$user || !in_array($user->role, ['Admin', 'Receptionist'])) {
+            return [
+                'message' => 'Unauthorized',
+            ];
+        }
+
         $fields = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
+            'email' => 'nullable|email|unique:users,email',
+            'password' => 'nullable|min:8|confirmed',
             'phone_number' => 'required|string',
             'gender' => 'required|string',
             'role' => 'required|string',
@@ -30,12 +36,16 @@ class AuthController extends Controller
             'no_of_children' => 'required|integer',
         ]);
 
+
+        // Set password: If not provided, use national_id as default password
+        $password = $fields['password'] ?? (string) $fields['national_id'];
+
         //Create a user
         $user = User::create([
             'first_name'=> $fields['first_name'],
             'last_name'=> $fields['last_name'],
             'email' => $fields['email'],
-            'password' => Hash::make($fields['password']),
+            'password'=> Hash::make($password),
             'phone_number' => $fields['phone_number'],
             'gender'=> $fields['gender'],
             'role'=> $fields['role'],
@@ -52,33 +62,48 @@ class AuthController extends Controller
         $token = $user->createToken($fields['first_name']);
 
         return [
+            'message' => 'User registered successfully',
             'user' => $user,
             'token'=> $token->plainTextToken,
         ];
     }
 
-    public function  login(Request $request)
+    public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
             'password' => 'required',
+            'email|phone_number' => 'required_without_all:email,phone_number',
+        ], [
+            'email|phone_number.required_without_all' => 'Either email or phone number is required.'
         ]);
 
-        $user = User::where('email', $request->email)->first();
-        if (!$user || !Hash::check($request->password, $user->password)) {
-
-            return [
-                'message' => 'Invalid credentials',
-            ];
-            
+        // Check if email is provided
+        if ($request->has('email')) {
+            $user = User::where('email', $request->email)->first();
         } 
+        // Otherwise check phone number
+        else if ($request->has('phone_number')) {
+            $user = User::where('phone_number', $request->phone_number)->first();
+        }
+        else {
+            return response()->json([
+                'message' => 'Please provide either email or phone number',
+            ], 422);
+        }
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Invalid login details',
+            ], 401);
+        }
 
         $token = $user->createToken($user->first_name);
 
-        return [
+        return response()->json([
+            'message' => 'Logged in successfully',
             'user' => $user,
-            'token'=> $token->plainTextToken,
-        ];
+            'token' => $token->plainTextToken,
+        ]);
     }
 
     public function logout(Request $request)

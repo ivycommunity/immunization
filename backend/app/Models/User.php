@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -60,10 +59,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function babies(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Baby::class, 'guardian_id');
-    }
 
 
 }

@@ -12,13 +12,13 @@ class GuardianController extends Controller
     {
         $user = auth()->guard()->user();
 
-        if ($user->role == 'Guardian') {
+        if (in_array($user->role, ['Guardian', 'Parent'])) {
             return [
                 'message'=> 'Unauthorized'
             ];
         }
 
-        $guardians = User::where('role', 'Guardian')->get();
+        $guardians = User::whereIn('role', ['Guardian', 'Parent'])->get();
         return [
             'guardians'=> $guardians
         ];
@@ -28,20 +28,14 @@ class GuardianController extends Controller
     public function getGuardian($id)
     {
         $user = auth()->guard()->user();
-
-        if ($user->role == 'Guardian') {
-            return [
-                'message'=> 'Unauthorized'
-            ];
-        }
         
         $guardian = User::where('id', $id)
-                        ->where('role', 'Guardian')
+                        ->whereIn('role', ['Guardian', 'Parent'])
                         ->first();
 
         if (! $guardian) {
             return [
-                'message'=> 'Guardian not found'
+                'message'=> 'Guardian/Parent record not found'
             ];
         }
         return [
@@ -49,19 +43,19 @@ class GuardianController extends Controller
         ];
     }
 
-    //Update guardian details
+    //Update guardian details or parent details
     public function updateGuardian(Request $request, $id)
     {
         $user = auth()->guard()->user(); //Retrieve the authenticated user
         
         //Find the guardian to update
         $guardian = User::where('id', $id)
-                        ->where('role', 'Guardian')
+                        ->whereIn('role', ['Guardian', 'Parent'])
                         ->first();
 
         if (! $guardian) {
             return [
-                'message'=> 'Guardian not found'
+                'message'=> 'Guardian/Parent not found'
             ];
         }
 
@@ -81,14 +75,14 @@ class GuardianController extends Controller
         $guardian->update($validated);
 
         return [
-            'message'=> 'Guardian updated successfully'
+            'message'=> 'Guardian/Parent record updated successfully'
         ];
     }
 
     //Delete a guardian
     public function deleteGuardian($id)
     {
-        $user = auth()->guard()->user(); //Retrieve the authenticated user
+        $user = auth()->guard()->user(); 
         
         // Only admins can delete guardians
         if ($user->role !== 'Admin') {
@@ -98,19 +92,19 @@ class GuardianController extends Controller
         }
 
         $guardian = User::where('id', $id)
-                        ->where('role', 'Guardian')
+                        ->whereIn('role', ['Guardian', 'Parent'])
                         ->first();
         
         if (! $guardian) {
             return [
-                'message'=> 'Guardian not found'
+                'message'=> 'Guardian/Parent record not found'
             ];
         }
 
         $guardian->delete();
 
         return [
-            'message'=> 'Guardian deleted successfully',
+            'message'=> 'Guardian/Parent record deleted successfully',
         ];
     }
 

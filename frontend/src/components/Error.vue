@@ -1,5 +1,5 @@
 <template>
-    <p class="text-red-400">{{ error }}</p>
+    <p class="text-red-400"> {{ error }} </p>
 </template>
 
 <script setup>

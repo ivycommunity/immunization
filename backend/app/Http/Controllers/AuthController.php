@@ -10,14 +10,6 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $user = auth()->guard()->user();
-
-        if (!$user || !in_array($user->role, ['Admin', 'Receptionist'])) {
-            return [
-                'message' => 'Unauthorized',
-            ];
-        }
-
         $fields = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
@@ -49,15 +41,23 @@ class AuthController extends Controller
             'phone_number' => $fields['phone_number'],
             'gender'=> $fields['gender'],
             'role'=> $fields['role'],
-            'nationality'=> $fields['nationality'],
-            'national_id'=> $fields['national_id'],
-            'date_of_birth'=> $fields['date_of_birth'],
-            'address'=> $fields['address'],
-            'marital_status'=> $fields['marital_status'],
-            'next_of_kin'=> $fields['next_of_kin'],
-            'next_of_kin_contact'=> $fields['next_of_kin_contact'],
-            'no_of_children'=> $fields['no_of_children'],
         ]);
+
+        //Insert role specific details
+        if ($fields['role'] === 'caregiver'){
+            Caregiver::create([
+                'user_id' => $user->id,
+                'phone' => $fields['phone'],
+                'relationship' => $fields['relationship'],
+            ]);
+        }elseif ($fields['role'] === 'hospital_staff'){
+            HospitalStaff::create([
+                'user_id' => $user->id,
+                'employee_id' => $fields['employee_id'],
+                'phone' => $fields['phone'],
+                'position' => $fields['position'],
+            ]);
+        }
 
         $token = $user->createToken($fields['first_name']);
 
@@ -69,42 +69,46 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $request->validate([
-            'password' => 'required',
-            'email|phone_number' => 'required_without_all:email,phone_number',
-        ], [
-            'email|phone_number.required_without_all' => 'Either email or phone number is required.'
-        ]);
-
-        // Check if email is provided
-        if ($request->has('email')) {
-            $user = User::where('email', $request->email)->first();
-        } 
-        // Otherwise check phone number
-        else if ($request->has('phone_number')) {
-            $user = User::where('phone_number', $request->phone_number)->first();
-        }
-        else {
-            return response()->json([
-                'message' => 'Please provide either email or phone number',
-            ], 422);
-        }
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Invalid login details',
-            ], 401);
-        }
-
-        $token = $user->createToken($user->first_name);
-
-        return response()->json([
-            'message' => 'Logged in successfully',
-            'user' => $user,
-            'token' => $token->plainTextToken,
-        ]);
+{
+    // Validate that at least one login method is provided
+    $request->validate([
+        'password' => 'required',
+        'email|phone_number' => 'required_without_all:email,phone_number',
+    ], [
+        'email|phone_number.required_without_all' => 'Either email or phone number is required.'
+    ]);
+    
+    // Check if email is provided
+    if ($request->has('email')) {
+        $user = User::where('email', $request->email)->first();
+    } 
+    // Otherwise check phone number
+    else if ($request->has('phone_number')) {
+        $user = User::where('phone_number', $request->phone_number)->first();
     }
+    // Fallback - shouldn't reach here due to validation
+    else {
+        return response()->json([
+            'message' => 'Please provide either email or phone number',
+        ], 422);
+    }
+    
+    // Check if user exists and password is correct
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response()->json([
+            'message' => 'Invalid login details',
+        ], 401);
+    }
+    
+    // Generate token
+    $token = $user->createToken($user->first_name);
+    
+    return response()->json([
+        'message' => 'Logged in successfully',
+        'user' => $user,
+        'token' => $token->plainTextToken,
+    ]);
+}
 
     public function logout(Request $request)
     {

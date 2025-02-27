@@ -22,8 +22,18 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
-        'role',
         'password',
+        'phone_number',
+        'gender',
+        'role',
+        'nationality',
+        'national_id',
+        'date_of_birth',
+        'address',
+        'marital_status',
+        'next_of_kin',
+        'next_of_kin_contact',
+        'no_of_children',
     ];
 
     /**
@@ -48,4 +58,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+
 }

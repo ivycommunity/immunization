@@ -13,7 +13,7 @@ const formData = reactive({
     name: '',
     email: '',
     password: '',
-    confirm_password: '',
+    password_confirmation: '',
 })
 
 </script>
@@ -31,15 +31,15 @@ const formData = reactive({
                     <form @submit.prevent="authenticate('register', formData)">
                         <Input v-model="formData.name" type="name" label="Name" name="name"
                             placeholder="Enter your name" />
-                        <Error v-if="errors.name">{{ errors.name[0] }}</Error>
+                        <Error v-if="errors.name" :error="errors.name[0]"/>
                         <Input v-model="formData.email" type="email" label="Email Address" name="email"
                             placeholder="Enter your email" />
-                        <Error v-if="errors.email">{{ errors.email[0] }}</Error>
+                        <Error v-if="errors.email" :error="errors.email[0]"/>
                         <Input v-model="formData.password" type="password" label="Password" name="password"
                             placeholder="Enter your password" />
-                        <Error v-if="errors.password">{{ errors.password[0] }}</Error>
-                        <Input v-model="formData.confirm_password" type="password" label="Confirm Password"
-                            name="confirm_password" placeholder="Confirm your password" />
+                        <Error v-if="errors.password" :error="errors.password[0]" />
+                        <Input v-model="formData.password_confirmation" type="password" label="Confirm Password"
+                            name="password_confirmation" placeholder="Confirm your password" />
                         <div class="flex justify-center">
                             <GreenButton name="Sign Up" />
                         </div>

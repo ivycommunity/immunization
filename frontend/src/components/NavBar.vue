@@ -9,12 +9,13 @@
         <img
           src="@/assets/images/logo.png"
           alt="IVY Logo"
-          class="w-[80px]"
+          class="w-12 sm:w-16 md:w-18 lg:w-20"
         />
+
       </router-link>
   
       <button
-        class="md:hidden text-2xl bg-transparent border-none cursor-pointer text-[#F8F8FF]"
+        class="md:hidden text-2xl bg-transparent border-none cursor-pointer text-[#121212]"
         @click="toggleMenu"
         aria-label="Toggle navigation"
       >
@@ -28,6 +29,12 @@
           ${isOpen ? 'flex flex-col' : 'hidden'}
         `"
       >
+        <router-link
+          to="/"
+          class="text-[#121212] hover:text-[#04A699] text-sm md:ml-6 md:my-0 py-2.5 px-5 border-b border-[#02343B] md:border-none"
+        >
+          Home
+        </router-link>
         <router-link
           to="/about-us"
           class="text-[#121212] hover:text-[#04A699] text-sm md:ml-6 md:my-0 py-2.5 px-5 border-b border-[#02343B] md:border-none"

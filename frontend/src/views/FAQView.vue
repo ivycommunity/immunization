@@ -1,4 +1,5 @@
 <template>
+  <LandingsLayout>
     <div class="min-h-screen bg-[#F8F8FF] text-[#121212]/80 py-12 px-6">
   
       <section class="max-w-6xl mx-auto">
@@ -27,11 +28,16 @@
         </div>
       </section>
     </div>
+  </LandingsLayout>
   </template>
   
   <script>
+  import LandingsLayout from '@/components/landingsLayout.vue';
   export default {
     name: 'FAQ',
+    components: {
+      LandingsLayout,
+    },
     data() {
       return {
         activeIndex: null,

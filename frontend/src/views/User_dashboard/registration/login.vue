@@ -3,7 +3,7 @@
   import axios from 'axios';
   
   export default {
-    name: 'userSignInForm',
+    name: 'userLoginForm',
     data() {
       return {
         email: '',
@@ -173,7 +173,7 @@
           <button 
             type="submit" 
             :disabled="isLoading"
-            class="bg-[#432C81] text-white py-3 px-6 rounded-full font-medium hover:bg-opacity-90 transition-colors"
+            class="bg-[#432C81] text-white py-3 px-6 rounded-lg font-medium hover:bg-opacity-90 transition-colors"
           >
             Login
           </button>

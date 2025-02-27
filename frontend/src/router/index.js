@@ -8,8 +8,9 @@ import ContactUsView from '@/views/contactUsView.vue'
 import VaccinationDetails from '@/views/vaccinationDetails.vue'
 import ClinicsView from '@/views/clinicsView.vue'
 import FAQView from '@/views/FAQView.vue'
-import userSignInForm from "@/views/User_dashboard/registration/signin.vue"
+import userLoginForm from "@/views/User_dashboard/registration/login.vue"
 import registrationError from "@/views/User_dashboard/registration/error.vue"
+import userWelcome from "@/views/User_dashboard/registration/welcome.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -55,9 +56,14 @@ const router = createRouter({
       component: FAQView,
     },
     {
-      path: '/user/signin',
-      name: 'userSignIn',
-      component: userSignInForm,
+      path: '/user/welcome',
+      name: 'userWelcome',
+      component: userWelcome,
+    },
+    {
+      path: '/user/login',
+      name: 'userLogin',
+      component: userLoginForm,
     },
     {
       path: '/user/registrationError',

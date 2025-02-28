@@ -2,8 +2,16 @@
   import { z } from 'zod';
   import axios from 'axios';
   
+  import userRegistrationLayout from '@/components/userRegistrationLayout.vue';
+  import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
+  
   export default {
     name: 'userLoginForm',
+    components: {
+      userRegistrationLayout,
+      EyeIcon,
+      EyeSlashIcon,
+    },
     data() {
       return {
         email: '',
@@ -92,6 +100,7 @@
 </script>
 
 <template>
+  <userRegistrationLayout topBartitle="Login">
     <div class="flex flex-wrap items-center justify-between h-dvh p-6 box-border bg-white">
       <!-- Header Section -->
       <div class="w-full text-center mb-4">
@@ -145,20 +154,14 @@
                 class="absolute right-4 top-1/3 transform -translate-y-1/2 text-secondary"
                 aria-label="Toggle password visibility"
               >
-                <img 
-                  v-if="showPassword"
-                  src="@/assets/userI/icons/eye-crossed1.svg"
-                  alt="Hide password"
-                  class="h-5 w-5"
-                  style="filter: invert(50%) sepia(20%) saturate(500%) hue-rotate(200deg) brightness(90%) contrast(90%);"
-                >
-                <img 
-                  v-else
-                  src="@/assets/userI/icons/eye1.svg"
-                  alt="Show password"
-                  class="h-5 w-5"
-                  style="filter: invert(50%) sepia(20%) saturate(500%) hue-rotate(200deg) brightness(90%) contrast(90%);"
-                >
+                <EyeSlashIcon 
+                  v-if="showPassword" 
+                  class="h-5 w-5 text-gray-500"
+                />
+                <EyeIcon 
+                  v-else 
+                  class="h-5 w-5 text-gray-500"
+                />
               </button>
               <span v-if="errors.password" class="text-[#EB5858] text-sm ml-2">{{ errors.password }}</span>
               <!-- Label & Forgot Password Link -->
@@ -188,5 +191,6 @@
         </form>
       </div>
     </div>
+  </userRegistrationLayout>
 </template>
 

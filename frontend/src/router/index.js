@@ -56,7 +56,7 @@ const router = createRouter({
       component: FAQView,
     },
     {
-      path: '/user/welcome',
+      path: '/user',
       name: 'userWelcome',
       component: userWelcome,
     },

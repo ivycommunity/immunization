@@ -8,6 +8,10 @@ import ContactUsView from '@/views/contactUsView.vue'
 import VaccinationDetails from '@/views/vaccinationDetails.vue'
 import ClinicsView from '@/views/clinicsView.vue'
 import FAQView from '@/views/FAQView.vue'
+import Home from '@/views/Hospital/Patients.vue'
+import Appointments from '@/views/Hospital/Appointments.vue'
+import AddGuardian from '@/views/Hospital/AddGuardian.vue'
+import AddBaby from '@/views/Hospital/AddBaby.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,6 +55,26 @@ const router = createRouter({
       path: '/questions',
       name: 'Questions',
       component: FAQView,
+    },
+    {
+      path: '/hospital/patients',
+      name: 'hospital.patients',
+      component: Home,
+    },
+    {
+      path: '/hospital/appointments',
+      name: 'hospital.appointments',
+      component: Appointments,
+    },
+    {
+      path: '/hospital/add-parent',
+      name: 'hospital.add-parent',
+      component: AddGuardian,
+    },
+    {
+      path: '/hospital/add-baby',
+      name: 'hospital.add-baby',
+      component: AddBaby,
     },
   ],
 })

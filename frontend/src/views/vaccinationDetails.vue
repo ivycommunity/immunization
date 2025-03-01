@@ -1,4 +1,5 @@
 <template>
+  <LandingsLayout>
     <div class="min-h-screen bg-[#F8F8FF] text-[#02343B] py-12 px-6">
       <section class="max-w-6xl mx-auto">
         <h2 class="text-4xl font-bold text-center mb-12">Vaccination List</h2>
@@ -20,43 +21,45 @@
         </div>
   
         <div class="bg-[#F8F8FF] rounded-lg overflow-hidden">
-          <table class="w-full">
-            <thead>
-              <tr class="bg-[#04A699] text-[#F8F8FF]">
-                <th class="p-4 text-left">Vaccine Name</th>
-                <th class="p-4 text-left">Age Recommendations</th>
-                <th class="p-4 text-left">Description</th>
-                <th class="p-4 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="vaccine in filteredVaccines"
-                :key="vaccine.id"
-                class="border-b border-[#02343B] hover:bg-[#EEEEF5] transition duration-300"
-              >
-                <td class="p-4">{{ vaccine.name }}</td>
-                <td class="p-4">{{ vaccine.age }}</td>
-                <td class="p-4">{{ vaccine.description }}</td>
-                <td class="p-4">
-                  <button
-                    @click="openDetails(vaccine)"
-                    class="bg-[#04A699] text-[#F8F8FF] px-4 py-2 rounded-lg hover:bg-[#038C7F] transition duration-300"
-                  >
-                    Details
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="bg-[#04A699] text-[#F8F8FF]">
+                  <th class="p-4 text-left">Vaccine Name</th>
+                  <th class="p-4 text-left">Age Recommendations</th>
+                  <th class="p-4 text-left">Description</th>
+                  <th class="p-4 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="vaccine in filteredVaccines"
+                  :key="vaccine.id"
+                  class="border-b border-[#02343B] hover:bg-[#EEEEF5] transition duration-300"
+                >
+                  <td class="p-4">{{ vaccine.name }}</td>
+                  <td class="p-4">{{ vaccine.age }}</td>
+                  <td class="p-4">{{ vaccine.description }}</td>
+                  <td class="p-4">
+                    <button
+                      @click="openDetails(vaccine)"
+                      class="bg-[#04A699] text-[#F8F8FF] px-4 py-2 rounded-lg hover:bg-[#038C7F] transition duration-300"
+                    >
+                      Details
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
   
-      <div v-if="selectedVaccine" class="fixed inset-0 bg-[#02343B]/90 flex items-center justify-center p-6">
-        <div class="bg-[#121212] rounded-lg p-8 max-w-2xl w-full relative">
+      <div v-if="selectedVaccine" class="fixed inset-0 bg-[#02343B]/80 flex items-center justify-center p-6">
+        <div class="bg-[#F8F8FF] rounded-lg p-8 max-w-2xl w-full relative">
           <button
             @click="selectedVaccine = null"
-            class="absolute top-4 right-4 text-[#F8F8FF] hover:text-[#04A699]"
+            class="absolute top-4 right-4 text-[#121212] hover:text-[#04A699]"
           >
             &times;
           </button>
@@ -71,7 +74,7 @@
               {{ selectedVaccine.source }}
             </a>
           </p>
-          <div class="flex space-x-4">
+          <div class="flex space-x-4 justify-center" hidden>
             <button
               @click="addToCalendar(selectedVaccine)"
               class="bg-[#04A699] text-[#F8F8FF] px-6 py-3 rounded-lg hover:bg-[#038C7F] transition duration-300"
@@ -88,11 +91,17 @@
         </div>
       </div>
     </div>
-  </template>
+  </LandingsLayout>
+</template>
   
   <script>
+  import LandingsLayout from '@/components/landingsLayout.vue';
+
   export default {
     name: 'Vaccinations',
+    components: {
+      LandingsLayout,
+    },
     data() {
       return {
         searchQuery: '',

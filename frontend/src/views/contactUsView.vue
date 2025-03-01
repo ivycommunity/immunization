@@ -1,4 +1,5 @@
 <template>
+  <LandingsLayout>
     <div class="min-h-screen bg-[#02343B] text-[#F8F8FF]">
       <section class="py-20 px-6">
         <div class="max-w-6xl mx-auto">
@@ -110,11 +111,17 @@
         </div>
       </section>
     </div>
+  </LandingsLayout>
   </template>
   
   <script>
+import LandingsLayout from '@/components/landingsLayout.vue';
+
   export default {
     name: 'ContactUs',
+    components: {
+      LandingsLayout,
+    },
     data() {
       return {
         form: {

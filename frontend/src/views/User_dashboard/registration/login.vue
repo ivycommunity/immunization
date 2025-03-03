@@ -1,101 +1,78 @@
-<script>
+<script setup>
+  import { ref } from 'vue';
   import { z } from 'zod';
   import axios from 'axios';
-  
+  import { useRouter } from 'vue-router';
   import userRegistrationLayout from '@/components/userRegistrationLayout.vue';
   import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
-  
-  export default {
-    name: 'userLoginForm',
-    components: {
-      userRegistrationLayout,
-      EyeIcon,
-      EyeSlashIcon,
-    },
-    data() {
-      return {
-        email: '',
-        password: '',
-        errors: {
-          email: null,
-          password: null,
-        },
-        isLoading: false,  // To show a loading state while submitting
-        showPassword: false, // To toggle password visibility
+
+  // Reactive state
+  const email = ref('');
+  const password = ref('');
+  const errors = ref({
+    email: null,
+    password: null,
+  });
+  const isLoading = ref(false);
+  const showPassword = ref(false);
+
+  const router = useRouter();
+
+  // Toggle password visibility
+  const togglePassword = () => {
+    showPassword.value = !showPassword.value;
+    const passwordInput = document.getElementById('password');
+    passwordInput.type = showPassword.value ? 'text' : 'password';
+  };
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    // Define the Zod schema for email and password
+    const signInSchema = z.object({
+      email: z
+        .string()
+        .email('Please enter your email address')
+        .nonempty('Please enter your email address'),
+      password: z
+        .string()
+        .min(6, 'Password must be at least 6 characters')
+        .nonempty('Please enter your password'),
+    });
+
+    // Validate the data using Zod
+    const result = signInSchema.safeParse({
+      email: email.value,
+      password: password.value,
+    });
+
+    if (result.success) {
+      errors.value = { email: null, password: null };
+      isLoading.value = true;
+
+      try {
+        console.log('Email:', email.value, 'Password:', password.value);
+        // Example API call (commented out)
+        // const response = await axios.post('https://your-api-url.com/signin', {
+        //   email: email.value,
+        //   password: password.value,
+        // });
+        // console.log('API Response:', response.data);
+
+        router.push({ name: 'home' });
+      } catch (error) {
+        console.error('API Error:', error.response ? error.response.data : error.message);
+        router.push({ name: 'registrationError' });
+      } finally {
+        isLoading.value = false;
+      }
+    } else {
+      // If validation fails, set error messages
+      errors.value = {
+        email: result.error.errors.find((err) => err.path[0] === 'email')?.message || null,
+        password: result.error.errors.find((err) => err.path[0] === 'password')?.message || null,
       };
-    },
-    methods: {
-        // Toggle password visibility
-        togglePassword() {
-            this.showPassword = !this.showPassword;
-            const passwordInput = document.getElementById('password');
-            if (this.showPassword) {
-                passwordInput.type = 'text';
-            } else {
-                passwordInput.type = 'password';
-            }
-        },
-      // Handle form submission
-        async handleSubmit() {
-            // Define the Zod schema for email and password
-            const signInSchema = z.object({
-            email: z
-                .string()
-                .email('Please enter your email address') // Validates email format
-                .nonempty('Please enter your email address'), // Ensures email is not empty
-            password: z
-                .string()
-                .min(6, 'Password must be at least 6 characters') // Password length validation
-                .nonempty('Please enter your password'), // Ensures password is not empty
-            });
-    
-            // Validate the data using Zod
-            const result = signInSchema.safeParse({
-            email: this.email,
-            password: this.password,
-            });
-    
-            if (result.success) {
-            this.errors = { email: null, password: null };
-            this.isLoading = true; // Show loading indicator while submitting
-    
-            // If validation passes, send data to API using Axios
-            try {
-              console.log(
-                'Email:', this.email,
-                'Password', this.password
-              );
-                // const response = await axios.post('https://your-api-url.com/signin', {
-                //     email: this.email,
-                //     password: this.password,
-                // });
-                
-                // // Handle successful API response (e.g., save the token, redirect the user, etc.)
-                // console.log('API Response:', response.data);
-                // // Example: Save token, redirect, or show success message
-                
-                this.$router.push({ name: 'home' });
-
-            } catch (error) {
-                // Handle API error
-                
-                console.error('API Error:', error.response ? error.response.data : error.message);
-
-                this.$router.push({ name: 'registrationError' }); 
-                // You can set specific error messages here if needed
-            } finally {
-                this.isLoading = false; // Hide loading indicator once the request is complete
-            }
-            } else {
-            // If validation fails, set error messages
-            this.errors = {
-                email: result.error.errors.find((err) => err.path[0] === 'email')?.message || null,
-                password: result.error.errors.find((err) => err.path[0] === 'password')?.message || null,
-            };
-            console.log('Validation errors:', this.errors);
-            }
-        },
-    },
+      console.log('Validation errors:', errors.value);
+    }
   };
 </script>
 
@@ -193,4 +170,3 @@
     </div>
   </userRegistrationLayout>
 </template>
-

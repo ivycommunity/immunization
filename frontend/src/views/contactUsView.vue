@@ -5,6 +5,7 @@
         <div class="max-w-6xl mx-auto">
           <h2 class="text-4xl font-bold text-center mb-12">Contact Us</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <!-- Contact Form -->
             <div class="bg-[#121212] p-8 rounded-lg">
               <h3 class="text-2xl font-semibold mb-6">Send Us a Message</h3>
               <form @submit.prevent="submitForm">
@@ -56,7 +57,8 @@
                 </button>
               </form>
             </div>
-  
+
+            <!-- Contact Information -->
             <div class="space-y-8">
               <div>
                 <h3 class="text-2xl font-semibold mb-4">Get in Touch</h3>
@@ -112,37 +114,24 @@
       </section>
     </div>
   </LandingsLayout>
-  </template>
-  
-  <script>
+</template>
+
+<script setup>
+import { ref } from 'vue';
 import LandingsLayout from '@/components/landingsLayout.vue';
 
-  export default {
-    name: 'ContactUs',
-    components: {
-      LandingsLayout,
-    },
-    data() {
-      return {
-        form: {
-          name: '',
-          email: '',
-          subject: '',
-          message: '',
-        },
-      };
-    },
-    methods: {
-      submitForm() {
-        // Handle form submission logic here
-        console.log('Form submitted:', this.form);
-        alert('Thank you for reaching out! We’ll get back to you soon.');
-        this.form = { name: '', email: '', subject: '', message: '' }; // Reset form
-      },
-    },
-  };
-  </script>
-  
-  <style scoped>
-  @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
-  </style>
+// Reactive form state
+const form = ref({
+  name: '',
+  email: '',
+  subject: '',
+  message: '',
+});
+
+// Form submission logic
+const submitForm = () => {
+  console.log('Form submitted:', form.value);
+  alert('Thank you for reaching out! We’ll get back to you soon.');
+  form.value = { name: '', email: '', subject: '', message: '' }; // Reset form
+};
+</script>

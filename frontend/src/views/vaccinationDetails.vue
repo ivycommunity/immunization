@@ -3,7 +3,8 @@
     <div class="min-h-screen bg-[#F8F8FF] text-[#02343B] py-12 px-6">
       <section class="max-w-6xl mx-auto">
         <h2 class="text-4xl font-bold text-center mb-12">Vaccination List</h2>
-  
+
+        <!-- Search and Sort Section -->
         <div class="flex justify-between items-center mb-8">
           <input
             v-model="searchQuery"
@@ -19,7 +20,8 @@
             <option value="age">Sort by Age</option>
           </select>
         </div>
-  
+
+        <!-- Vaccination Table -->
         <div class="bg-[#F8F8FF] rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full">
@@ -54,7 +56,8 @@
           </div>
         </div>
       </section>
-  
+
+      <!-- Vaccine Details Modal -->
       <div v-if="selectedVaccine" class="fixed inset-0 bg-[#02343B]/80 flex items-center justify-center p-6">
         <div class="bg-[#F8F8FF] rounded-lg p-8 max-w-2xl w-full relative">
           <button
@@ -69,7 +72,7 @@
           <p class="text-lg mb-4"><strong>Schedule:</strong> {{ selectedVaccine.schedule }}</p>
           <p class="text-lg mb-4"><strong>Manufacturer:</strong> {{ selectedVaccine.manufacturer }}</p>
           <p class="text-lg mb-6">
-            <strong>Learn More:</strong>
+            <strong>Learn More: </strong>
             <a :href="selectedVaccine.sourceLink" target="_blank" class="text-[#04A699] hover:underline">
               {{ selectedVaccine.source }}
             </a>
@@ -93,82 +96,78 @@
     </div>
   </LandingsLayout>
 </template>
-  
-  <script>
-  import LandingsLayout from '@/components/landingsLayout.vue';
 
-  export default {
-    name: 'Vaccinations',
-    components: {
-      LandingsLayout,
-    },
-    data() {
-      return {
-        searchQuery: '',
-        sortBy: 'name',
-        selectedVaccine: null,
-        vaccines: [
-          {
-            id: 1,
-            name: 'Hepatitis B',
-            age: 'At birth',
-            description: 'Protects against Hepatitis B virus.',
-            fullDescription: 'The Hepatitis B vaccine is given to prevent infection by the Hepatitis B virus, which can cause liver damage.',
-            schedule: 'First dose at birth, second dose at 1-2 months, third dose at 6-18 months.',
-            manufacturer: 'Various',
-            source: 'CDC',
-            sourceLink: 'https://www.cdc.gov/vaccines/hcp/vis/vis-statements/hep-b.html',
-          },
-          {
-            id: 2,
-            name: 'DTaP',
-            age: '2, 4, 6 months',
-            description: 'Protects against Diphtheria, Tetanus, and Pertussis.',
-            fullDescription: 'The DTaP vaccine protects against three serious diseases: Diphtheria, Tetanus, and Pertussis (whooping cough).',
-            schedule: 'Five doses: 2 months, 4 months, 6 months, 15-18 months, and 4-6 years.',
-            manufacturer: 'Various',
-            source: 'WHO',
-            sourceLink: 'https://www.who.int/health-topics/diphtheria',
-          },
-          {
-            id: 3,
-            name: 'MMR',
-            age: '12-15 months',
-            description: 'Protects against Measles, Mumps, and Rubella.',
-            fullDescription: 'The MMR vaccine protects against three viral diseases: Measles, Mumps, and Rubella.',
-            schedule: 'First dose at 12-15 months, second dose at 4-6 years.',
-            manufacturer: 'Various',
-            source: 'CDC',
-            sourceLink: 'https://www.cdc.gov/vaccines/hcp/vis/vis-statements/mmr.html',
-          },
-        ],
-      };
-    },
-    computed: {
-      filteredVaccines() {
-        let vaccines = this.vaccines.filter(vaccine =>
-          vaccine.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-        if (this.sortBy === 'name') {
-          vaccines.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (this.sortBy === 'age') {
-          vaccines.sort((a, b) => a.age.localeCompare(b.age));
-        }
-        return vaccines;
-      },
-    },
-    methods: {
-      openDetails(vaccine) {
-        this.selectedVaccine = vaccine;
-      },
-      addToCalendar(vaccine) {
-        alert(`Added ${vaccine.name} to your calendar.`);
-      },
-      downloadRecord(vaccine) {
-        alert(`Downloading ${vaccine.name} record as PDF.`);
-      },
-    },
-  };
-  </script>
-  
-  
+<script setup>
+import { ref, computed } from 'vue';
+import LandingsLayout from '@/components/landingsLayout.vue';
+
+// Reactive state
+const searchQuery = ref('');
+const sortBy = ref('name');
+const selectedVaccine = ref(null);
+
+// Vaccine data
+const vaccines = ref([
+  {
+    id: 1,
+    name: 'Hepatitis B',
+    age: 'At birth',
+    description: 'Protects against Hepatitis B virus.',
+    fullDescription: 'The Hepatitis B vaccine is given to prevent infection by the Hepatitis B virus, which can cause liver damage.',
+    schedule: 'First dose at birth, second dose at 1-2 months, third dose at 6-18 months.',
+    manufacturer: 'Various',
+    source: 'CDC',
+    sourceLink: 'https://www.cdc.gov/vaccines/hcp/vis/vis-statements/hep-b.html',
+  },
+  {
+    id: 2,
+    name: 'DTaP',
+    age: '2, 4, 6 months',
+    description: 'Protects against Diphtheria, Tetanus, and Pertussis.',
+    fullDescription: 'The DTaP vaccine protects against three serious diseases: Diphtheria, Tetanus, and Pertussis (whooping cough).',
+    schedule: 'Five doses: 2 months, 4 months, 6 months, 15-18 months, and 4-6 years.',
+    manufacturer: 'Various',
+    source: 'WHO',
+    sourceLink: 'https://www.who.int/health-topics/diphtheria',
+  },
+  {
+    id: 3,
+    name: 'MMR',
+    age: '12-15 months',
+    description: 'Protects against Measles, Mumps, and Rubella.',
+    fullDescription: 'The MMR vaccine protects against three viral diseases: Measles, Mumps, and Rubella.',
+    schedule: 'First dose at 12-15 months, second dose at 4-6 years.',
+    manufacturer: 'Various',
+    source: 'CDC',
+    sourceLink: 'https://www.cdc.gov/vaccines/hcp/vis/vis-statements/mmr.html',
+  },
+]);
+
+// Computed property for filtered and sorted vaccines
+const filteredVaccines = computed(() => {
+  let filtered = vaccines.value.filter(vaccine =>
+    vaccine.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+
+  if (sortBy.value === 'name') {
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy.value === 'age') {
+    filtered.sort((a, b) => a.age.localeCompare(b.age));
+  }
+
+  return filtered;
+});
+
+// Methods
+const openDetails = (vaccine) => {
+  selectedVaccine.value = vaccine;
+};
+
+const addToCalendar = (vaccine) => {
+  alert(`Added ${vaccine.name} to your calendar.`);
+};
+
+const downloadRecord = (vaccine) => {
+  alert(`Downloading ${vaccine.name} record as PDF.`);
+};
+</script>

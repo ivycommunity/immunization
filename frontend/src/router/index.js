@@ -9,7 +9,7 @@ import VaccinationDetails from '@/views/vaccinationDetails.vue'
 import ClinicsView from '@/views/clinicsView.vue'
 import FAQView from '@/views/FAQView.vue'
 import userLoginForm from "@/views/User_dashboard/registration/login.vue"
-import registrationError from "@/views/User_dashboard/registration/error.vue"
+import registrationError from "@/views/User_dashboard/error/errors.vue"
 import userWelcome from "@/views/User_dashboard/registration/welcome.vue"
 import Home from '@/views/Hospital/Patients.vue'
 import Appointments from '@/views/Hospital/Appointments.vue'
@@ -73,6 +73,8 @@ const router = createRouter({
       path: '/user/registrationError',
       name: 'registrationError',
       component: registrationError,
+    },
+    {
       path: '/hospital/patients',
       name: 'hospital.patients',
       component: Home,

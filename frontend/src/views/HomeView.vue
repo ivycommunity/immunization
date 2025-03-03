@@ -1,5 +1,6 @@
 <template>
-  <div class="min-h-screen bg-[#02343B] text-[#F8F8FF]">
+  <NavBar />
+  <div class="mt-28 min-h-screen bg-[#02343B] text-[#F8F8FF]">
     <section class="py-20 px-6 text-center">
       <h1 class="text-5xl font-bold mb-4">
         Track Your Child's Vaccinations with <span class="text-[#04A699]">IVY Immunization</span>
@@ -104,10 +105,11 @@
       </button>
     </section>
   </div>
+  <Footer />
 </template>
 
-<script>
-export default {
-  name: 'LandingPage',
-};
+<script setup>
+import NavBar from '@/components/NavBar.vue';
+import Footer from '@/components/Footer.vue';
+
 </script>

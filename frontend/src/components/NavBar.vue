@@ -1,6 +1,5 @@
 <template>
-    <nav
-    :class="`fixed top-0 w-full bg-[#F8F8FF] z-50 shadow-md flex justify-between items-center px-6 py-4 transition-all duration-300 ${
+  <nav :class="`fixed top-0 w-full bg-[#F8F8FF] z-50 shadow-md flex justify-between items-center px-6 py-4 transition-all duration-300 ${
       isVisible ? 'translate-y-0 opacity-100 shadow-lg' : '-translate-y-full opacity-0'
       }`"
     >

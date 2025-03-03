@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vaccine extends Model
 {
+
     protected $fillable = [
         'vaccine_name',
         'description',
@@ -14,4 +15,5 @@ class Vaccine extends Model
         'dosage',
         'administration_method',
     ];
+
 }

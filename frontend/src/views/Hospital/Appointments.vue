@@ -134,11 +134,11 @@ const addAppointment = () => {
                 <!-- Tabs -->
                 <div class="mb-6">
                     <button @click="activeTab = 'list'"
-                        :class="['px-4 py-2 rounded-t-lg', activeTab === 'list' ? 'bg-white text-blue-600' : 'bg-gray-200 text-gray-600']">
+                        :class="['px-4 py-2 rounded-t-lg', activeTab === 'list' ? 'bg-white text-blue-600' : 'cursor-pointer bg-gray-200 text-gray-600']">
                         List View
                     </button>
                     <button @click="activeTab = 'calendar'"
-                        :class="['px-4 py-2 rounded-t-lg', activeTab === 'calendar' ? 'bg-white text-blue-600' : 'bg-gray-200 text-gray-600']">
+                        :class="['px-4 py-2 rounded-t-lg', activeTab === 'calendar' ? 'bg-white text-blue-600' : 'cursor-pointer bg-gray-200 text-gray-600']">
                         Calendar View
                     </button>
                 </div>

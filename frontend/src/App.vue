@@ -10,13 +10,13 @@ const authStore = useAuthStore()
 
 <template>
   <header>
-    <nav class="flex gap-5">
+    <!-- <nav class="flex gap-5">
       <!-- <p v-if="authStore.user"> {{ authStore.user.name }}</p> -->
       <!-- <RouterLink :to="{ name: 'home' }" class="nav-link">Home</RouterLink>
       <RouterLink :to="{ name: 'signin' }" class="nav-link">Sign in</RouterLink>
       <RouterLink :to="{ name: 'signup' }" class="nav-link">Sign up</RouterLink> -->
-      <!-- <Navbar /> -->
-    </nav>
+      <!-- <Navbar /> 
+    </nav> -->
   </header>
   
   <RouterView />

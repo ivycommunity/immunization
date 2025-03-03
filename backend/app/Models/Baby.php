@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Baby extends Model
 {
+
     use HasFactory;
 
     protected $fillable = [
@@ -28,4 +30,5 @@ class Baby extends Model
     {
         return $this->belongsTo(User::class, 'guardian_id');
     }
+
 }

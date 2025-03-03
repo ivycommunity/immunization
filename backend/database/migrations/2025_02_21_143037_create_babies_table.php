@@ -15,16 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->unsignedBigInteger('guardian_id');
-            $table->string('gender')->nullable();
-            $table->string('immunization_status')->nullable();
+            $table->foreignId('guardian_id')->constrained('users')->onDelete('cascade');
+            $table->enum('gender', ['Male', 'Female', 'Other']);
+            $table->enum('immunization_status', ['Up to date', 'Pending', 'Overdue'])->default('Pending');
             $table->string('last_vaccine_received')->nullable();
             $table->date('next_appointment_date')->nullable();
-            $table->date('date_of_birth')->nullable();
+            $table->date('date_of_birth');
             $table->string('nationality')->nullable();
             $table->timestamps();
-
-            $table->foreign('guardian_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('vaccine_name');
             $table->text('description')->nullable();
-            $table->string('disease_prevented')->nullable();
-            $table->string('recommended_age')->nullable();
-            $table->string('dosage')->nullable();
-            $table->string('administration_method')->nullable();
+            $table->string('disease_prevented');
+            $table->string('recommended_age');
+            $table->string('dosage');
+            $table->enum('administration_method', ['Oral', 'Injection', 'Nasal Spray']);
             $table->timestamps();
         });
     }

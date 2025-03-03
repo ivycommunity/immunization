@@ -72,24 +72,24 @@
               </div>
               <div>
                 <h4 class="text-xl font-semibold mb-2">Phone</h4>
-                <a href="tel:+1234567890" class="text-[#04A699] hover:underline">
+                <router-link to="tel:+1234567890" class="text-[#04A699] hover:underline">
                   +1 (234) 567-890
-                </a>
+                </router-link>
               </div>
               <div>
                 <h4 class="text-xl font-semibold mb-2">Social Media</h4>
                 <div class="flex space-x-4">
                   <a href="#" class="text-[#04A699] hover:text-[#038C7F]">
-                    <i class="fab fa-facebook fa-2x"></i>
+                  <i class="fab fa-facebook fa-2x"></i>
                   </a>
                   <a href="#" class="text-[#04A699] hover:text-[#038C7F]">
-                    <i class="fab fa-twitter fa-2x"></i>
+                  <i class="fab fa-twitter fa-2x"></i>
                   </a>
                   <a href="#" class="text-[#04A699] hover:text-[#038C7F]">
-                    <i class="fab fa-instagram fa-2x"></i>
+                  <i class="fab fa-instagram fa-2x"></i>
                   </a>
                   <a href="#" class="text-[#04A699] hover:text-[#038C7F]">
-                    <i class="fab fa-whatsapp fa-2x"></i>
+                  <i class="fab fa-whatsapp fa-2x"></i>
                   </a>
                 </div>
               </div>
@@ -100,13 +100,13 @@
                   Tech City, TX 12345<br />
                   United States
                 </p>
-                <a
-                  href="https://www.google.com/maps"
+                <router-link
+                  to="https://www.google.com/maps"
                   target="_blank"
                   class="text-[#04A699] hover:underline"
                 >
                   View on Google Maps
-                </a>
+                </router-link>
               </div>
             </div>
           </div>
@@ -118,7 +118,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import LandingsLayout from '@/components/landingsLayout.vue';
+import LandingsLayout from '@/components/landing/landingsLayout.vue';
 
 // Reactive form state
 const form = ref({

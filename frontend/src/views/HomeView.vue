@@ -115,5 +115,5 @@
 </template>
 
 <script setup>
-import LandingsLayout from '@/components/landingsLayout.vue';
+import LandingsLayout from '@/components/landing/landingsLayout.vue';
 </script>

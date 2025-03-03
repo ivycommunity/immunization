@@ -144,7 +144,7 @@
               <!-- Label & Forgot Password Link -->
               <div class="flex justify-between items-center mt-2">
                 <span></span>
-                <a href="#" class="text-sm text-[#432C81]">Forgot Password?</a>
+                <router-link to="#" class="text-sm text-[#432C81]">Forgot Password?</router-link>
               </div>
             </div>
           </div>
@@ -163,7 +163,7 @@
           
           <!-- Sign Up Link -->
           <div class="text-center text-[#82799D]">
-            Don't have an account? <a href="#" class="text-[#432C81] font-medium">Sign Up</a>
+            Don't have an account? <router-link to="#" class="text-[#432C81] font-medium">Sign Up</router-link>
           </div>
         </form>
       </div>

@@ -73,9 +73,9 @@
           <p class="text-lg mb-4"><strong>Manufacturer:</strong> {{ selectedVaccine.manufacturer }}</p>
           <p class="text-lg mb-6">
             <strong>Learn More: </strong>
-            <a :href="selectedVaccine.sourceLink" target="_blank" class="text-[#04A699] hover:underline">
+            <router-link :to="selectedVaccine.sourceLink" target="_blank" class="text-[#04A699] hover:underline">
               {{ selectedVaccine.source }}
-            </a>
+            </router-link>
           </p>
           <div class="flex space-x-4 justify-center" hidden>
             <button
@@ -99,7 +99,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import LandingsLayout from '@/components/landingsLayout.vue';
+import LandingsLayout from '@/components/landing/landingsLayout.vue';
 
 // Reactive state
 const searchQuery = ref('');

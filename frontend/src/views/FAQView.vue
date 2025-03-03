@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import LandingsLayout from '@/components/landingsLayout.vue';
+import LandingsLayout from '@/components/landing/landingsLayout.vue';
 
 // Reactive state
 const activeIndex = ref(null);

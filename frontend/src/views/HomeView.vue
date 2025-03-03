@@ -1,10 +1,12 @@
 <template>
-  <NavBar />
-  <div class="mt-28 min-h-screen bg-[#02343B] text-[#F8F8FF]">
+  <LandingsLayout>
+  <div class="min-h-screen bg-[#02343B] text-[#F8F8FF]">
     <section class="py-20 px-6 text-center">
-      <h1 class="text-5xl font-bold mb-4">
-        Track Your Child's Vaccinations with <span class="text-[#04A699]">IVY Immunization</span>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+        Track Your Child's Vaccinations with 
+        <span class="text-[#04A699]">IVY Immunization</span>
       </h1>
+
       <p class="text-xl mb-8">
         Easy, reliable, and up-to-date vaccination tracking from birth to adulthood.
       </p>
@@ -13,7 +15,7 @@
       </button>
     </section>
 
-    <section class="bg-[#F8F8FF] py-16 px-6">
+    <section class="bg-[#F8F8FF] text-[#121212] py-16 px-6">
       <div class="max-w-6xl mx-auto">
         <h2 class="text-3xl font-bold text-center mb-12">Why Choose IVY Immunization?</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -105,11 +107,16 @@
       </button>
     </section>
   </div>
-  <Footer />
+</LandingsLayout>
 </template>
 
-<script setup>
-import NavBar from '@/components/NavBar.vue';
-import Footer from '@/components/Footer.vue';
+<script>
+import LandingsLayout from '@/components/landingsLayout.vue';
 
+export default {
+  name: 'LandingPage',
+  components: {
+    LandingsLayout,
+  }
+};
 </script>

@@ -3,7 +3,7 @@
   import { z } from 'zod';
   import axios from 'axios';
   import { useRouter } from 'vue-router';
-  import userRegistrationLayout from '@/components/userRegistrationLayout.vue';
+  import userRegistrationLayout from '@/components/User/userRegistrationLayout.vue';
   import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
 
   // Reactive state

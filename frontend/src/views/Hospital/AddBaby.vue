@@ -80,8 +80,6 @@ const submitForm = () => {
                                 <input id="dateOfBirth" v-model="form.dateOfBirth" type="date"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required />
-                                <CalendarIcon
-                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                             </div>
                         </div>
 

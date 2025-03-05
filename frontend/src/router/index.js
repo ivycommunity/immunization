@@ -15,6 +15,7 @@ import Home from '@/views/Hospital/Patients.vue'
 import Appointments from '@/views/Hospital/Appointments.vue'
 import AddGuardian from '@/views/Hospital/AddGuardian.vue'
 import AddBaby from '@/views/Hospital/AddBaby.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,11 +29,13 @@ const router = createRouter({
       path: '/signin',
       name: 'signin',
       component: SignIn,
+      meta: { guest: true }
     },
     {
       path: '/signup',
       name: 'signup',
       component: SignUp,
+      meta: { guest: true }
     },
     {
       path: '/about-us',
@@ -73,26 +76,47 @@ const router = createRouter({
       path: '/user/registrationError',
       name: 'registrationError',
       component: registrationError,
+    },
+    {
       path: '/hospital/patients',
       name: 'hospital.patients',
       component: Home,
+      meta: { auth: true }
     },
     {
       path: '/hospital/appointments',
       name: 'hospital.appointments',
       component: Appointments,
+      meta: { auth: true }
     },
     {
       path: '/hospital/add-parent',
       name: 'hospital.add-parent',
       component: AddGuardian,
+      meta: { auth: true }
     },
     {
       path: '/hospital/add-baby',
       name: 'hospital.add-baby',
       component: AddBaby,
+      meta: { auth: true }
     },
   ],
+})
+
+router.beforeEach(async (to, from) => {
+  const authStore = useAuthStore()
+  await authStore.getUser()
+
+  if (authStore.user && to.meta.guest) {
+    if (authStore.user.role === 'nurse') {
+      return { name: 'hospital.patients' }
+    }
+  }
+
+  if (!authStore.user && to.meta.auth) {
+    return { name: 'signin' }
+  }
 })
 
 export default router

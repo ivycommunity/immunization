@@ -7,6 +7,9 @@ use App\Models\Vaccine;
 
 class VaccineController extends Controller
 {
+   /**
+     * Retrieve all vaccines
+     */
     public function getVaccines()
     {
         $user = auth()->guard()->user();
@@ -20,6 +23,9 @@ class VaccineController extends Controller
         ];
     }
 
+    /**
+     * Retrieve Specific vaccine by ID
+     */
 
     public function getVaccine($id)
     {

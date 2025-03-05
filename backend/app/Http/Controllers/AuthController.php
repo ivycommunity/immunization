@@ -10,13 +10,13 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        // $user = auth()->guard()->user();
+        $user = auth()->guard()->user();
 
-        // if (!$user || !in_array($user->role, ['Admin', 'Receptionist'])) {
-        //     return [
-        //         'message' => 'Unauthorized',
-        //     ];
-        // }
+        if (!$user || !in_array($user->role, ['admin', 'nurse'])) {
+            return [
+                'message' => 'Unauthorized',
+            ];
+        }
 
         $fields = $request->validate([
             'first_name' => 'required|string',
@@ -72,9 +72,9 @@ class AuthController extends Controller
     {
         $request->validate([
             'password' => 'required',
-            'email|phone_number' => 'required_without_all:email,phone_number',
+            'email_or_phone_number' => 'required_without_all:email,phone_number',
         ], [
-            'email|phone_number.required_without_all' => 'Either email or phone number is required.'
+            'email_or_phone_number.required_without_all' => 'Either email or phone number is required.'
         ]);
 
         // Check if email is provided
@@ -92,9 +92,11 @@ class AuthController extends Controller
         }
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Invalid login details',
-            ], 401);
+            return [
+                'errors' => [
+                    'email_or_phone_number' => ['The provided credentials are incorrect.']
+                ],
+            ];
         }
 
         $token = $user->createToken($user->first_name);

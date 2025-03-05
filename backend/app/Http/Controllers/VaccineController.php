@@ -7,6 +7,9 @@ use App\Models\Vaccine;
 
 class VaccineController extends Controller
 {
+   /**
+     * Retrieve all vaccines
+     */
     public function getVaccines()
     {
         $user = auth()->guard()->user();
@@ -20,6 +23,9 @@ class VaccineController extends Controller
         ];
     }
 
+    /**
+     * Retrieve Specific vaccine by ID
+     */
 
     public function getVaccine($id)
     {
@@ -41,6 +47,9 @@ class VaccineController extends Controller
     }
 
     
+    /**
+     * Add a Vaccine
+     */
     public function createVaccine(Request $request)
     {
         $user = auth()->guard()->user();
@@ -64,6 +73,9 @@ class VaccineController extends Controller
     }
 
     
+    /**
+     * Update a Vaccine
+     */
     public function updateVaccine(Request $request, $id)
     {
         $user = auth()->guard()->user();
@@ -93,6 +105,9 @@ class VaccineController extends Controller
     }
 
     
+    /**
+     * Delete a Vaccine
+     */
     public function deleteVaccine($id)
     {
         $user = auth()->guard()->user();

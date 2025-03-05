@@ -48,7 +48,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/vaccines/{id}', [VaccineController::class, 'deleteVaccine']);
 });
 
-
-// Route::get('/docs/api', function () {
-//     return redirect('/docs');
-// });

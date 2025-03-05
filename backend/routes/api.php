@@ -13,7 +13,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-// Authorization routes
+
 Route::post('/register', [AuthController::class,'register']);
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
@@ -21,26 +21,24 @@ Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanct
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('babies', BabyController::class);
 });
-// Guardian routes
-Route::get('/guardians', [GuardianController::class,'getGuardians'])->middleware('auth:sanctum');
-Route::get('/guardians/{id}', [GuardianController::class,'getGuardian'])->middleware('auth:sanctum');
-Route::put('/guardians/{id}', [GuardianController::class,'updateGuardian'])->middleware('auth:sanctum');
-Route::delete('/guardians/{id}', [GuardianController::class,'deleteGuardian'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/guardians', [GuardianController::class,'getGuardians']);
+    Route::get('/guardians/{id}', [GuardianController::class,'getGuardian']);
+    Route::put('/guardians/{id}', [GuardianController::class,'updateGuardian']);
+    Route::delete('/guardians/{id}', [GuardianController::class,'deleteGuardian']);
+});
 
 
-// Doctor routes
-Route::get('/doctors', [DoctorController::class,'index'])->middleware('auth:sanctum');
-Route::get('/doctors/{id}', [DoctorController::class,'show'])->middleware('auth:sanctum');
-Route::post('/doctors', [DoctorController::class,'store'])->middleware('auth:sanctum');
-Route::put('/doctors/{id}', [DoctorController::class,'update'])->middleware('auth:sanctum');
-Route::delete('/doctors/{doctor}', [DoctorController::class,'destroy'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('doctors', DoctorController::class)->except(['create', 'edit']);
+});
 
-// Appointment routes
-Route::get('/appointments', [AppointmentsController::class,'index'])->middleware('auth:sanctum');
-Route::get('/appointments/{id}', [AppointmentsController::class,'show'])->middleware('auth:sanctum');
-Route::post('/appointments', [AppointmentsController::class,'store'])->middleware('auth:sanctum');
-Route::put('/appointments/{id}', [AppointmentsController::class,'update'])->middleware('auth:sanctum');
-Route::delete('/appointments/{id}', [AppointmentsController::class,'destroy'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('appointments', AppointmentsController::class)->except(['create', 'edit']);
+});
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/vaccines', [VaccineController::class, 'getVaccines']);

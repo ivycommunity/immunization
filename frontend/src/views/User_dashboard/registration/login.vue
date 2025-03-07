@@ -59,7 +59,7 @@
         });
         console.log('API Response:', response.data);
 
-        // router.push({ name: 'home' });
+      // router.push({ name: 'userhomePage' });  
 
       } catch (error) {
         // console.error('API Error:', error.response ? error.response.data : error.message);

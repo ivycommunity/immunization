@@ -70,7 +70,7 @@ const router = createRouter({
       component: userLoginForm,
     },
     {
-      path: '/user/registrationError',
+      path: '/user/error/:errorCode',
       name: 'registrationError',
       component: registrationError,
     },

@@ -8,7 +8,7 @@
   </template>
   
   <script setup>
-  import Topbar from '@/components/User/topbar.vue';
+  import Topbar from './topBar.vue';
   
   // Props
   const props = defineProps({

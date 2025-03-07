@@ -51,16 +51,18 @@
 
       try {
         console.log('Email:', email.value, 'Password:', password.value);
-        // Example API call (commented out)
-        // const response = await axios.post('https://your-api-url.com/signin', {
-        //   email: email.value,
-        //   password: password.value,
-        // });
-        // console.log('API Response:', response.data);
+        // API call
+        // const response = await axios.post('https://deployed-url/login', {
+        const response = await axios.post('http://localhomst:9000/login', {
+          email: email.value,
+          password: password.value,
+        });
+        console.log('API Response:', response.data);
 
-        router.push({ name: 'home' });
+        // router.push({ name: 'home' });
+
       } catch (error) {
-        console.error('API Error:', error.response ? error.response.data : error.message);
+        // console.error('API Error:', error.response ? error.response.data : error.message);
         router.push({ name: 'registrationError' });
       } finally {
         isLoading.value = false;

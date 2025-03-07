@@ -4,7 +4,7 @@
       isVisible ? 'translate-y-0 opacity-100 shadow-lg' : '-translate-y-full opacity-0'
     }`"
   >
-    <div class="flex gap-8 w-full">
+    <div class="flex gap-8">
       <router-link to="/user" class="z-10">
         <ArrowLeftIcon class="w-6 h-6 text-[#432C81]" />
       </router-link>
@@ -30,7 +30,12 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: true
-  }
+  },
+  withBackArrow: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
 });
 
 // Reactive state

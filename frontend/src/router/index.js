@@ -15,8 +15,11 @@ import ClinicsView from '@/views/clinicsView.vue'
 import FAQView from '@/views/FAQView.vue'
 
 import userLoginForm from "@/views/User_dashboard/registration/login.vue"
-import registrationError from "@/views/User_dashboard/error/errors.vue"
+import userRegister from '@/views/User_dashboard/registration/register.vue'
+import userUpdatePassword from '@/views/User_dashboard/registration/updatePassword.vue'
+import useError from "@/views/User_dashboard/error/errors.vue"
 import userWelcome from "@/views/User_dashboard/registration/welcome.vue"
+import userHomePage from '@/views/User_dashboard/home/homePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -74,9 +77,24 @@ const router = createRouter({
       component: userLoginForm,
     },
     {
+      path: '/user/register',
+      name: 'userRegister',
+      component: userRegister,
+    },
+    {
+      path: '/user/updatePassword',
+      name: 'userUpdatePassword',
+      component: userUpdatePassword,
+    },
+    {
+      path: '/user/home',
+      name: 'userHomePage',
+      component: userHomePage,
+    },
+    {
       path: '/user/error/:errorCode',
-      name: 'registrationError',
-      component: registrationError,
+      name: 'useError',
+      component: useError,
     },
     {
       path: '/hospital/patients',
@@ -105,19 +123,19 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach(async (to, from) => {
-  const authStore = useAuthStore()
-  await authStore.getUser()
+// router.beforeEach(async (to, from) => {
+//   const authStore = useAuthStore()
+//   await authStore.getUser()
 
-  if (authStore.user && to.meta.guest) {
-    if (authStore.user.role === 'nurse') {
-      return { name: 'hospital.patients' }
-    }
-  }
+//   if (authStore.user && to.meta.guest) {
+//     if (authStore.user.role === 'nurse') {
+//       return { name: 'hospital.patients' }
+//     }
+//   }
 
-  if (!authStore.user && to.meta.auth) {
-    return { name: 'signin' }
-  }
-})
+//   if (!authStore.user && to.meta.auth) {
+//     return { name: 'signin' }
+//   }
+// })
 
 export default router

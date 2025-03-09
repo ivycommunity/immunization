@@ -4,27 +4,37 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Resources\UserResource;
+
 
 class GuardianController extends Controller
 {
-    //Retrieve all guardians
+    /**
+     * Return all the guardians
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getGuardians()
     {
         $user = auth()->guard()->user();
 
         if (in_array($user->role, ['Guardian', 'Parent'])) {
-            return [
-                'message'=> 'Unauthorized'
-            ];
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
         }
 
         $guardians = User::whereIn('role', ['Guardian', 'Parent'])->get();
-        return [
-            'guardians'=> $guardians
-        ];
+        return response()->json([
+            'guardians' => UserResource::collection($guardians),
+            'total' => $guardians->count()
+        ]);
     }
 
-    //Retrieve a single guardian
+    /**
+     * Retrieve a single guardian
+     * @param mixed $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getGuardian($id)
     {
         $user = auth()->guard()->user();
@@ -34,29 +44,27 @@ class GuardianController extends Controller
                         ->first();
 
         if (! $guardian) {
-            return [
-                'message'=> 'Guardian/Parent record not found'
-            ];
+            return response()->json(['message'=> 'Guardian/Parent record not found'], 404);
         }
-        return [
-            'guardian'=> $guardian
-        ];
+        return response()->json(new UserResource($guardian));
     }
 
-    //Update guardian details or parent details
+    /**
+     *Update a guardian's records
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateGuardian(Request $request, $id)
     {
-        $user = auth()->guard()->user(); //Retrieve the authenticated user
+        $user = auth()->guard()->user(); 
         
-        //Find the guardian to update
         $guardian = User::where('id', $id)
                         ->whereIn('role', ['Guardian', 'Parent'])
                         ->first();
 
         if (! $guardian) {
-            return [
-                'message'=> 'Guardian/Parent not found'
-            ];
+            return response()->json(['message'=> 'Guardian/Parent not found'],404);
         }
 
         $validated = $request->validate([
@@ -74,21 +82,25 @@ class GuardianController extends Controller
 
         $guardian->update($validated);
 
-        return [
-            'message'=> 'Guardian/Parent record updated successfully'
-        ];
+        return response()->json([
+            'message'=> 'Guardian/Parent record updated successfully',
+            'guardian'=> new UserResource($guardian)
+        ]);
     }
 
-    //Delete a guardian
+    /**
+     * Delete a guardian record
+     * @param mixed $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteGuardian($id)
     {
         $user = auth()->guard()->user(); 
         
-        // Only admins can delete guardians
         if ($user->role !== 'Admin') {
-            return [
-                'message'=> 'Unauthorized'
-            ];
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
         }
 
         $guardian = User::where('id', $id)
@@ -96,16 +108,16 @@ class GuardianController extends Controller
                         ->first();
         
         if (! $guardian) {
-            return [
-                'message'=> 'Guardian/Parent record not found'
-            ];
+            return response()->json([
+                'message' => 'Guardian/Parent record not found'
+            ], 404);
         }
 
         $guardian->delete();
 
-        return [
+        return response()->json([
             'message'=> 'Guardian/Parent record deleted successfully',
-        ];
+        ]);
     }
 
 }

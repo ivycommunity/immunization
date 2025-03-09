@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Sidebar from '@/components/Hospital/Sidebar.vue';
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import Error from '@/components/Error.vue';
@@ -25,8 +25,24 @@ const form = reactive({
     no_of_children: ''
 })
 
-const submitForm = () => {
-    authenticate('register', form)
+const showModal = ref(false)
+const modalMessage = ref('')
+
+const submitForm = async () => {
+    const response = await authenticate('register', form)
+    if (response?.success) {
+        modalMessage.value = 'Guardian registered successfully!'
+        showModal.value = true
+        // Reset all form fields
+        Object.keys(form).forEach(key => {
+            form[key] = ''
+        })
+    }
+}
+
+const closeModal = () => {
+    showModal.value = false
+    modalMessage.value = ''
 }
 
 </script>
@@ -46,7 +62,7 @@ const submitForm = () => {
                                     placeholder="Enter Parent's First Name"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required />
-                                <!-- <Error v-if="errors.first_name" :error="errors.first_name[0]" /> -->
+                                <Error v-if="errors.first_name" :error="errors.first_name[0]" />
                             </div>
 
                             <div>
@@ -56,6 +72,7 @@ const submitForm = () => {
                                     placeholder="Enter Parent's Last Name"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required />
+                                <Error v-if="errors.last_name" :error="errors.last_name[0]" />
                             </div>
 
                             <div>
@@ -65,6 +82,7 @@ const submitForm = () => {
                                     placeholder="Enter Parent's Email Address"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required />
+                                <Error v-if="errors.email" :error="errors.email[0]" />
                             </div>
 
                             <div>
@@ -74,6 +92,7 @@ const submitForm = () => {
                                     placeholder="Enter Parent's phone Number"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required />
+                                <Error v-if="errors.phone_number" :error="errors.phone_number[0]" />
                             </div>
 
                             <div>
@@ -87,6 +106,7 @@ const submitForm = () => {
                                     <option value="female">Female</option>
                                     <option value="other">Other</option>
                                 </select>
+                                <Error v-if="errors.gender" :error="errors.gender[0]" />
                             </div>
 
                             <div>
@@ -96,10 +116,11 @@ const submitForm = () => {
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required>
                                     <option value="">Select Role</option>
-                                    <option value="guradian">Guardian</option>
+                                    <option value="guardian">Guardian</option>
                                     <option value="doctor">Doctor</option>
                                     <option value="nurse">Nurse</option>
                                 </select>
+                                <Error v-if="errors.role" :error="errors.role[0]" />
                             </div>
 
                             <div>
@@ -365,6 +386,7 @@ const submitForm = () => {
                                     <option value="Zambia">Zambia</option>
                                     <option value="Zimbabwe">Zimbabwe</option>
                                 </select>
+                                <Error v-if="errors.country" :error="errors.country[0]" />
                             </div>
                         </div>
 
@@ -377,6 +399,7 @@ const submitForm = () => {
                                     placeholder="Enter Parent's national ID"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required />
+                                <Error v-if="errors.national_id" :error="errors.national_id[0]" />
                             </div>
 
                             <div>
@@ -387,6 +410,7 @@ const submitForm = () => {
                                     <input id="date_of_birth" v-model="form.date_of_birth" type="date"
                                         class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         required />
+                                    <Error v-if="errors.date_of_birth" :error="errors.date_of_birth[0]" />
                                 </div>
                             </div>
 
@@ -396,6 +420,7 @@ const submitForm = () => {
                                 <input id="address" v-model="form.address" placeholder="Enter Parent's Address"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required />
+                                <Error v-if="errors.address" :error="errors.address[0]" />
                             </div>
 
                             <div>
@@ -405,14 +430,13 @@ const submitForm = () => {
                                 <select id="marital_status" v-model="form.marital_status"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required>
-                                    <option value="">Select Status<span
-                                            style="color: red !important; display: inline; float: none;">*</span>
-                                    </option>
+                                    <option value="">Select Status</option>
                                     <option value="single">Single</option>
                                     <option value="married">Married</option>
                                     <option value="divorced">Divorced</option>
                                     <option value="widowed">Widowed</option>
                                 </select>
+                                <Error v-if="errors.marital_status" :error="errors.marital_status[0]" />
                             </div>
 
                             <div>
@@ -421,6 +445,7 @@ const submitForm = () => {
                                 <input id="next_of_kin" v-model="form.next_of_kin" type="text"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Parent's next of kin name" required />
+                                <Error v-if="errors.next_of_kin" :error="errors.next_of_kin[0]" />
                             </div>
 
                             <div>
@@ -430,6 +455,7 @@ const submitForm = () => {
                                 <input id="next_of_kin_contact" v-model="form.next_of_kin_contact" type="tel"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Parent's next of kin contact" required />
+                                <Error v-if="errors.next_of_kin_contact" :error="errors.next_of_kin_contact[0]" />
                             </div>
 
                             <div>
@@ -438,17 +464,38 @@ const submitForm = () => {
                                 <input id="no_of_children" v-model="form.no_of_children" type="number" min="0"
                                     class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Parent's number of nbr of children" />
+                                <Error v-if="errors.no_of_children" :error="errors.no_of_children[0]" />
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-8 flex justify-center">
                         <button type="submit"
-                            class="bg-blue-600 text-white px-8 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            class="cursor-pointer bg-blue-600 text-white px-8 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                             Save
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div v-if="showModal" class="fixed inset-0 backdrop-blur-xs flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+                <div class="flex flex-col items-center">
+                    <div class="mb-4 text-green-600">
+                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Success!</h3>
+                    <p class="text-gray-600 text-center mb-6">{{ modalMessage }}</p>
+                    <button @click="closeModal"
+                        class="cursor-pointer bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Close
+                    </button>
+                </div>
             </div>
         </div>
     </Sidebar>

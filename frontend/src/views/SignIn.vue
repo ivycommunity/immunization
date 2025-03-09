@@ -1,7 +1,7 @@
 <script setup>
 import Input from '@/components/Input.vue'
 import GreenButton from '@/components/GreenButton.vue'
-import { reactive } from 'vue'
+import { onMounted, reactive } from 'vue'
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import Error from '@/components/Error.vue';
@@ -15,6 +15,8 @@ const formData = reactive({
     password: "",
 })
 
+onMounted(() => (errors.value = {}))
+
 </script>
 
 <template>
@@ -27,10 +29,10 @@ const formData = reactive({
                 <div class="flex flex-col justify-center">
                     <div class="mb-2 flex justify-center bg-black-100 text-xl font-bold md:text-4xl md:mb-5">Sign in
                     </div>
-                    <form @submit.prevent="authenticate('/signin', formData)">
-                        <Input v-model="formData.email" type="email" label="Email Address" name="email"
+                    <form @submit.prevent="authenticate('login', formData)">
+                        <Input v-model="formData.email" type="email" label="Email or Phone Number" name="email"
                             placeholder="Enter your email" />
-                        <Error v-if="errors.email" :error="errors.email[0]" />
+                        <Error v-if="errors.email_or_phone_number" :error="errors.email_or_phone_number[0]" />
                         <Input v-model="formData.password" type="password" label="Password" name="password"
                             placeholder="Enter your password" />
                         <Error v-if="errors.password" :error=" errors.password[0]" />

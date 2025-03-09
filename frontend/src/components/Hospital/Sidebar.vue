@@ -11,7 +11,7 @@
             <!-- Navigation -->
             <div class="flex-1 px-3 py-4 space-y-2">
                 <router-link v-for="link in links" :key="link.name" :to="{ name: link.name }"
-                    class="w-full block py-2 px-4 rounded-md text-left"
+                    class="w-full hover:bg-blue-600 block py-2 px-4 rounded-md text-left"
                     :class="{ 'bg-blue-700 text-white': route.name === link.name, 'bg-blue-500 text-white': route.name !== link.name }">
                     {{ link.label }}
                 </router-link>
@@ -19,9 +19,11 @@
 
             <!-- Bottom button -->
             <div class="p-3 mt-auto">
-                <router-link to="/logout" class="w-full bg-blue-800 text-white py-2 px-4 rounded-md">
-                    SIGN OUT
-                </router-link>
+                <form @submit.prevent="authStore.logout">
+                    <button type="submit" class="cursor-pointer w-full bg-blue-800 text-white py-2 px-4 rounded-md hover:bg-blue-600">
+                        LOGOUT
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -31,13 +33,13 @@
                 <h1 class="text-xl font-semibold">{{ title }}</h1>
                 <Menu as="div" class="relative inline-block text-left">
                     <div>
-                        <MenuButton
+                        <MenuButton v-if="authStore.user"
                             class="h-10 cursor-pointer w-10 rounded-full bg-yellow-500 flex items-center justify-center text-white font-bold hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-yellow-500">
-                            MN
+                            {{ authStore.user.first_name[0] }} {{ authStore.user.last_name[0] }}
                         </MenuButton>
                     </div>
 
-                    <transition enter-active-class="transition ease-out duration-100"
+                    <!-- <transition enter-active-class="transition ease-out duration-100"
                         enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
                         leave-active-class="transition ease-in duration-75"
                         leave-from-class="transform opacity-100 scale-100"
@@ -63,7 +65,7 @@
                                 </MenuItem>
                             </div>
                         </MenuItems>
-                    </transition>
+                    </transition> -->
                 </Menu>
             </header>
             <div class="p-2">
@@ -76,6 +78,14 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import { useAuthStore } from '@/stores/auth';
+import { onMounted } from 'vue';
+
+const authStore = useAuthStore();
+
+// onMounted(() => {
+//     authStore.getUser();
+// })
 
 defineProps({
     title: {

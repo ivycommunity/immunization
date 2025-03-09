@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
-    "@tailwindcss/vite": "^4.0.7",
     "axios": "^1.8.1",
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",

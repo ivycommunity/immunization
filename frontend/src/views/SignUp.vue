@@ -1,7 +1,7 @@
 <script setup>
 import Input from '@/components/Input.vue'
 import GreenButton from '@/components/GreenButton.vue'
-import { reactive } from 'vue'
+import { onMounted, reactive } from 'vue'
 import { useAuthStore } from '@/stores/auth';
 import Error from '@/components/Error.vue';
 import { storeToRefs } from 'pinia';
@@ -16,6 +16,7 @@ const formData = reactive({
     password_confirmation: '',
 })
 
+onMounted(() => (errors.value = {}))
 </script>
 
 <template>

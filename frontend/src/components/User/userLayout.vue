@@ -12,9 +12,8 @@ const props = defineProps({
     type: [Boolean, String], // Accept both Boolean and String (from parent)
     default: true,
   },
-  topBarWithBackArrow: {
-    type: [Boolean, String], // Accept both Boolean and String (from parent)
-    default: true,
+  bactTo: {
+    type:  String, // Accept both Boolean and String (from parent)
   },
   className: {
     type: String,
@@ -24,12 +23,11 @@ const props = defineProps({
 
 // Ensure boolean conversion (if parent passes as string)
 const move = computed(() => props.topBarMove === true || props.topBarMove === 'true');
-const withBackArrow = computed(() => props.topBarWithBackArrow === true || props.topBarWithBackArrow === 'true');
 </script>
 
 <template>
   <div class="default-layout">
-    <Topbar :title="topBartitle" :move="move" :with-back-arrow="withBackArrow" />
+    <Topbar :title="topBartitle" :move="move" :back-to="bactTo" />
     <main :class="`
           w-full 
           mx-auto 

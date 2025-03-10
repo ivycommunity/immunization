@@ -3,26 +3,30 @@ import { ref } from 'vue';
 import { z } from 'zod';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import userRegistrationLayout from '@/components/User/userRegistrationLayout.vue';
+import registrationForm from '@/components/User/registrationForm.vue';
+import formInput from '@/components/User/formInput.vue';
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
 
 // Reactive state
-const confirmPassword = ref('');
+const confirm_password = ref('');
 const password = ref('');
 const errors = ref({
   password: null,
-  confirmPassword: null,
+  confirm_password: null,
 });
-const showPassword = ref(false);
+
 const isLoading = ref(false);
 
 const router = useRouter();
 
-// Toggle password visibility
-const togglePassword = () => {
-  showPassword.value = !showPassword.value;
-};
-
+// watch([password, confirm_password], ()=>{
+//   if(confirm_password.value && password.value !== confirm_password.value){
+//     errors.confirm_password = "Passwords do not match";
+//   }
+//   else{
+//     errors.value.confirm_password = null;
+//   }
+// })
 
 const handleSubmit = async () => {
   // Define the Zod schema
@@ -32,19 +36,27 @@ const handleSubmit = async () => {
         .string()
         .min(6, 'ID number must be at least 6 characters')
         .nonempty('Please enter your your Password'),
+      confirm_password: z
+      .string()
+      . nonempty('Please confirm your password')
+    })
+    .refine((data)=> data.password === data.confirm_password,{
+      message: 'passwords do not match',
+      path: ['confirm_password'],
     })
 
   // Validate the data
   const result = registrationSchema.safeParse({
     password: password.value,
+    confirm_password: confirm_password.value,
   });
 
   if (result.success) {
-    errors.value = { confirmPassword: null, password: null };
+    errors.value = { confirm_password: null, password: null };
     isLoading.value = true;
 
     try {
-      console.log('Password:', password.value, 'Confirm Password:', confirmPassword.value);
+      console.log('Password:', password.value, 'Confirm Password:', confirm_password.value);
       
       // API call
       
@@ -57,7 +69,7 @@ const handleSubmit = async () => {
       //       password: password.value,
       //   });
         
-      console.log('API Response:', response.data); // recieve a password updated successfully message
+      // console.log('API Response:', response.data); // recieve a password updated successfully message
 
       router.push({ name: 'userLogin' });
     } catch (error) {
@@ -71,7 +83,7 @@ const handleSubmit = async () => {
     // Set error messages
     errors.value = {
       password: result.error.errors.find((err) => err.path[0] === 'password')?.message || null,
-      confirmPassword: result.error.errors.find((err) => err.path[0] === 'confirmPassword')?.message || null,
+      confirm_password: result.error.errors.find((err) => err.path[0] === 'confirm_password')?.message || null,
     };
     console.log('Validation errors:', errors.value);
   }
@@ -79,103 +91,24 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <userRegistrationLayout topBartitle="Change Password">
-    <div class="flex flex-wrap items-center justify-between box-border bg-white">
-      <!-- Header Section -->
-      <div class="w-full text-center mb-4">
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#432C81]">Change Password</h2>
-      </div>
-      
-      <!-- Image Section -->
-      <div class="w-full max-w-md mx-auto mb-8">
-        <img 
-          src="@/assets/userI/group1.png" 
-          alt="People illustrations" 
-          class="w-full h-auto object-contain"
-        >
-      </div>
-
-      <!-- Form Section -->
-      <div class="w-full max-w-md mx-auto">
-        <form @submit.prevent="handleSubmit" class="flex flex-col gap-6">
-          <!-- Password Field -->
-          <div class="flex flex-col gap-1">
-            <div class="relative w-full">
-              <input 
-                v-model="password" 
-                :type="showPassword ? 'text' : 'password'"
-                id="password" 
-                placeholder="Create a passeword" 
-                class="w-full px-4 py-3 rounded-lg border border-[#EDECF4] 
-                    text-[#432C81] placeholder-[#82799D]
-                    focus:outline-none focus:ring-2 focus:ring-[#432C81]"
-              />
-              <!-- Password Toggle Button -->
-              <button 
-                type="button" 
-                @click="togglePassword"
-                class="absolute right-4 top-1/3 transform -translate-y-1/2 text-secondary"
-                aria-label="Toggle password visibility"
-              >
-                <EyeSlashIcon 
-                  v-if="showPassword" 
-                  class="h-5 w-5 text-gray-500"
-                />
-                <EyeIcon 
-                  v-else 
-                  class="h-5 w-5 text-gray-500"
-                />
-              </button>
-              <span v-if="errors.password" class="text-[#EB5858] text-sm ml-2">{{ errors.password }}</span>
-            </div>
-          </div>
-
-          <!-- Password Field -->
-          <div class="flex flex-col gap-1">
-            <div class="relative w-full">
-              <input 
-                v-model="confirmPassword" 
-                :type="showPassword ? 'text' : 'password'"
-                id="password" 
-                placeholder="Confirm your password" 
-                class="w-full px-4 py-3 rounded-lg border border-[#EDECF4] 
-                    text-[#432C81] placeholder-[#82799D]
-                    focus:outline-none focus:ring-2 focus:ring-[#432C81]"
-              />
-              <!-- Password Toggle Button -->
-              <button 
-                type="button" 
-                @click="togglePassword"
-                class="absolute right-4 top-1/3 transform text-secondary"
-                aria-label="Toggle password visibility"
-              >
-                <EyeSlashIcon 
-                  v-if="showPassword" 
-                  class="h-5 w-5 text-gray-500"
-                />
-                <EyeIcon 
-                  v-else 
-                  class="h-5 w-5 text-gray-500"
-                />
-              </button>
-              <span v-if="errors.password" class="text-[#EB5858] text-sm ml-2">{{ errors.password }}</span>
-            </div>
-          </div>
-          
-          <!-- Submit Button -->
-          <button 
-            type="submit" 
-            :disabled="isLoading"
-            class="bg-[#432C81] text-white py-3 px-6 rounded-lg font-medium hover:bg-opacity-90 transition-colors"
-          >
-            Save
-          </button>
-          
-          <!-- Loading Indicator  later use a proper animation in the login button-->
-          <div v-if="isLoading" class="text-center text-[#432C81]">Loading...</div> 
-        </form>
-      </div>
-    </div>
-  </userRegistrationLayout>
+  <registrationForm :handle-submit="handleSubmit" title="Change Password" submit-button-text="Save" :is-loading="isLoading">
+    <formInput 
+      type="password"
+      name="password"
+      id="password"
+      placeholder="Password"
+      :model-value="password"
+      @update:model-value="password = $event"
+      :error-message="errors.password"
+    />
+    <formInput 
+      type="password"
+      name="confirm_password"
+      id="confirm_password"
+      placeholder="Confirm Password"
+      :model-value="confirm_password"
+      @update:model-value="confirm_password = $event"
+      :error-message="errors.confirm_password"
+    />
+  </registrationForm>
 </template>
-

@@ -49,9 +49,9 @@ const handleSubmit = async () => {
   }
   
   if (!password.value) {
-    errors.value.password = "Please enter your ID number";
+    errors.value.password = "Please enter your Password";
   } else if (password.value.length < 6) {
-    errors.value.password = "ID number must be at least 6 characters";
+    errors.value.password = "Password must be at least 6 characters";
   } else {
     errors.value.password = null;
   }
@@ -73,9 +73,9 @@ const handleSubmit = async () => {
       //     password: password.value,
       //   });
       
-      console.log('API Response:', response.data);
+      // console.log('API Response:', response.data);
       
-      // router.push({ name: 'userUpdatePassword' });
+      router.push({ name: 'userHomePage' });
     } catch (error) {
       console.error('API Error:', error.response ? error.response.data : error.message);
       // router.push(`/user/error/${error.response ? error.response.status : '500'}`);
@@ -89,7 +89,14 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <registrationForm :handle-submit="handleSubmit" title="Login" :is-loading="isLoading">
+  <registrationForm 
+    :handle-submit="handleSubmit" 
+    title="Login" 
+    :is-loading="isLoading"
+    secondary-message_Message="First time?" 
+    secondary-message_Action="register" 
+  >
+
     <formInput 
       type="text"
       name="identifier"

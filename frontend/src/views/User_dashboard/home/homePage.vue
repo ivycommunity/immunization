@@ -1,5 +1,5 @@
 <script setup>
-    import userRegistrationLayout from '@/components/User/userRegistrationLayout.vue';
+    import userRegistrationLayout from '@/components/User/userLayout.vue';
     import homeNavButton from '@/components/User/homeNavButton.vue';
     import clinicDetailsIocn from "@/assets/userI/clinic-details.png";
     import clinicRecordsIcon from "@/assets/userI/clinic-records.png";

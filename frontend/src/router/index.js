@@ -123,19 +123,19 @@ const router = createRouter({
   ],
 })
 
-// router.beforeEach(async (to, from) => {
-//   const authStore = useAuthStore()
-//   await authStore.getUser()
+router.beforeEach(async (to, from) => {
+  const authStore = useAuthStore()
+  await authStore.getUser()
 
-//   if (authStore.user && to.meta.guest) {
-//     if (authStore.user.role === 'nurse') {
-//       return { name: 'hospital.patients' }
-//     }
-//   }
+  if (authStore.user && to.meta.guest) {
+    if (authStore.user.role === 'nurse') {
+      return { name: 'hospital.patients' }
+    }
+  }
 
-//   if (!authStore.user && to.meta.auth) {
-//     return { name: 'signin' }
-//   }
-// })
+  if (!authStore.user && to.meta.auth) {
+    return { name: 'signin' }
+  }
+})
 
 export default router

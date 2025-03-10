@@ -11,7 +11,7 @@ import FAQView from '@/views/FAQView.vue'
 import userLoginForm from "@/views/User_dashboard/registration/login.vue"
 import registrationError from "@/views/User_dashboard/registration/error.vue"
 import userWelcome from "@/views/User_dashboard/registration/welcome.vue"
-import Home from '@/views/Hospital/Patients.vue'
+import Patients from '@/views/Hospital/Patients.vue'
 import Appointments from '@/views/Hospital/Appointments.vue'
 import AddGuardian from '@/views/Hospital/AddGuardian.vue'
 import AddBaby from '@/views/Hospital/AddBaby.vue'
@@ -80,7 +80,7 @@ const router = createRouter({
     {
       path: '/hospital/patients',
       name: 'hospital.patients',
-      component: Home,
+      component: Patients,
       meta: { auth: true }
     },
     {

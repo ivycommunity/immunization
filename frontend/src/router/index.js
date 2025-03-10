@@ -3,19 +3,33 @@ import HomeView from '../views/HomeView.vue'
 import SignIn from '@/views/SignIn.vue'
 import SignUp from '@/views/SignUp.vue'
 
+import Home from '@/views/Hospital/Patients.vue'
+import Appointments from '@/views/Hospital/Appointments.vue'
+import AddGuardian from '@/views/Hospital/AddGuardian.vue'
+import AddBaby from '@/views/Hospital/AddBaby.vue'
+
 import AboutUsView from '../views/AboutUsView.vue'
 import ContactUsView from '@/views/contactUsView.vue'
 import VaccinationDetails from '@/views/vaccinationDetails.vue'
 import ClinicsView from '@/views/clinicsView.vue'
 import FAQView from '@/views/FAQView.vue'
+
 import userLoginForm from "@/views/User_dashboard/registration/login.vue"
-import registrationError from "@/views/User_dashboard/registration/error.vue"
+import userRegister from '@/views/User_dashboard/registration/register.vue'
+import userUpdatePassword from '@/views/User_dashboard/registration/updatePassword.vue'
+import useError from "@/views/User_dashboard/error/errors.vue"
+import userWelcome from "@/views/User_dashboard/registration/welcome.vue"
+import userHomePage from '@/views/User_dashboard/home/homePage.vue'
+
+import registrationError from "@/views/User_dashboard/error/errors.vue"
 import userWelcome from "@/views/User_dashboard/registration/welcome.vue"
 import Patients from '@/views/Hospital/Patients.vue'
 import Appointments from '@/views/Hospital/Appointments.vue'
 import AddGuardian from '@/views/Hospital/AddGuardian.vue'
 import AddBaby from '@/views/Hospital/AddBaby.vue'
 import { useAuthStore } from '@/stores/auth'
+import homePage from '@/views/User_dashboard/home/homePage.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -73,9 +87,34 @@ const router = createRouter({
       component: userLoginForm,
     },
     {
-      path: '/user/registrationError',
+      path: '/user/register',
+      name: 'userRegister',
+      component: userRegister,
+    },
+    {
+      path: '/user/updatePassword',
+      name: 'userUpdatePassword',
+      component: userUpdatePassword,
+    },
+    {
+      path: '/user/home',
+      name: 'userHomePage',
+      component: userHomePage,
+    },
+    {
+      path: '/user/error/:errorCode',
+      name: 'useError',
+      component: useError,
+    },
+    {
+      path: '/user/error/:errorCode',
       name: 'registrationError',
       component: registrationError,
+    },
+    {
+      path: '/user/home',
+      name: 'userhomePage',
+      component: homePage,
     },
     {
       path: '/hospital/patients',

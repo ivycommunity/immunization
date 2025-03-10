@@ -1,6 +1,7 @@
 <template>
   <userLayout>
   <div class="flex flex-wrap items-center justify-between p-6 box-border bg-white">
+  <div class="flex flex-wrap items-center justify-between h-dvh p-6 box-border bg-white">
     <!-- Header Section -->
     <div class="w-full text-center mb-4">
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#432C81]">
@@ -39,4 +40,7 @@
 
 <script setup>
 import userLayout from '@/components/User/userLayout.vue';
+
+<script setup>
+
 </script>

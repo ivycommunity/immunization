@@ -8,6 +8,7 @@ const errorCode = route.params.errorCode;
 
 const errorMessages = {
     500: {
+    412: {
         title: 'Opps! Something went wrong.',
         image: defaultErrorImage,
         action_text: 'Tap the screen to try again.',

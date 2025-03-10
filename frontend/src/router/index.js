@@ -15,6 +15,12 @@ import ClinicsView from '@/views/clinicsView.vue'
 import FAQView from '@/views/FAQView.vue'
 
 import userLoginForm from "@/views/User_dashboard/registration/login.vue"
+import userRegister from '@/views/User_dashboard/registration/register.vue'
+import userUpdatePassword from '@/views/User_dashboard/registration/updatePassword.vue'
+import useError from "@/views/User_dashboard/error/errors.vue"
+import userWelcome from "@/views/User_dashboard/registration/welcome.vue"
+import userHomePage from '@/views/User_dashboard/home/homePage.vue'
+
 import registrationError from "@/views/User_dashboard/error/errors.vue"
 import userWelcome from "@/views/User_dashboard/registration/welcome.vue"
 import Home from '@/views/Hospital/Patients.vue'
@@ -79,6 +85,26 @@ const router = createRouter({
       path: '/user/login',
       name: 'userLogin',
       component: userLoginForm,
+    },
+    {
+      path: '/user/register',
+      name: 'userRegister',
+      component: userRegister,
+    },
+    {
+      path: '/user/updatePassword',
+      name: 'userUpdatePassword',
+      component: userUpdatePassword,
+    },
+    {
+      path: '/user/home',
+      name: 'userHomePage',
+      component: userHomePage,
+    },
+    {
+      path: '/user/error/:errorCode',
+      name: 'useError',
+      component: useError,
     },
     {
       path: '/user/error/:errorCode',

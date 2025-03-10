@@ -11,7 +11,7 @@
     
         <section class="bg-[#F8F8FF] py-16 px-6">
           <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-12">The Problem & Our Solution</h2>
+            <h2 class="text-3xl font-bold text-[#121212]/80 text-center mb-12">The Problem & Our Solution</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div class="bg-[#04A699] p-8 rounded-lg">
                 <h3 class="text-2xl font-semibold mb-4">The Problem</h3>
@@ -84,16 +84,9 @@
     </LandingsLayout>
   </template>
   
-  <script>
+  <script setup>
   
-  import LandingsLayout from '@/components/landingsLayout.vue';
-
-  export default {
-    name: 'AboutUs',
-    components : {
-      LandingsLayout
-    }
-  };
+  import LandingsLayout from '@/components/landing/landingsLayout.vue';
 
   </script>
   

@@ -7,6 +7,7 @@ const route = useRoute();
 const errorCode = route.params.errorCode;
 
 const errorMessages = {
+    500: {
     412: {
         title: 'Opps! Something went wrong.',
         image: defaultErrorImage,

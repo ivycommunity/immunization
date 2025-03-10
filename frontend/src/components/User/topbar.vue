@@ -6,7 +6,10 @@
   >
     <div class="flex items-center gap-8">
       <!-- Back Arrow -->
+      <router-link v-if="backTo" to="/user" class="z-10">
+
       <router-link v-if="withBackArrow" to="/user" class="z-10">
+
         <ArrowLeftIcon class="w-6 h-6 text-[#432C81]" />
       </router-link>
 
@@ -37,6 +40,9 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  backTo: {
+    type: String,
+
   withBackArrow: {
     type: Boolean,
     default: false,

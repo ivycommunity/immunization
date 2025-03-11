@@ -12,8 +12,13 @@ class BabyController extends Controller
      */
     public function index()
     {
-        return response()->json(Baby::all());
+        $babies = Baby::with('guardian:id,first_name,last_name')->get();
+
+        return response()->json([
+            'babies' => $babies
+        ]);
     }
+
 
     /**
      * Store a newly created resource in storage.

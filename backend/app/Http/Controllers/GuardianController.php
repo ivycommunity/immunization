@@ -14,21 +14,23 @@ class GuardianController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function getGuardians()
-    {
-        $user = auth()->guard()->user();
+{
+    $user = auth()->guard()->user();
 
-        if (in_array($user->role, ['Guardian', 'Parent'])) {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
-        }
-
-        $guardians = User::whereIn('role', ['Guardian', 'Parent'])->get();
+    if (in_array($user->role, ['Guardian', 'Parent'])) {
         return response()->json([
-            'guardians' => UserResource::collection($guardians),
-            'total' => $guardians->count()
-        ]);
+            'message' => 'Unauthorized'
+        ], 401);
     }
+
+    $guardians = User::where('role', 'guardian')->get(['id', 'first_name', 'last_name']); 
+
+    return response()->json([
+        'guardians' => $guardians,
+        'total' => $guardians->count()
+    ]);
+}
+
 
     /**
      * Retrieve a single guardian

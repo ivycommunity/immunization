@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'baby_id',
         'guardian_id',
@@ -23,11 +25,11 @@ class Appointment extends Model
         return $this->belongsTo(User::class, 'guardian_id');
     }
 
+
     public function baby()
     {
         return $this->belongsTo(Baby::class);
     }
-
     public function doctor()
     {
         return $this->belongsTo(Doctor::class);
@@ -37,4 +39,5 @@ class Appointment extends Model
     {
         return $this->belongsTo(Vaccine::class);
     }
+
 }

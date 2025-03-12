@@ -118,27 +118,23 @@
   </LandingsLayout>
 </template>
 
-<script>
-import LandingsLayout from "@/components/landingsLayout.vue";
+<script setup>
+import LandingsLayout from "@/components/landing/landingsLayout.vue";
+import { ref } from "vue";
+import { onMounted } from "vue";
 
-export default {
-  name: 'Vaccinations',
-  components: {
-    LandingsLayout,
-  },
-  data() {
-    return {
-      searchQuery: '',
-      sortBy: 'name',
-      selectedVaccine: null,
-      vaccines: []
-    };
-  },
-  mounted() {
+
+      const searchQuery = ref("")
+      const sortBy = ref("")
+      const selectedVaccine = ref("")
+      const vaccines = ref([])
+      
+    onMounted(() => {
     this.fetchVaccines();
-  },
-  methods: {
-    async fetchVaccines() {
+  });
+
+  
+  async function fetchVaccines() {
       try {
         const response = await fetch("http://127.0.0.1:8000/api/vaccines", {
           headers: {
@@ -146,20 +142,20 @@ export default {
           }
         });
         const data = await response.json();
-        this.vaccines = data.vaccines;
+        vaccines.value = data.vaccines;
       } catch (error) {
         console.error("Error fetching vaccines:", error);
       }
-    },
-    openDetails(vaccine) {
+    }
+    
+    function openDetails(vaccine) {
       this.selectedVaccine = vaccine;
-    },
-    addToCalendar(vaccine) {
+    };
+    
+    function addToCalendar(vaccine) {
       alert(`Added ${vaccine.vaccine_name} to your calendar.`);
-    },
-    downloadRecord(vaccine) {
+    };
+    function downloadRecord(vaccine) {
       alert(`Downloading ${vaccine.vaccine_name} record as PDF.`);
     }
-  }
-};
 </script>

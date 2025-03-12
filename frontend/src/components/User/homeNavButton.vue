@@ -1,17 +1,14 @@
 <script setup>
-    import { defineProps } from 'vue';
-
     
     defineProps({
         title:{
-                type: String,
-                required: true
-        },
-        link:{
             type: String,
             required: true
         },
-        illustration_Icon:{
+        link:{
+            type: String,
+        },
+        illustrationIcon:{
             type: String,
             required: false
         },
@@ -32,9 +29,9 @@
                 <h3 class="text-[#432C81] text-xl sm:text-2xl text-left font-semibold">{{ title }}</h3>
             </div>
             
-            <div v-if="illustration_Icon" class="bg-transparent flex justify-center">
+            <div v-if="illustrationIcon" class="bg-transparent flex justify-center">
                 <img 
-                    :src="illustration_Icon"
+                    :src="illustrationIcon"
                     alt="icon"
                     class="w-30 h-30 object-contain"
                 />

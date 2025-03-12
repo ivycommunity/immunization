@@ -23,7 +23,7 @@ class AppointmentFactory extends Factory
             'vaccine_id' => $this->faker->numberBetween(1, 5),
             'doctor_id' => $this->faker->numberBetween(1, 5),
             'appointment_date' => Carbon::now()->addDays($this->faker->numberBetween(1, 30)),
-            'status' => $this->faker->randomElement(['scheduled', 'confirmed', 'completed', 'cancelled']),
+            'status' => $this->faker->randomElement(['scheduled', 'completed', 'completed', 'cancelled']),
             'reminder_sent' => $this->faker->boolean(),
             'notes' => $this->faker->sentence(),
             'created_at' => Carbon::now(),

@@ -7,4 +7,3 @@ Route::get('/', function () {
     return view('welcome');
 }); 
 
-Route::get('/sendsms', [SmsController::class,'sendsms']);

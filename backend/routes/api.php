@@ -49,4 +49,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/vaccines/{id}', [VaccineController::class, 'deleteVaccine']);
 });
 
-Route::get('/sendsms', [SmsController::class,'sendsms']);
+Route::post('/send-reminders', [SmsController::class, 'sendAppointmentReminders']);

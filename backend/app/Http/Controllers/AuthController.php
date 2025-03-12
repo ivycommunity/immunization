@@ -19,9 +19,9 @@ class AuthController extends Controller
         $user = auth()->guard()->user();
 
         if (!$user || !in_array($user->role, ['admin', 'nurse'])) {
-            return [
-                'message' => 'Unauthorized',
-            ];
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 403);
         }
 
         $fields = $request->validate([
@@ -67,11 +67,11 @@ class AuthController extends Controller
 
         $token = $user->createToken($fields['first_name']);
 
-        return [
+        return response()->json([
             'message' => 'User registered successfully',
-            'user' => (new UserResource($user))->toArray($request),
-            'token'=> $token->plainTextToken,
-        ];
+            'user' => new UserResource($user),
+            'token' => $token->plainTextToken,
+        ], 201);
     }
 
     /**
@@ -103,20 +103,20 @@ class AuthController extends Controller
         }
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return [
+            return response()->json([
                 'errors' => [
                     'email_or_phone_number' => ['The provided credentials are incorrect.']
                 ],
-            ];
+            ], 401);
         }
 
         $token = $user->createToken($user->first_name);
 
-        return [
-            'message'=> 'Logged in successfully',
-            'user' => (new UserResource($user))->toArray($request),
-            'token'=> $token->plainTextToken,
-        ];
+        return response()->json([
+            'message' => 'Logged in successfully',
+            'user' => new UserResource($user),
+            'token' => $token->plainTextToken,
+        ], 200);
     }
 
     
@@ -130,8 +130,8 @@ class AuthController extends Controller
     {
         $request->user()->tokens()->delete();
 
-        return [
+        return response()->json([
             'message' => 'You are logged out.',
-        ];
+        ], 200);
     }
 }

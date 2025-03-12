@@ -74,7 +74,6 @@ const showPassword = ref(false);
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
-
 </script>
 
 <style scoped>

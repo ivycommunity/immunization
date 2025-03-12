@@ -1,6 +1,4 @@
 <template>
-  <userLayout>
-  <div class="flex flex-wrap items-center justify-between p-6 box-border bg-white">
   <div class="flex flex-wrap items-center justify-between h-dvh p-6 box-border bg-white">
     <!-- Header Section -->
     <div class="w-full text-center mb-4">
@@ -20,26 +18,24 @@
         class="w-full h-auto object-contain"
       >
     </div>
-    
+
     <!-- Buttons Section -->
     <div class="w-full flex flex-col gap-6 max-w-md mx-auto">
       <router-link
-        to="/user/login"
+        to="/user/signin" 
         class="bg-[#432C81] text-center text-white py-3 px-6 rounded-lg font-medium hover:bg-opacity-90 transition-colors"
       >
-        Get Started
+        Sign In
       </router-link>
-      <!-- Sign Up Link -->
-      <div class="text-center text-[#82799D]">
-        First time? <a href="/user/register" class="text-[#432C81] font-medium">Register</a>
-      </div>
+      <router-link 
+        to="/user/login"
+        class="text-[#432C81] text-center border border-[#432C81] bg-white py-3 px-6 rounded-lg font-medium hover:bg-opacity-90 transition-colors"
+      >
+        LogIn
+      </router-link>
     </div>
   </div>
-</userLayout>
 </template>
-
-<script setup>
-import userLayout from '@/components/User/userLayout.vue';
 
 <script setup>
 

@@ -13,7 +13,6 @@ class SmsController extends Controller
 {
     /**
      * Summary of sendAppointmentReminders
-     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function sendAppointmentReminders() {
         if (!env("TWILIO_SID") || !env("TWILIO_TOKEN") || !env("TWILIO_PHONE")) {
@@ -26,15 +25,16 @@ class SmsController extends Controller
         
         $today = Carbon::now()->format('Y-m-d');
         
-        // Fetch upcoming appointments within 5 days
+        // Fetch upcoming appointments within 5 days that haven't had a reminder today
         $appointments = Appointment::where('appointment_date', '>=', Carbon::now())
             ->where('appointment_date', '<=', Carbon::now()->addDays(5))
-            ->where('status', 'Scheduled') 
+            ->where('status', 'Scheduled')
+            ->where('reminder_sent', false) 
             ->get();
         
         if ($appointments->isEmpty()) {
             return response()->json([
-                "message" => "No upcoming appointments within the next 5 days."
+                "message" => "No upcoming appointments that need reminders today."
             ], 200);
         }
         
@@ -45,19 +45,6 @@ class SmsController extends Controller
         
         try {
             foreach ($appointments as $appointment) {
-                $daysUntilAppointment = ceil(Carbon::now()->floatDiffInDays(Carbon::parse($appointment->appointment_date)));
-                
-                $lastReminderDate = Carbon::parse($appointment->updated_at)->format('Y-m-d');
-                if ($lastReminderDate == $today && $appointment->reminder_sent) {
-                    continue;
-                }
-                
-                $shouldSendReminder = in_array($daysUntilAppointment, [5, 3, 1, 0]);
-                
-                if (!$shouldSendReminder) {
-                    continue;
-                }
-    
                 $guardian = User::find($appointment->guardian_id);
                 
                 if (!$guardian || !$guardian->phone_number) {
@@ -65,6 +52,8 @@ class SmsController extends Controller
                 }
                 
                 $guardianFullName = $guardian->first_name . " " . $guardian->last_name;
+                
+                $daysUntilAppointment = ceil(Carbon::now()->floatDiffInDays(Carbon::parse($appointment->appointment_date)));
                 
                 if ($daysUntilAppointment == 0) {
                     $timeContext = "today";
@@ -86,7 +75,6 @@ class SmsController extends Controller
                             "from" => env("TWILIO_PHONE")
                         ]
                     );
-                    
                     
                     $appointment->reminder_sent = true;
                     $appointment->reminder_count = $appointment->reminder_count + 1;

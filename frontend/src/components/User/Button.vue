@@ -43,7 +43,7 @@ const buttonClass = computed(() => {
     props.variant === "secondary"
       ? "text-[#432C81] text-center border border-[#432C81] bg-white"
       : "bg-[#432C81] text-center text-white";
-  return ${variantClass} ${props.class};
+  return `${variantClass} ${props.class}`;
 });
 </script>
 

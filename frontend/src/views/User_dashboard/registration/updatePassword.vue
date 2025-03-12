@@ -19,22 +19,13 @@ const isLoading = ref(false);
 
 const router = useRouter();
 
-// watch([password, confirm_password], ()=>{
-//   if(confirm_password.value && password.value !== confirm_password.value){
-//     errors.confirm_password = "Passwords do not match";
-//   }
-//   else{
-//     errors.value.confirm_password = null;
-//   }
-// })
-
 const handleSubmit = async () => {
   // Define the Zod schema
   const registrationSchema = z
     .object({
       password: z
         .string()
-        .min(6, 'ID number must be at least 6 characters')
+        .min(6, 'Password must be at least 6 characters')
         .nonempty('Please enter your your Password'),
       confirm_password: z
       .string()

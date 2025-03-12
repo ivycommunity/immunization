@@ -7,6 +7,7 @@ use App\Http\Controllers\GuardianController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentsController;
 use App\Http\Controllers\VaccineController;
+use App\Http\Controllers\SmsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
@@ -14,7 +15,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-Route::post('/register', [AuthController::class,'register']);
+Route::post('/register', [AuthController::class,'register'])->middleware('auth:sanctum');
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
 
@@ -48,3 +49,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/vaccines/{id}', [VaccineController::class, 'deleteVaccine']);
 });
 
+Route::post('/send-reminders', [SmsController::class, 'sendAppointmentReminders']);

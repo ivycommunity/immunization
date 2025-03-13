@@ -23,6 +23,7 @@ import AddGuardian from '@/views/Hospital/AddGuardian.vue'
 import AddBaby from '@/views/Hospital/AddBaby.vue'
 import { useAuthStore } from '@/stores/auth'
 import homePage from '@/views/User_dashboard/home/homePage.vue'
+import userProfile from "@/views/User_dashboard/settings/profile.vue";
 
 
 const router = createRouter({
@@ -96,6 +97,11 @@ const router = createRouter({
       component: userHomePage,
     },
     {
+      path: '/user/profile',
+      name: 'userProfile',
+      component: userProfile,
+    },
+    {
       path: '/user/error/:errorCode',
       name: 'useError',
       component: useError,
@@ -143,19 +149,19 @@ const router = createRouter({
   when I try to access the user page
 */
 
-router.beforeEach(async (to, from) => {
-  const authStore = useAuthStore()
-  await authStore.getUser()
+// router.beforeEach(async (to, from) => {
+//   const authStore = useAuthStore()
+//   await authStore.getUser()
 
-  if (authStore.user && to.meta.guest) {
-    if (authStore.user.role === 'nurse') {
-      return { name: 'hospital.patients' }
-    }
-  }
+//   if (authStore.user && to.meta.guest) {
+//     if (authStore.user.role === 'nurse') {
+//       return { name: 'hospital.patients' }
+//     }
+//   }
 
-  if (!authStore.user && to.meta.auth) {
-    return { name: 'signin' }
-  }
-})
+//   if (!authStore.user && to.meta.auth) {
+//     return { name: 'signin' }
+//   }
+// })
 
 export default router

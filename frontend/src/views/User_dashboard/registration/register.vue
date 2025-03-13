@@ -4,6 +4,9 @@ import FormInput from '@/components/User/formInput.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import userStore from '@/stores/userStore';
+
+const store = userStore();
 
 const identifier = ref('');
 const email = ref('');
@@ -73,7 +76,13 @@ const handleSubmit = async () => {
       //     password: password.value,
       //   });
       
-      // console.log('API Response:', response.data);
+      const user = await store.login({
+        email : email.value,
+        phone_number : phone_number.value,
+        password : password.value
+      })
+      
+      console.log('API Response:', user);
       
       router.push({ name: 'userUpdatePassword' });
     } catch (error) {

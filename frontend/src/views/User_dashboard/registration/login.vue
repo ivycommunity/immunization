@@ -4,6 +4,9 @@ import FormInput from '@/components/User/formInput.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import userStore from '@/stores/userStore';
+
+const store = userStore();
 
 const identifier = ref('');
 const email = ref('');
@@ -62,18 +65,24 @@ const handleSubmit = async () => {
     try {
       console.log('Email:', email.value, 'Phone:', phone_number.value, 'Password:', password.value);
       
-      const response = await axios
-        .create({
-          baseURL:'/api',
-          withCredentials: true,
-        })
-        .post('/login', {
-          email: email.value || null,
-          phone_number: phone_number.value || null,
-          password: password.value,
-        });
+      // const response = await axios
+      //   .create({
+      //     baseURL:'/api',
+      //     withCredentials: true,
+      //   })
+      //   .post('/login', {
+      //     email: email.value || null,
+      //     phone_number: phone_number.value || null,
+      //     password: password.value,
+      //   });
+
+      const user = await store.login({
+        email : email.value,
+        phone_number : phone_number.value,
+        password : password.value
+      })
       
-      // console.log('API Response:', response.data);
+      console.log('API Response:', user);
       
       router.push({ name: 'userHomePage' });
     } catch (error) {

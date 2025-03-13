@@ -32,8 +32,7 @@ export const useBabiesStore = defineStore('babies', {
         return this.allBabies;
       } catch (error) {
         this.setError(error.message || 'Failed to fetch babies');
-        this.error = error;
-        return Promise.reject(error);
+        throw error;
       } finally {
         this.setLoading(false);
       }
@@ -58,8 +57,7 @@ export const useBabiesStore = defineStore('babies', {
         return baby;
       } catch (error) {
         this.setError(error.message || `Failed to fetch baby with ID ${id}`);
-        this.error = error;
-        return Promise.reject(error);
+        throw error;
       } finally {
         this.setLoading(false);
       }
@@ -84,8 +82,7 @@ export const useBabiesStore = defineStore('babies', {
         return babies;
       } catch (error) {
         this.setError(error.message || `Failed to fetch baby with ID ${id}`);
-        this.error = error;
-        return Promise.reject(error);
+        throw error;
       } finally {
         this.setLoading(false);
       }
@@ -103,8 +100,7 @@ export const useBabiesStore = defineStore('babies', {
         return newBaby;
       } catch (error) {
         this.setError(error.message || 'Failed to create baby');
-        this.error = error;
-        return Promise.reject(error);
+        throw error;
       } finally {
         this.setLoading(false);
       }
@@ -133,8 +129,7 @@ export const useBabiesStore = defineStore('babies', {
         return updatedBaby;
       } catch (error) {
         this.setError(error.message || `Failed to update baby with ID ${id}`);
-        this.error = error;
-        return Promise.reject(error);
+        throw error;
       } finally {
         this.setLoading(false);
       }
@@ -160,8 +155,7 @@ export const useBabiesStore = defineStore('babies', {
         return true;
       } catch (error) {
         this.setError(error.message || `Failed to delete baby with ID ${id}`);
-        this.error = error;
-        return Promise.reject(error);
+        throw error;
       } finally {
         this.setLoading(false);
       }

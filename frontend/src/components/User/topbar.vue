@@ -15,12 +15,24 @@
     </div>
 
     <!-- Avatar Section -->
-    <div v-if="username && username.trim()!==''" class="flex items-center gap-4">
-      <img
-        :src="user.avatar"
-        alt="User Avatar"
-        class="w-10 h-10 rounded-full border-2 border-[#432C81]"
-      />
+    <div v-if="user" 
+      class="flex rounded-full items-center gap-4"
+      @click="$router.push('/user/profile')"
+    >
+      <div v-if="user.avatar" class="w-10 h-10">
+        <img
+          :src="user.avatar"
+          alt="User Avatar"
+          class="w-full h-full rounded-full border-2 border-[#432C81]"
+        />
+      </div>
+      <div
+        v-else
+        class="w-10 h-10 flex items-center justify-center rounded-full text-white font-bold border-2 border-[#432C81]"
+        :style="{ backgroundColor: randomDarkColor }"
+      >
+        {{ user.first_name.charAt(0).toUpperCase() }}
+      </div>
     </div>
   </nav>
 </template>
@@ -40,14 +52,14 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  username: {
-    type: String,
+  user: {
+    type: Object,
     default: null,
   },
 });
 
 // Compute title dynamically
-const dynamicTitle = computed(() => (props.username ? `👋🏻 Hi, ${props.username}` : props.title));
+const dynamicTitle = computed(() => (props.user ? `👋🏻 Hi, ${props.user.first_name}` : props.title));
 
 
 // // Reactive state
@@ -91,4 +103,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
 });
+
+const randomDarkColor = computed(() => {
+  const colors = ["#1D1B31", "#2C2A4A", "#3D3B60", "#25233D", "#282846"]; // Add more dark colors
+  return colors[Math.floor(Math.random() * colors.length)];
+});
+
 </script>

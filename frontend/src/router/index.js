@@ -137,6 +137,12 @@ const router = createRouter({
   ],
 })
 
+/* 
+  Please could you explain the reason for this code? 
+  On my  end, it is making a request to api/user 
+  when I try to access the user page
+*/
+
 router.beforeEach(async (to, from) => {
   const authStore = useAuthStore()
   await authStore.getUser()

@@ -1,13 +1,26 @@
 <script setup>
-    import userRegistrationLayout from '@/components/User/userLayout.vue';
+    import Layout from '@/components/User/userLayout.vue';
     import homeNavButton from '@/components/User/homeNavButton.vue';
     import clinicDetailsIocn from "@/assets/userI/clinic-details.png";
     import clinicRecordsIcon from "@/assets/userI/clinic-records.png";
     import vaccinationIcon from "@/assets/userI/vaccination.png";
+    
+    import userStore from '@/stores/userStore';
+
+    let USER = {};
+    
+    const store = userStore();
+    
+    if (store.isAuthenticated){
+        USER = JSON.parse(localStorage.getItem('user_data') || "{}");
+        console.log("the user in home page", USER);
+    }
+        
+
 </script>
 
 <template>
-    <userRegistrationLayout topBartitle="👋🏻 Hi Julia!" topBarMove="false" topBarWithBackArrow="false">
+    <Layout :user-data="{ first_name: USER.first_name, avatar: null }" topBarMove="false" topBarWithBackArrow="false">
         <div class="mb-4 flex flex-col gap-4 w-full items-center justify-center">
             <homeNavButton
                 title="Child Details"
@@ -26,18 +39,18 @@
             />
         </div>
 
-        <div class="flex gap-4 flex-grow">
+        <div class="flex gap-4 flex-grow flex-wrap md:flex-nowrap">
             <homeNavButton
                 title="Why the OPV vaccine is important for your child"
                 link="/user/view-records"
-                className = "aspect-square lg:max-h-[100px] text-xs sm:text-sm md:text-base"
+                className = "aspect-square max-h-[100px] text-xs sm:text-sm md:text-base"
             />
             <homeNavButton
                 title="Tetanus Prevention measures"
                 link="/user/view-records"
-                className = "aspect-square lg:max-h-[100px] text-xs sm:text-sm md:text-base"
+                className = "aspect-square max-h-[100px] text-xs sm:text-sm md:text-base "
             />
         </div>
         
-    </userRegistrationLayout>
+    </Layout>
 </template>

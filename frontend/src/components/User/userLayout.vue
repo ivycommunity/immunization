@@ -8,6 +8,10 @@ const props = defineProps({
     type: String,
     default: 'IVY Immunization',
   },
+  userData: {
+    type: Object,
+    default: () => ({ first_name: '', avatar: null })
+  },
   topBarMove: {
     type: [Boolean, String], // Accept both Boolean and String (from parent)
     default: true,
@@ -17,9 +21,11 @@ const props = defineProps({
   },
   className: {
     type: String,
-    default: "mt-[10%]"
+    default: ""
   }
 });
+
+console.log('Layout received user:', props.userData);
 
 // Ensure boolean conversion (if parent passes as string)
 const move = computed(() => props.topBarMove === true || props.topBarMove === 'true');
@@ -27,10 +33,12 @@ const move = computed(() => props.topBarMove === true || props.topBarMove === 't
 
 <template>
   <div class="default-layout">
-    <Topbar :title="topBartitle" :move="move" :back-to="bactTo" />
+    <Topbar :title="topBartitle" :user="userData" :move="move" :back-to="bactTo" />
     <main :class="`
           w-full 
-          mx-auto 
+          mx-auto
+          mt-[44px]
+          pt-[8%]
           px-4
           sm:max-w-[475px]
           sm:px-6

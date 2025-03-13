@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
+const TOKEN = localStorage.getItem('user_token') || "";
+const USER = JSON.parse(localStorage.getItem('user_data') || "{}");
+
 const API = axios.create({
     baseURL: '/api',
     withCredentials: true,
@@ -8,10 +11,10 @@ const API = axios.create({
 
 export default defineStore('user', {
     state: () => ({
-        token: "",
-        user: {},
+        token: TOKEN,
+        user: USER,
         errors:{},
-        isAuthenticated: false
+        isAuthenticated: !!TOKEN,
     }),
     actions: {
         async login({ email = null, phone_number = null, password }) {
@@ -27,6 +30,9 @@ export default defineStore('user', {
                 this.token = token;
                 this.user = user;
                 this.isAuthenticated = true;
+
+                localStorage.setItem('user_token', token);
+                localStorage.setItem('user_data', JSON.stringify(user));
                 
                 return user;
 
@@ -54,6 +60,8 @@ export default defineStore('user', {
             
             try {
                 await API.post('/logout');
+                localStorage.removeItem('user_token');
+                localStorage.removeItem('user_data');
             } catch (error) {
                 console.error('Logout failed:', error);
                 return Promise.reject(error);
@@ -69,5 +77,4 @@ export default defineStore('user', {
         },
         isLoggedIn: (state) => state.isAuthenticated
     },
-    persist: true, // Enable persistence with pinia-plugin-persistedstate
 });

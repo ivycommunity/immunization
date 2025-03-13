@@ -31,7 +31,6 @@ export default defineStore('user', {
                 return user;
 
             } catch (error) {
-                console.error('Authentication failed:', error);
                 return Promise.reject(error);
             }
         },

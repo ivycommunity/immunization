@@ -41,16 +41,16 @@ export default class AppointmentsService {
     }
   }
   
-  // Create a new appointment
-  async createAppointment(appointmentData) {
-    try {
-      const response = await this.api.post('/appointments', appointmentData);
-      return response.data;
-    } catch (error) {
-      console.error('Error creating appointment:', error);
-      throw error;
-    }
-  }
+  // // Create a new appointment
+  // async createAppointment(appointmentData) {
+  //   try {
+  //     const response = await this.api.post('/appointments', appointmentData);
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error('Error creating appointment:', error);
+  //     throw error;
+  //   }
+  // }
   
   // Update an appointment
   async updateAppointment(id, appointmentData) {
@@ -85,16 +85,16 @@ export default class AppointmentsService {
     }
   }
   
-  // Get appointments for a specific guardian
-  async getAppointmentsByGuardian(guardianId) {
-    try {
-      const allAppointments = await this.getAllAppointments();
-      return allAppointments.filter(appointment => appointment.guardian.id === guardianId);
-    } catch (error) {
-      console.error(`Error fetching appointments for guardian ${guardianId}:`, error);
-      throw error;
-    }
-  }
+  // // Get appointments for a specific guardian
+  // async getAppointmentsByGuardian(guardianId) {
+  //   try {
+  //     const allAppointments = await this.getAllAppointments();
+  //     return allAppointments.filter(appointment => appointment.guardian.id === guardianId);
+  //   } catch (error) {
+  //     console.error(`Error fetching appointments for guardian ${guardianId}:`, error);
+  //     throw error;
+  //   }
+  // }
   
   // Get appointments for a specific doctor
   async getAppointmentsByDoctor(doctorId) {

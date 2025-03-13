@@ -54,7 +54,8 @@ export const useAppointmentsStore = defineStore('appointments', {
         return this.allAppointments;
       } catch (error) {
         this.setError(error.message || 'Failed to fetch appointments');
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -79,7 +80,8 @@ export const useAppointmentsStore = defineStore('appointments', {
         return appointment;
       } catch (error) {
         this.setError(error.message || `Failed to fetch appointment with ID ${id}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -97,7 +99,8 @@ export const useAppointmentsStore = defineStore('appointments', {
         return newAppointment;
       } catch (error) {
         this.setError(error.message || 'Failed to create appointment');
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -126,7 +129,8 @@ export const useAppointmentsStore = defineStore('appointments', {
         return updatedAppointment;
       } catch (error) {
         this.setError(error.message || `Failed to update appointment with ID ${id}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -152,7 +156,8 @@ export const useAppointmentsStore = defineStore('appointments', {
         return true;
       } catch (error) {
         this.setError(error.message || `Failed to delete appointment with ID ${id}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -171,7 +176,8 @@ export const useAppointmentsStore = defineStore('appointments', {
         return appointments;
       } catch (error) {
         this.setError(error.message || `Failed to fetch appointments for baby with ID ${babyId}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -189,7 +195,8 @@ export const useAppointmentsStore = defineStore('appointments', {
         return appointments;
       } catch (error) {
         this.setError(error.message || `Failed to fetch appointments for guardian with ID ${guardianId}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -207,7 +214,8 @@ export const useAppointmentsStore = defineStore('appointments', {
         return appointments;
       } catch (error) {
         this.setError(error.message || `Failed to fetch appointments for doctor with ID ${doctorId}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -225,7 +233,8 @@ export const useAppointmentsStore = defineStore('appointments', {
         return appointments;
       } catch (error) {
         this.setError(error.message || `Failed to fetch appointments for date ${date}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -243,7 +252,8 @@ export const useAppointmentsStore = defineStore('appointments', {
         return appointments;
       } catch (error) {
         this.setError(error.message || `Failed to fetch appointments with status ${status}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }

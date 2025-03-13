@@ -4,6 +4,7 @@ import BabiesService from '@/services/BabiesService';
 export const useBabiesStore = defineStore('babies', {
   state: () => ({
     allBabies: [],
+    allGuardianBabies: [],
     currentBaby: null,
     loading: false,
     error: null
@@ -31,7 +32,8 @@ export const useBabiesStore = defineStore('babies', {
         return this.allBabies;
       } catch (error) {
         this.setError(error.message || 'Failed to fetch babies');
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -56,32 +58,34 @@ export const useBabiesStore = defineStore('babies', {
         return baby;
       } catch (error) {
         this.setError(error.message || `Failed to fetch baby with ID ${id}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
     },
     
     // Fetch a specific baby by guardian_ID
-    async fetchBabyByGuardian(guardian_ID) {
+    async fetchBabyByGuardian(guardian_id) {
       const babyService = new BabiesService();
       this.setLoading(true);
       this.error = null;
       
       try {
-        const baby = await babyService.getBabyByGuardian(guardian_ID);
-        this.currentBaby = baby;
+        const babies = await babyService.getBabyByGuardian(guardian_id);
+        this.allGuardianBabies = babies; // because it returns an array of all the babies since one guardian can have more than one babies.
         
-        // Also update this baby in the allBabies array if it exists there
-        const index = this.allBabies.findIndex(b => b.id === id);
-        if (index !== -1) {
-          this.allBabies[index] = baby;
-        }
+        // // Also update this babies in the allBabies array if it exists there
+        // const index = this.allBabies.findIndex(b => b.guardian_id === guardian_id);
+        // if (index !== -1) {
+        //   this.allBabies[index] = babies;
+        // }
         
-        return baby;
+        return babies;
       } catch (error) {
         this.setError(error.message || `Failed to fetch baby with ID ${id}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -99,7 +103,8 @@ export const useBabiesStore = defineStore('babies', {
         return newBaby;
       } catch (error) {
         this.setError(error.message || 'Failed to create baby');
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -128,7 +133,8 @@ export const useBabiesStore = defineStore('babies', {
         return updatedBaby;
       } catch (error) {
         this.setError(error.message || `Failed to update baby with ID ${id}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }
@@ -154,7 +160,8 @@ export const useBabiesStore = defineStore('babies', {
         return true;
       } catch (error) {
         this.setError(error.message || `Failed to delete baby with ID ${id}`);
-        throw error;
+        this.error = error;
+        return Promise.reject(error);
       } finally {
         this.setLoading(false);
       }

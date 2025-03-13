@@ -103,7 +103,8 @@ const handleSubmit = async () => {
     title="Register" 
     :is-loading="isLoading"
     secondary-message_Message="Aldready have an account?" 
-    secondary-message_Action="login" 
+    secondary-message_Action="login"
+    top-bar-back-to = "/user"
   >
     <formInput 
       type="text"

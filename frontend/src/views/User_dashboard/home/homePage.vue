@@ -29,7 +29,7 @@
             />
             <homeNavButton
                 title="Vaccination Records"
-                link="/user/view-records"
+                link="/user/reccords/vaccination"
                 :illustration-icon= "clinicRecordsIcon"
             />
             <homeNavButton

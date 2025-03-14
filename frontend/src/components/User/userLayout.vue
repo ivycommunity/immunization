@@ -34,7 +34,7 @@ console.log('Layout received user:', props.userData);
 // Ensure boolean conversion (if parent passes as string)
 const move = computed(() => props.topBarMove === true || props.topBarMove === 'true');
 </script>
-
+<!-- ${props.withBottomBar ? 'pb-16 ' : 'overflow-y-auto scrollbar-hide'} -->
 <template>
   <div class="default-layout relative h-screen flex flex-col">
     <Topbar :title="topBartitle" :user="userData" :move="move" :back-to="bactTo" class="fixed top-0 left-0 w-full z-10" />
@@ -43,7 +43,8 @@ const move = computed(() => props.topBarMove === true || props.topBarMove === 't
           w-full 
           mx-auto
           mt-[44px]
-          pt-[8%]
+          md:mt-0
+          md:pt-[8%]
           px-4
           sm:max-w-[475px]
           sm:px-6
@@ -52,9 +53,7 @@ const move = computed(() => props.topBarMove === true || props.topBarMove === 't
           xl:max-w-6xl 
           2xl:max-w-7xl 
           flex-1
-          overflow-y-auto
-          scrollbar-hide
-          ${props.withBottomBar ? 'pb-16' : ''}
+          ${props.withBottomBar ? 'pb-16 overflow-y-auto scrollbar-hide' : ''}
           ${className}`"
       >
       <slot></slot>
@@ -67,8 +66,8 @@ const move = computed(() => props.topBarMove === true || props.topBarMove === 't
 .default-layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+  height: 100svh;
+
 }
 
 .scrollbar-hide {

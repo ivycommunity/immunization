@@ -24,6 +24,7 @@ import AddBaby from '@/views/Hospital/AddBaby.vue'
 import { useAuthStore } from '@/stores/auth'
 import homePage from '@/views/User_dashboard/home/homePage.vue'
 import userProfile from "@/views/User_dashboard/settings/profile.vue";
+import vaccineRecord from '@/views/User_dashboard/home/vaccineRecordPage.vue'
 
 
 const router = createRouter({
@@ -95,6 +96,11 @@ const router = createRouter({
       path: '/user/home',
       name: 'userHomePage',
       component: userHomePage,
+    },
+    {
+      path: '/user/reccords/vaccination',
+      name: 'vaccineRecord',
+      component: vaccineRecord,
     },
     {
       path: '/user/profile',

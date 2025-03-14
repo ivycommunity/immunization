@@ -10,11 +10,9 @@ const props = defineProps({
     },
     clinic : {
         type : String,
-        required: true
     },
     vaccineType : {
         type : String,
-        required: true
     }
 })
 </script>

@@ -3,10 +3,10 @@
     :type="type"
     :disabled="isLoading"
     :class="buttonClass"
-    class="w-full hover:cursor-pointer py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+    class="w-full flex items-center hover:cursor-pointer py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
   >
-    <span v-if="isLoading" class="loader"></span>
-    <span v-if="!isLoading">{{ text }}</span>
+    <span v-if="isLoading" :class="`loader border-3 ${props.variant !== 'secondary' ? 'border-white': 'border-[#432C81]' }`"></span>
+    <span>{{ text }}</span>
   </button>
 </template>
 
@@ -52,7 +52,6 @@ const buttonClass = computed(() => {
 .loader {
   width: 20px;
   height: 20px;
-  border: 3px solid #fff;
   border-top: 3px solid transparent;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;

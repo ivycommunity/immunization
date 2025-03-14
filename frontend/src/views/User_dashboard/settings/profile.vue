@@ -6,41 +6,38 @@
     import {default as LogoutButton} from '@/components/User/Button.vue';
 
     import userStore from '@/stores/userStore';
-    import { ref } from 'vue';
     import { useRouter } from 'vue-router';
-
-    let { first_name, last_name, email, phone_number} = {first_name: "", last_name: "", email: "", phone_number: ""};
+    import { ref, computed } from 'vue';
     
     const store = userStore();
-    const router = useRouter();
-    
-    if (store.isAuthenticated){
-        ({ first_name, last_name, email, phone_number} = JSON.parse(localStorage.getItem('user_data') || "{}"));
-        
-        console.log("the user in home page");
+    const router = useRouter()
+
+    const userData = ref({ first_name: "", last_name: "", email: "", phone_number: "" });
+
+    if (store.isAuthenticated) {
+        userData.value = JSON.parse(localStorage.getItem('user_data') || "{}");
     }
 
-    const userFullName = first_name.concat(" ").concat(last_name);
-    const userEmail = email;
-    const userPhone_number = phone_number;
-
+    const userFullName = computed(() => userData.value.first_name + " " + userData.value.last_name);
+    const userEmail = computed(() => userData.value.email);
+    const userPhone_number = computed(() => userData.value.phone_number);
+    
     const isLoading = ref(false);
 
     const handleLogout = async () => {
-        try{
-            isLoading.value = true;
+        isLoading.value = true;
+        console.log("is loading is on -> value : ", isLoading.value);
+        try {
+            await new Promise(resolve => setTimeout(resolve, 5000));
             await store.logout();
-            router.push({name : "userWelcome",});
-        }
-        catch(error){
-            isLoading.value = false;
+            router.push({ name: "userWelcome" });
+        } catch (error) {
             router.push(`/user/error/${error.response ? error.response.status : '415'}`);
-        }
-        finally{
+        } finally {
             isLoading.value = false;
+            console.log("is loading is off -> value : ", isLoading);
         }
-
-    }
+    };
 </script>
 
 <template>
@@ -49,8 +46,8 @@
         topBarMove="false"
         :with-bottom-bar ="true"
     >
-        <profileComponent :user-full-name = "userFullName" :user-email = "userEmail" :is-loading="isLoading" :user-phone="userPhone_number" />
+        <profileComponent :user-full-name = "userFullName" :user-email = "userEmail" :user-phone="userPhone_number" />
         <settingsMenu/>
-        <LogoutButton @click="handleLogout"  text="Logout" variant="secondary" class="hover:bg-[#F8F4F8]"/>
+        <LogoutButton @click="handleLogout"  text="Logout" :is-loading="isLoading" variant="secondary" class="hover:bg-[#F8F4F8]"/>
     </userLayout>
 </template>

@@ -87,7 +87,7 @@ const handleSubmit = async () => {
       router.push({ name: 'userHomePage' });
     } catch (error) {
       console.error('API Error:', error.response ? error.response.data : error.message);
-      // router.push(`/user/error/${error.response ? error.response.status : '500'}`);
+      router.push(`/user/error/${error.response ? error.response.status : '500'}`);
     } finally {
       isLoading.value = false;
     }

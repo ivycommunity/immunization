@@ -3,7 +3,7 @@
     :type="type"
     :disabled="isLoading"
     :class="buttonClass"
-    class="py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+    class="w-full hover:cursor-pointer py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
   >
     <span v-if="isLoading" class="loader"></span>
     <span v-if="!isLoading">{{ text }}</span>

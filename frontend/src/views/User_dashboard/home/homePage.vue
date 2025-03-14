@@ -20,7 +20,7 @@
 </script>
 
 <template>
-    <Layout :user-data="{ first_name: first_name, avatar: null }" topBarMove="false">
+    <Layout :user-data="{ first_name: first_name, avatar: null }" :topBarMove="false" :with-bottom-bar ="true" >
         <div class="mb-4 flex flex-col gap-4 w-full items-center justify-center">
             <homeNavButton
                 title="Child Details"

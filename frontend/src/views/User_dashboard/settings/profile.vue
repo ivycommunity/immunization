@@ -25,6 +25,7 @@
     <userLayout
         topBartitle="Settings"
         topBarMove="false"
+        :with-bottom-bar ="true"
     >
         <profileComponent :user-full-name = "userFullName" :user-email = "userEmail" :user-phone="userPhone_number" />
         <settingsMenu/>

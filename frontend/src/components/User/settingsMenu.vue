@@ -44,16 +44,16 @@
 </script>
 
 <template>
-    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <div class="w-full mx-auto">
       <nav class="py-2">
         <ul class="space-y-1">
           <li v-for="(item, index) in menuItems" :key="index">
             <a 
-              href="#" 
-              class="flex items-center px-4 py-3 text-purple-800 hover:bg-purple-50 transition-colors duration-200"
+              :href="item.to.concat(item.label.toLowerCase())"
+              class="flex items-center px-4 py-3 text-[#56428F] hover:bg-[#F8F4F8] transition-colors duration-200"
             >
-              <component :is="item.icon" class="h-5 w-5 text-purple-400 mr-3" aria-hidden="true" />
-              <span class="text-base font-medium">{{ item.label }}</span>
+              <component :is="item.icon" class="h-5 w-5 text-[#56428F]/60 mr-3" aria-hidden="true" />
+              <span class="font-medium">{{ item.label }}</span>
               <ChevronRightIcon class="h-5 w-5 text-gray-400 ml-auto" aria-hidden="true" />
             </a>
           </li>

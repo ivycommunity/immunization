@@ -11,11 +11,12 @@
       </router-link>
 
       <!-- Dynamic Title -->
-      <h2 class="text-2xl font-bold text-[#432C81] md:text-3xl xl:text-4xl">{{ dynamicTitle }}</h2>
+      <h2 v-if="!!title" class="text-2xl font-bold text-[#432C81] md:text-3xl xl:text-4xl">{{ title }}</h2>
+      <h2 v-else class="text-2xl font-bold text-[#432C81] md:text-3xl xl:text-4xl">{{ `👋🏻 Hi, ${props.user.first_name}` }}</h2>
     </div>
 
     <!-- Avatar Section -->
-    <div v-if="user" 
+    <div v-if="user && !title" 
       class="flex rounded-full items-center gap-4"
       @click="$router.push('/user/profile')"
     >
@@ -59,7 +60,7 @@ const props = defineProps({
 });
 
 // Compute title dynamically
-const dynamicTitle = computed(() => (props.user ? `👋🏻 Hi, ${props.user.first_name}` : props.title));
+// const dynamicTitle = computed(() => (props.user ? `👋🏻 Hi, ${props.user.first_name}` : props.title));
 
 
 // // Reactive state

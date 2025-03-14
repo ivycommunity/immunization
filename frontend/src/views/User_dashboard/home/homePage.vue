@@ -7,20 +7,20 @@
     
     import userStore from '@/stores/userStore';
 
-    let USER = {};
+    let { first_name, } = {first_name: "", };
     
     const store = userStore();
     
     if (store.isAuthenticated){
-        USER = JSON.parse(localStorage.getItem('user_data') || "{}");
-        console.log("the user in home page", USER);
+        ({ first_name, } = JSON.parse(localStorage.getItem('user_data') || "{}"));
+        console.log("the user in home page", first_name);
     }
         
 
 </script>
 
 <template>
-    <Layout :user-data="{ first_name: USER.first_name, avatar: null }" topBarMove="false" topBarWithBackArrow="false">
+    <Layout :user-data="{ first_name: first_name, avatar: null }" topBarMove="false">
         <div class="mb-4 flex flex-col gap-4 w-full items-center justify-center">
             <homeNavButton
                 title="Child Details"

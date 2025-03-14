@@ -1,6 +1,7 @@
 <script setup>
 import { PencilIcon } from '@heroicons/vue/24/solid'
 import { ref } from "vue";
+import avatar from "@/assets/userI/Avatar.png"
 
 const img = ref("");
 
@@ -15,8 +16,10 @@ const props = defineProps({
   },
   userEmail: {
     type: String,
-    required: true
   },
+  userPhone : {
+    type : String,
+  }
 })
 
 const handlePictureChange = (event) => {
@@ -36,11 +39,11 @@ const handlePictureChange = (event) => {
     <!-- Profile image with edit button -->
     <div class="relative">
       <!-- Profile image container with purple background -->
-      <div class="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center">
-        <div class="w-28 h-28 rounded-full bg-purple-700 flex items-center justify-center overflow-hidden">
+      <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center">
+        <div class="w-28 h-28 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
           <!-- User avatar image -->
           <div v-if="img || imgPath">
-            <div class="w-28 h-28 rounded-full bg-purple-700 flex items-center justify-center overflow-hidden">
+            <div class="w-28 h-28 rounded-full flex items-center justify-center overflow-hidden">
               <!-- Using an actual image tag -->
               <img 
                 :src="img || imgPath"
@@ -50,20 +53,23 @@ const handlePictureChange = (event) => {
             </div>
           </div>
           <div v-else class="flex flex-col items-center justify-end h-full w-full pt-2">
-            <!-- Simplified avatar illustration -->
-            <div class="w-16 h-16 bg-orange-300 rounded-full relative mb-2">
-              <!-- Simple face -->
-              <div class="absolute right-3 bottom-2 w-2 h-2 border-b-2 border-black rounded-full transform rotate-12"></div>
+            <div>
+              <div class="w-28 h-28 rounded-full flex items-center justify-center overflow-hidden">
+                <!-- Using an actual image tag -->
+                <img 
+                  :src="avatar"
+                  :alt="userFullName + ' profile picture'"
+                  class="w-full h-full object-cover"
+                />
+              </div>
             </div>
-            <!-- Shirt/clothing -->
-            <div class="w-20 h-10 bg-blue-200 border-t border-blue-300"></div>
           </div>
         </div>
       </div>
       
       <!-- Edit button -->
       <label for="fileInput" class="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-md cursor-pointer">
-        <PencilIcon class="h-5 w-5 text-purple-800" />
+        <PencilIcon class="h-5 w-5 text-[#56428F]" />
         <input 
           id="fileInput" 
           type="file" 
@@ -75,9 +81,9 @@ const handlePictureChange = (event) => {
     </div>
     
     <!-- User name -->
-    <h1 class="mt-6 text-2xl font-bold text-purple-900">{{ userFullName }}</h1>
+    <h1 class="mt-6 text-2xl font-bold text-[#56428F]">{{ userFullName }}</h1>
     
     <!-- User email -->
-    <p class="mt-2 text-gray-500">{{ userEmail }}</p>
+    <p class="mt-2 text-[#56428F]/80">{{ !!userEmail ? userEmail : userPhone }}</p>
   </div>
 </template>

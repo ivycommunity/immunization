@@ -6,7 +6,6 @@ import Topbar from './topbar.vue';
 const props = defineProps({
   topBartitle: {
     type: String,
-    default: 'IVY Immunization',
   },
   userData: {
     type: Object,

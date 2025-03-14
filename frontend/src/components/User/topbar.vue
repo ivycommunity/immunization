@@ -6,9 +6,9 @@
   >
     <div class="flex items-center gap-8">
       <!-- Back Arrow -->
-      <router-link v-if="backTo && backTo.trim() !== ''" :to="backTo" class="z-10">
+      <div @click="$router.push(`${backTo}`)" v-if="backTo && backTo.trim() !== ''" class="z-10">
         <ArrowLeftIcon class="w-6 h-6 text-[#432C81]" />
-      </router-link>
+      </div>
 
       <!-- Dynamic Title -->
       <h2 v-if="!!title" class="text-2xl font-bold text-[#432C81] md:text-3xl xl:text-4xl">{{ title }}</h2>

@@ -34,7 +34,7 @@
         }
         catch(error){
             isLoading.value = false;
-            router.push(`/user/error/${error.response ? error.response.status : '500'}`);
+            router.push(`/user/error/${error.response ? error.response.status : '415'}`);
         }
         finally{
             isLoading.value = false;
@@ -49,8 +49,8 @@
         topBarMove="false"
         :with-bottom-bar ="true"
     >
-        <profileComponent :user-full-name = "userFullName" :user-email = "userEmail" :user-phone="userPhone_number" />
+        <profileComponent :user-full-name = "userFullName" :user-email = "userEmail" :is-loading="isLoading" :user-phone="userPhone_number" />
         <settingsMenu/>
-        <LogoutButton @click="handleLogout" text="Logout" variant="secondary" class="hover:bg-[#F8F4F8]"/>
+        <LogoutButton @click="handleLogout"  text="Logout" variant="secondary" class="hover:bg-[#F8F4F8]"/>
     </userLayout>
 </template>

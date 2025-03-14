@@ -108,12 +108,12 @@ const router = createRouter({
       component: userProfile,
     },
     {
-      path: '/user/error/:errorCode',
+      path: '/user/error/:errorCode?',
       name: 'useError',
       component: useError,
     },
     {
-      path: '/user/error/:errorCode',
+      path: '/user/error/:errorCode?',
       name: 'registrationError',
       component: registrationError,
     },

@@ -86,8 +86,11 @@ const handleSubmit = async () => {
       
       router.push({ name: 'userHomePage' });
     } catch (error) {
-      console.error('API Error:', error.response ? error.response.data : error.message);
-      router.push(`/user/error/${error.response ? error.response.status : '500'}`);
+      if(error.response.status === 401){
+        errors.value.password = "The provided credentials are incorrect. Please try again";
+      }
+      else
+        router.push(`/user/error/${error.response ? error.response.status : ''}`);
     } finally {
       isLoading.value = false;
     }

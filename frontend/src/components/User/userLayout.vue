@@ -27,9 +27,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  
 });
 
-console.log('Layout received user:', props.userData);
+// console.log('Layout received user:', props.userData);
 
 // Ensure boolean conversion (if parent passes as string)
 const move = computed(() => props.topBarMove === true || props.topBarMove === 'true');
@@ -42,9 +43,9 @@ const move = computed(() => props.topBarMove === true || props.topBarMove === 't
       :class="`
           w-full 
           mx-auto
-          mt-[44px]
-          md:mt-0
-          md:pt-[8%]
+          mt-[64px]
+          lg:mt-0
+          lg:pt-[8%]
           px-4
           sm:max-w-[475px]
           sm:px-6
@@ -53,7 +54,7 @@ const move = computed(() => props.topBarMove === true || props.topBarMove === 't
           xl:max-w-6xl 
           2xl:max-w-7xl 
           flex-1
-          ${props.withBottomBar ? 'pb-16 overflow-y-auto scrollbar-hide' : ''}
+          ${props.withBottomBar ? 'pb-20 overflow-y-auto scrollbar-hide' : ''}
           ${className}`"
       >
       <slot></slot>

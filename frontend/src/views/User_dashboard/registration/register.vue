@@ -4,6 +4,9 @@ import FormInput from '@/components/User/formInput.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import userStore from '@/stores/userStore';
+
+const store = userStore();
 
 const identifier = ref('');
 const email = ref('');
@@ -73,12 +76,21 @@ const handleSubmit = async () => {
       //     password: password.value,
       //   });
       
-      // console.log('API Response:', response.data);
+      const user = await store.login({
+        email : email.value,
+        phone_number : phone_number.value,
+        password : password.value
+      })
+      
+      console.log('API Response:', user);
       
       router.push({ name: 'userUpdatePassword' });
     } catch (error) {
-      // console.error('API Error:', error.response ? error.response.data : error.message);
-      router.push(`/user/error/${error.response ? error.response.status : '500'}`);
+      if(error.response.status === 401){
+        errors.value.password = "The provided credentials are incorrect. Please try again";
+      }
+      else
+        router.push(`/user/error/${error.response ? error.response.status : ''}`);
     } finally {
       isLoading.value = false;
     }
@@ -94,7 +106,8 @@ const handleSubmit = async () => {
     title="Register" 
     :is-loading="isLoading"
     secondary-message_Message="Aldready have an account?" 
-    secondary-message_Action="login" 
+    secondary-message_Action="login"
+    top-bar-back-to = "/user"
   >
     <formInput 
       type="text"

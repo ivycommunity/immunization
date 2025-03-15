@@ -10,23 +10,25 @@
       <span v-if="errorMessage" class="text-[#EB5858] text-sm ml-2">{{ errorMessage }}</span>
     </div>
     
-    <div v-else class="relative w-full">
-      <input 
-        :type="showPassword ? 'text' : 'password'"
-        :placeholder="placeholder" 
-        :class="className"
-        :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
-      />
-      <button 
-        type="button"
-        @click="togglePassword"
-        class="absolute right-4 top-1/3 transform text-secondary"
-        aria-label="Toggle password visibility"
-      >
-        <EyeSlashIcon v-if="showPassword" class="h-5 w-5 text-gray-500" />
-        <EyeIcon v-else class="h-5 w-5 text-gray-500" />
-      </button>
+    <div v-else class = "w-full">
+      <div class="relative w-full">
+        <input 
+          :type="showPassword ? 'text' : 'password'"
+          :placeholder="placeholder" 
+          :class="className"
+          :value="modelValue"
+          @input="$emit('update:modelValue', $event.target.value)"
+        />
+        <button 
+          type="button"
+          @click="togglePassword"
+          class="absolute right-4 top-1/3 transform text-secondary"
+          aria-label="Toggle password visibility"
+        >
+          <EyeSlashIcon v-if="showPassword" class="h-5 w-5 text-gray-500" />
+          <EyeIcon v-else class="h-5 w-5 text-gray-500" />
+        </button>
+      </div>
       <span v-if="errorMessage" class="text-[#EB5858] text-sm ml-2">{{ errorMessage }}</span>
     </div>
   </div>

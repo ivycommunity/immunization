@@ -1,60 +1,51 @@
 <script setup>
     import gridContainer from '@/components/User/gridContainer.vue';
-    import vaccineRecord from '@/components/User/vaccineRecord.vue';
     import UserLayout from '@/components/User/userLayout.vue';
     import homeNavButton from '@/components/User/homeNavButton.vue';
     import illustration from '@/assets/userI/Electrocardiogram.png';
+import { ref } from 'vue';
 
 
     const  TITLE = 'Vaccination Records';
+
+    const appointments = [
+        {
+            date: "today",
+            clinic: "Nairobi-west",
+            doctor: "Daniel",
+            vaccineType : "vaccin"
+        },
+        {
+            date: "today",
+            clinic: "Nairobi-west",
+            doctor: "Daniel",
+            vaccineType : "vaccin"
+        },
+    ];
+
 </script>
 
 <template>
     <UserLayout 
-        back-to="/home"
-        :top-bartitle="TITLE"
-        top-bar-move="true"
+        bact-to="/user/home"
+        :topBartitle="TITLE"
     >
-        <homeNavButton :title="TITLE" :illustration-icon = "illustration"/>
+        <homeNavButton :title="TITLE" :illustration-icon="illustration"/>
         
         <gridContainer>
-            <vaccineRecord 
-                date="Today"
-                doctor = "Mr Docta"
-                clinic = "Nairobi-West"
-                vaccine-type = "Tetanoce"
-            />
-            <vaccineRecord 
-                date="Today"
-                doctor = "Mr Docta"
-                clinic = "Nairobi-West"
-                vaccine-type = "Tetanoce"
-            />
-            <vaccineRecord 
-                date="Today"
-                doctor = "Mr Docta"
-                clinic = "Nairobi-West"
-                vaccine-type = "Tetanoce"
-            />
-            <vaccineRecord 
-                date="Today"
-                doctor = "Mr Docta"
-                clinic = "Nairobi-West"
-                vaccine-type = "Tetanoce"
-            />
-            <vaccineRecord 
-                date="Today"
-                doctor = "Mr Docta"
-                clinic = "Nairobi-West"
-                vaccine-type = "Tetanoce"
-            />
-            <vaccineRecord 
-                date="Today"
-                doctor = "Mr Docta"
-                clinic = "Nairobi-West"
-                vaccine-type = "Tetanoce"
-            />
+            <div v-for="(item, index) in appointments" :key="index">
+                <div class="p-4 rounded rounded-lg bg-white">
+                <h3 class="text-[#432C81] text-lg">
+                    {{ item.date }} - 
+                    {{ item.clinic }} - 
+                    {{ item.doctor }}
+                </h3>
+                <p class="text-[#432C81]/80">
+                    Vaccine type : 
+                    <span>{{ item.vaccineType }}</span>
+                </p>
+            </div>
+            </div>
         </gridContainer>
     </UserLayout>
-    
 </template>

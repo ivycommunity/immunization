@@ -30,7 +30,6 @@ const props = defineProps({
   },
   topBarBackTo:{
     type : String,
-    default: '/user',
   }
 });
 </script>

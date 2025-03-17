@@ -4,6 +4,9 @@ import FormInput from '@/components/User/formInput.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import userStore from '@/stores/userStore';
+
+const store = userStore();
 
 const identifier = ref('');
 const email = ref('');
@@ -62,23 +65,32 @@ const handleSubmit = async () => {
     try {
       console.log('Email:', email.value, 'Phone:', phone_number.value, 'Password:', password.value);
       
-      const response = await axios
-        .create({
-          baseURL:'/api',
-          withCredentials: true,
-        })
-        .post('/login', {
-          email: email.value || null,
-          phone_number: phone_number.value || null,
-          password: password.value,
-        });
+      // const response = await axios
+      //   .create({
+      //     baseURL:'/api',
+      //     withCredentials: true,
+      //   })
+      //   .post('/login', {
+      //     email: email.value || null,
+      //     phone_number: phone_number.value || null,
+      //     password: password.value,
+      //   });
+
+      const user = await store.login({
+        email : email.value,
+        phone_number : phone_number.value,
+        password : password.value
+      })
       
-      // console.log('API Response:', response.data);
+      console.log('API Response:', user);
       
       router.push({ name: 'userHomePage' });
     } catch (error) {
-      console.error('API Error:', error.response ? error.response.data : error.message);
-      // router.push(`/user/error/${error.response ? error.response.status : '500'}`);
+      if(error.response.status === 401){
+        errors.value.password = "The provided credentials are incorrect. Please try again";
+      }
+      else
+        router.push(`/user/error/${error.response ? error.response.status : ''}`);
     } finally {
       isLoading.value = false;
     }
@@ -94,7 +106,8 @@ const handleSubmit = async () => {
     title="Login" 
     :is-loading="isLoading"
     secondary-message_Message="First time?" 
-    secondary-message_Action="register" 
+    secondary-message_Action="register"
+    top-bar-back-to = "/user"
   >
 
     <formInput 

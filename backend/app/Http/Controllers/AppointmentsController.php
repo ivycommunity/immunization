@@ -16,7 +16,7 @@ class AppointmentsController extends Controller
     {
         $user = auth()->guard()->user();
 
-        if (in_array($user->role, ['Admin', 'Receptionist'])) {
+        if (in_array($user->role, ['admin', 'nurse', 'doctor'])) {
             $appointments = Appointment::with([
                 'baby', 
                 'guardian',
@@ -24,7 +24,7 @@ class AppointmentsController extends Controller
                 'vaccine'])
                 ->select('id', 'baby_id','guardian_id', 'doctor_id', 'vaccine_id', 'appointment_date', 'status','reminder_sent' ,'notes')
                 ->get();
-        } elseif ($user->role == 'Doctor') {
+        } elseif ($user->role == 'doctor') {
             $doctor = Doctor::where('user_id', $user->id)->first();
 
             if (!$doctor) {
@@ -55,7 +55,7 @@ class AppointmentsController extends Controller
         $user = auth()->guard()->user();
 
         //Only Admin and Receptionist can create appointments
-        if (!$user || !in_array($user->role, ['Admin','Receptionist'])) {
+        if (!$user || !in_array($user->role, ['admin','nurse','doctor'])) {
             return response()->json([
                 'message'=> 'Unauthorized'
             ], 403);
@@ -97,11 +97,11 @@ class AppointmentsController extends Controller
             return response()->json(['message' => 'Appointment not found'], 404);
         }
 
-        if (in_array($user->role, ['Admin', 'Receptionist'])) {
+        if (in_array($user->role, ['admin', 'nurse', 'doctor'])) {
             return new AppointmentResource($appointment);
         }
 
-        if ($user->role == 'Doctor' && optional($appointment->doctor)->user_id == $user->id) {
+        if ($user->role == 'doctor' && optional($appointment->doctor)->user_id == $user->id) {
             return new AppointmentResource($appointment);
         }
 
@@ -120,7 +120,7 @@ class AppointmentsController extends Controller
             return response()->json(['message' => 'Appointment not found'], 404);
         }
 
-        if (in_array($user->role, ['Admin', 'Receptionist'])) {
+        if (in_array($user->role, ['admin', 'nurse', 'doctor'])) {
             $request->validate([
                 'baby_id' => 'integer|exists:babies,id',
                 'guardian_id' => 'integer|exists:users,id',
@@ -135,7 +135,7 @@ class AppointmentsController extends Controller
             $appointment->update($request->only([
                 'baby_id','guardian_id','vaccine_id', 'doctor_id', 'appointment_date', 'status', 'reminder_sent', 'notes'
             ]));
-        } elseif ($user->role == 'Doctor') {
+        } elseif ($user->role == 'doctor') {
             $doctor = Doctor::where('user_id', $user->id)->first();
 
             if (!$doctor || $appointment->doctor_id != $doctor->id) {
@@ -165,7 +165,7 @@ class AppointmentsController extends Controller
     {
         $user = auth()->guard()->user();
 
-        if ($user->role !== 'Admin') {
+        if ($user->role !== 'admin') {
             return response()->json([
                 'message'=> 'Unauthorized'
             ], 403);

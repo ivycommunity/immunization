@@ -12,6 +12,7 @@ const form = ref({
 });
 
 const guardians = ref([]); // List of guardians
+const doctors = ref([]);
 const nationalities = ref([
   "Nigeria",
   "Kenya",
@@ -27,7 +28,10 @@ const nationalities = ref([
   "China",
   "Germany",
   "France",
-]); // List of available nationalities
+]);
+
+const showModal = ref(false);
+const modalMessage = ref('');
 
 // Fetch guardians from API
 const fetchGuardians = async () => {
@@ -44,7 +48,25 @@ const fetchGuardians = async () => {
   }
 };
 
+// Fetch doctors from API
+const fetchDoctors = async () => {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/api/doctors", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const data = await response.json();
+
+    doctors.value = data.doctors;
+  } catch (error) {
+    console.error("Error fetching Doctors:", error);
+  }
+};
+console.log("DOCTORS: " + doctors)
+
 onMounted(fetchGuardians);
+onMounted(fetchDoctors);
 
 const submitForm = async () => {
     try {
@@ -72,11 +94,24 @@ const submitForm = async () => {
         const result = await response.json();
         console.log("Baby Added:", result);
 
-        alert("Baby added successfully!");
+        modalMessage.value = "Baby added successfully!";
+        showModal.value = true;
+        form.value = {
+          firstName: "",
+          lastName: "",
+          guardian: "",
+          gender: "",
+          dateOfBirth: "",
+          nationality: "",
+        };
 
     } catch (error) {
         console.error("Error submitting form:", error);
     }
+};
+
+const closeModal = () => {
+  showModal.value = false;
 };
 </script>
 
@@ -134,6 +169,28 @@ const submitForm = async () => {
                   :value="guardian.id"
                 >
                   {{ guardian.first_name }} {{ guardian.last_name }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Doctor Selection -->
+            <div>
+              <label for="doctor" class="block text-sm text-gray-600 mb-1"
+                >Assign Doctor</label
+              >
+              <select
+                v-model="form.doctor"
+                id="doctor"
+                required
+                class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" class="hidden">Select Doctor</option>
+                <option
+                  v-for="doctor in doctors"
+                  :key="doctor.id"
+                  :value="doctor.id"
+                >
+                  {{ doctor.first_name }} {{ doctor.last_name }}
                 </option>
               </select>
             </div>
@@ -205,5 +262,23 @@ const submitForm = async () => {
         </form>
       </div>
     </div>
+    <div v-if="showModal" class="fixed inset-0 backdrop-blur-xs flex items-center justify-center z-50">
+      <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+        <div class="flex flex-col items-center">
+          <div class="mb-4 text-green-600">
+            <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Success!</h3>
+          <p class="text-gray-600 text-center mb-6">{{ modalMessage }}</p>
+          <button @click="closeModal"
+            class="cursor-pointer bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
   </Sidebar>
 </template>
+

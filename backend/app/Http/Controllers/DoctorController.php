@@ -29,7 +29,7 @@ class DoctorController extends Controller
     {
         $user = auth()->guard()->user();
 
-        if (!$user || !in_array($user->role, ['Admin', 'Receptionist'])) {
+        if (!$user || !in_array($user->role, ['admin', 'nurse', 'doctor'])) {
            return response()->json([
                'message'=> 'Unauthorized'
            ], 403);
@@ -42,13 +42,12 @@ class DoctorController extends Controller
             'unique:doctors,user_id',
             function ($attribute, $value, $fail) {
                 $user = User::find($value);
-                if (!$user || $user->role !== 'Doctor') {
+                if (!$user || $user->role !== 'doctor') {
                 $fail('The selected user must have a Doctor role.');
                 }
             },
             ],
             'specialization' => 'required|string',
-            'availability' => 'required|string',
             'license_number' => 'required|string',
             'work_phone_number' => 'nullable|string',
             'bio' => 'nullable|string',
@@ -83,7 +82,7 @@ class DoctorController extends Controller
         $user = auth()->guard()->user();
         $doctor = Doctor::findOrFail($id);
 
-        if ($user->role !== 'Admin') {
+        if ($user->role !== 'admin') {
             $userDoctor = Doctor::where('user_id', $user->id)->first();
 
             if (!$userDoctor || $userDoctor->id !== $doctor->id) {
@@ -115,7 +114,7 @@ class DoctorController extends Controller
     {
         $user = auth()->guard()->user();
 
-        if ($user->role !== 'Admin') {
+        if ($user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

@@ -18,7 +18,7 @@ class AuthController extends Controller
     {
         $user = auth()->guard()->user();
 
-        if (!$user || !in_array($user->role, ['admin', 'nurse'])) {
+        if (!$user || !in_array($user->role, ['admin', 'nurse', 'doctor'])) {
             return response()->json([
                 'message' => 'Unauthorized'
             ], 403);

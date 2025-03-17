@@ -23,6 +23,8 @@ import AddGuardian from '@/views/Hospital/AddGuardian.vue'
 import AddBaby from '@/views/Hospital/AddBaby.vue'
 import { useAuthStore } from '@/stores/auth'
 import homePage from '@/views/User_dashboard/home/homePage.vue'
+import userProfile from "@/views/User_dashboard/settings/profile.vue";
+import vaccineRecord from '@/views/User_dashboard/home/vaccineRecordPage.vue'
 
 
 const router = createRouter({
@@ -96,12 +98,22 @@ const router = createRouter({
       component: userHomePage,
     },
     {
-      path: '/user/error/:errorCode',
+      path: '/user/reccords/vaccination',
+      name: 'vaccineRecord',
+      component: vaccineRecord,
+    },
+    {
+      path: '/user/profile',
+      name: 'userProfile',
+      component: userProfile,
+    },
+    {
+      path: '/user/error/:errorCode?',
       name: 'useError',
       component: useError,
     },
     {
-      path: '/user/error/:errorCode',
+      path: '/user/error/:errorCode?',
       name: 'registrationError',
       component: registrationError,
     },
@@ -137,19 +149,25 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach(async (to, from) => {
-  const authStore = useAuthStore()
-  await authStore.getUser()
+/* 
+  Please could you explain the reason for this code? 
+  On my  end, it is making a request to api/user 
+  when I try to access the user page
+*/
 
-  if (authStore.user && to.meta.guest) {
-    if (authStore.user.role === 'nurse') {
-      return { name: 'hospital.patients' }
-    }
-  }
+// router.beforeEach(async (to, from) => {
+//   const authStore = useAuthStore()
+//   await authStore.getUser()
 
-  if (!authStore.user && to.meta.auth) {
-    return { name: 'signin' }
-  }
-})
+//   if (authStore.user && to.meta.guest) {
+//     if (authStore.user.role === 'nurse') {
+//       return { name: 'hospital.patients' }
+//     }
+//   }
+
+//   if (!authStore.user && to.meta.auth) {
+//     return { name: 'signin' }
+//   }
+// })
 
 export default router

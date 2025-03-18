@@ -82,12 +82,16 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'password' => 'required',
             'email_or_phone_number' => 'required_without_all:email,phone_number',
+            'password_or_national_id' => 'required_without_all:password,national_id',
         ], [
-            'email_or_phone_number.required_without_all' => 'Either email or phone number is required.'
+            'email_or_phone_number.required_without_all' => 'Either email or phone number is required.',
+            'password_or_national_id.required_without_all' => 'Either password or national ID is required.'
         ]);
 
+        // Find the user
+        $user = null;
+        
         // Check if email is provided
         if ($request->has('email')) {
             $user = User::where('email', $request->email)->first();
@@ -97,15 +101,34 @@ class AuthController extends Controller
             $user = User::where('phone_number', $request->phone_number)->first();
         }
         else {
-            return [
-                'message'=> 'Please provide either email or phone number'
-            ];
+            return response()->json([
+                'message' => 'Please provide either email or phone number'
+            ], 400);
         }
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user) {
             return response()->json([
                 'errors' => [
-                    'email_or_phone_number' => ['The provided credentials are incorrect.']
+                    'email_or_phone_number' => ['User not found with the provided credentials.']
+                ],
+            ], 401);
+        }
+
+        $authenticated = false;
+        
+        if ($request->has('password')) {
+            $authenticated = Hash::check($request->password, $user->password);
+        }
+        else if ($request->has('national_id')) {
+            if ($request->national_id == $user->national_id) {
+                $authenticated = true;
+            }
+        }
+        
+        if (!$authenticated) {
+            return response()->json([
+                'errors' => [
+                    'password_or_national_id' => ['The provided credentials are incorrect.']
                 ],
             ], 401);
         }

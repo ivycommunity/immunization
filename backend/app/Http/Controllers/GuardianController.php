@@ -73,7 +73,6 @@ class GuardianController extends Controller
             'first_name'=> 'sometimes|string',
             'last_name'=> 'sometimes|string',
             'email'=> 'sometimes|email|unique:users,email',
-            'password'=> 'sometimes|min:8|confirmed',
             'phone_number'=> 'sometimes|string',
             'date_of_birth'=> 'sometimes|date',
             'address'=> 'sometimes|string',

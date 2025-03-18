@@ -17,7 +17,7 @@ class GuardianController extends Controller
 {
     $user = auth()->guard()->user();
 
-    if (in_array($user->role, ['Guardian', 'Parent'])) {
+    if (in_array($user->role, ['guardian', 'parent'])) {
         return response()->json([
             'message' => 'Unauthorized'
         ], 401);
@@ -42,7 +42,7 @@ class GuardianController extends Controller
         $user = auth()->guard()->user();
         
         $guardian = User::where('id', $id)
-                        ->whereIn('role', ['Guardian', 'Parent'])
+                        ->where('role', 'guardian')
                         ->first();
 
         if (! $guardian) {
@@ -62,7 +62,7 @@ class GuardianController extends Controller
         $user = auth()->guard()->user(); 
         
         $guardian = User::where('id', $id)
-                        ->whereIn('role', ['Guardian', 'Parent'])
+                        ->where('role', 'guardian')
                         ->first();
 
         if (! $guardian) {
@@ -99,14 +99,14 @@ class GuardianController extends Controller
     {
         $user = auth()->guard()->user(); 
         
-        if ($user->role !== 'Admin') {
+        if ($user->role !== 'admin') {
             return response()->json([
                 'message' => 'Unauthorized'
             ], 401);
         }
 
         $guardian = User::where('id', $id)
-                        ->whereIn('role', ['Guardian', 'Parent'])
+                        ->where('role', 'guardian')
                         ->first();
         
         if (! $guardian) {

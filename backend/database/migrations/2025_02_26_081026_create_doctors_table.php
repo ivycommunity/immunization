@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('specialization');
+            $table->string('availability')->nullable(); // Optional availability
             $table->string('license_number');
             $table->string('work_phone_number')->nullable(); // Optional work phone number
             $table->string('bio')->nullable();

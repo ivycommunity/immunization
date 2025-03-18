@@ -54,7 +54,7 @@ class VaccineController extends Controller
     {
         $user = auth()->guard()->user();
 
-        if (!$user || $user->role !== 'Doctor') {
+        if (!$user || $user->role !== 'doctor') {
             return ['message' => 'Unauthorized'];
         }
 
@@ -80,7 +80,7 @@ class VaccineController extends Controller
     {
         $user = auth()->guard()->user();
 
-        if (!$user || $user->role !== 'Doctor') {
+        if (!$user || $user->role !== 'doctor') {
             return ['message' => 'Unauthorized'];
         }
 
@@ -112,7 +112,7 @@ class VaccineController extends Controller
     {
         $user = auth()->guard()->user();
 
-        if (!$user || $user->role !== 'Doctor') {
+        if (!$user || $user->role !== 'doctor') {
             return ['message' => 'Unauthorized'];
         }
 

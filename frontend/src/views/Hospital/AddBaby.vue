@@ -173,28 +173,6 @@ const closeModal = () => {
               </select>
             </div>
 
-            <!-- Doctor Selection -->
-            <div>
-              <label for="doctor" class="block text-sm text-gray-600 mb-1"
-                >Assign Doctor</label
-              >
-              <select
-                v-model="form.doctor"
-                id="doctor"
-                required
-                class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="" class="hidden">Select Doctor</option>
-                <option
-                  v-for="doctor in doctors"
-                  :key="doctor.id"
-                  :value="doctor.id"
-                >
-                  {{ doctor.first_name }} {{ doctor.last_name }}
-                </option>
-              </select>
-            </div>
-
             <!-- Gender Selection -->
             <div>
               <label for="gender" class="block text-sm text-gray-600 mb-1"

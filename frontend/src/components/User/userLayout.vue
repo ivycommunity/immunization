@@ -54,7 +54,7 @@ const move = computed(() => props.topBarMove === true || props.topBarMove === 't
           xl:max-w-6xl 
           2xl:max-w-7xl 
           flex-1
-          ${props.withBottomBar ? 'pb-20 overflow-y-auto scrollbar-hide' : ''}
+          ${props.withBottomBar ? 'pb-20 scrollbar-hide' : ''}
           ${className}`"
       >
       <slot></slot>

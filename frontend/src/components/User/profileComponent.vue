@@ -19,6 +19,10 @@ const props = defineProps({
   },
   userPhone : {
     type : String,
+  },
+  profileEdit :{
+    type: Boolean,
+    default: false
   }
 })
 
@@ -68,7 +72,7 @@ const handlePictureChange = (event) => {
       </div>
       
       <!-- Edit button -->
-      <label for="fileInput" class="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-md cursor-pointer">
+      <label v-if="profileEdit" for="fileInput" class="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-md cursor-pointer">
         <PencilIcon class="h-5 w-5 text-[#56428F]" />
         <input 
           id="fileInput" 

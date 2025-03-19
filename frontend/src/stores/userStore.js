@@ -41,18 +41,51 @@ export default defineStore('user', {
             }
         },
 
-        // async changePassword (newPassword){ // Not in the backend yet
-        //     try{
-        //         const response = await API.put(
-        //             '/updatePassword',{
-        //                 password : newPassword
-        //             }
-        //         )
-        //     }catch(error){
+        /*
+         *   I think that the agents at the hospital should be the ones  
+         *   to update the user national ID number for security purposes.
+        */
+        async update ({
+            first_name = USER.first_name || "",
+            last_name = USER.last_name || "",
+            email = USER.email || "",
+            password = USER.password || USER.national_id, // if there is no password, it should reset itself to the national ID
+            phone_number = USER.phone_number || "",
+            date_of_birth = USER.date_of_birth || "",
+            address = USER.address || "",
+            marital_status = USER.marital_status || "",
+            next_of_kin = USER.next_of_kin || "",
+            next_of_kin_contact = USER.next_of_kin_contact || "",
+            no_of_children = USER.no_of_children || 0
+        }) {
+            try {
+            const response = await API.put('/updateGuardian', {
+                first_name,
+                last_name,
+                email,
+                password,
+                phone_number,
+                date_of_birth,
+                address,
+                marital_status,
+                next_of_kin,
+                next_of_kin_contact,
+                no_of_children
+            });
 
-        //     }
-        // },
-        
+            const { user } = response.data;
+
+            this.user = user;
+            localStorage.setItem('user_data', JSON.stringify(user));
+
+            return user;
+
+            } catch (error) {
+            this.errors = error.response.data.errors || {};
+            return Promise.reject(error);
+            }
+        },
+
         async logout() {
             this.token = "";
             this.user = {};

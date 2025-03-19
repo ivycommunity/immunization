@@ -50,9 +50,9 @@ const buttonClass = computed(() => {
 <style scoped>
 /* Simple CSS spinner */
 .loader {
-  width: 20px;
-  height: 20px;
-  border-top: 3px solid transparent;
+  width: 16px;
+  height: 16px;
+  border-top: 2px solid transparent;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }

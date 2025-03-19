@@ -21,12 +21,19 @@ const errorMessages = {
         action_text: 'Tap the screen to try again.',
         Link: '/user/profile',
     },
-    413: {
+    416: {
+        title: "Something went wrong",
+        image: ErrorImage,
+        action_text: 'Tap on the screen to try again',
+        Link: '/user/profile/account',
+        topBarTitle : "Account",
+    },
+    404: {
         title: "You don't have any record",
         image: ErrorImage,
         action_text: 'Click on the plus button to add.',
         Link: '/user/home',
-        topBarTitle : "Vaccination records",
+        topBarTitle : "Vaccination record",
     },
 };
 

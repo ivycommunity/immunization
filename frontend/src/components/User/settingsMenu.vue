@@ -13,32 +13,38 @@
     {
       label: 'Account',
       to: `/user/profile/`,
-      icon: UserCircleIcon
+      icon: UserCircleIcon,
+      isDisabled: false,
     },
     {
       label: 'Notification',
       to: `/user/profile/`,
-      icon: BellIcon
+      icon: BellIcon,
+      isDisabled: true,
     },
     {
       label: 'Appearance',
       to: `/user/profile/`,
-      icon: EyeIcon
+      icon: EyeIcon,
+      isDisabled: true,
     },
     {
       label: 'Privacy & Security',
       to: `/user/profile/`,
-      icon: ShieldCheckIcon
+      icon: ShieldCheckIcon,
+      isDisabled: true,
     },
     {
       label: 'Sound',
       to: `/user/profile/`,
-      icon: SpeakerWaveIcon
+      icon: SpeakerWaveIcon,
+      isDisabled: true,
     },
     {
       label: 'Language',
       to: `/user/profile/`,
-      icon: LanguageIcon
+      icon: LanguageIcon,
+      isDisabled: true,
     }
   ]
 </script>
@@ -51,6 +57,10 @@
             <router-link 
               :to="item.to.concat(item.label.toLowerCase())"
               class="flex items-center px-4 py-3 text-[#56428F] hover:bg-[#F8F4F8] transition-colors duration-200"
+              :class="{ 'opacity-50 cursor-not-allowed': item.isDisabled }"
+              :tabindex="item.isDisabled ? -1 : 0"
+              :aria-disabled="item.isDisabled"
+              :disabled="item.isDisabled"
             >
               <component :is="item.icon" class="h-5 w-5 text-[#56428F]/60 mr-3" aria-hidden="true" />
               <span class="font-medium">{{ item.label }}</span>

@@ -25,6 +25,7 @@ import { useAuthStore } from '@/stores/auth'
 import homePage from '@/views/User_dashboard/home/homePage.vue'
 import userProfile from "@/views/User_dashboard/settings/profile.vue";
 import vaccineRecord from '@/views/User_dashboard/home/vaccineRecordPage.vue'
+import userAccount from '@/views/User_dashboard/settings/userAccount.vue'
 
 
 const router = createRouter({
@@ -106,6 +107,11 @@ const router = createRouter({
       path: '/user/profile',
       name: 'userProfile',
       component: userProfile,
+    },
+    {
+      path: '/user/profile/account',
+      name: 'userAccount',
+      component: userAccount,
     },
     {
       path: '/user/error/:errorCode?',

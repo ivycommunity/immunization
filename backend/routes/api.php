@@ -40,6 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('appointments', AppointmentsController::class)->except(['create', 'edit']);
+    Route::get('/appointments/baby/vaccination-history/{babyId}', [AppointmentsController::class, 'getBabyVaccinationHistory']);
+    Route::get('/appointments/guardian/vaccination-history/{guardianId}', [AppointmentsController::class, 'getVaccinationHistoryByGuardian']);
 });
 
 

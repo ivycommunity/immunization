@@ -61,6 +61,12 @@ class User extends Authenticatable implements CanResetPasswordContract
         ];
     }
 
+    public function babies()
+    {
+        return $this->hasMany(Baby::class, 'guardian_id');
+    }
+
+
 
 
 }

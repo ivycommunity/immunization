@@ -12,7 +12,6 @@ class Baby extends Model
 
     protected $fillable = [
         'first_name', 
-        'last_name', 
         'guardian_id', 
         'gender', 
         'immunization_status', 

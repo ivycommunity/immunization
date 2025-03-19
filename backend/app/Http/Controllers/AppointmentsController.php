@@ -65,11 +65,12 @@ class AppointmentsController extends Controller
             'baby_id' => 'required|exists:babies,id',
             'guardian_id' => 'required|exists:users,id',
             'vaccine_id' => 'required|exists:vaccines,id',
-            'doctor_id' => 'required|exists:doctors,id',
-            'appointment_date' => 'required|date',
+            'doctor_id' => 'nullable|exists:doctors,id',
+            'appointment_date' => 'required',
             'status' => 'required|string|in:Scheduled,Completed,Missed,Cancelled',
             'reminder_sent' => 'required|boolean',
             'notes' => 'nullable|string',
+            'nurse_id' => 'required|exists:users,id',
         ]);
 
         $appointment = Appointment::create($request->all());

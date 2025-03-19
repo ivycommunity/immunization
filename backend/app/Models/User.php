@@ -59,6 +59,12 @@ class User extends Authenticatable
         ];
     }
 
+    public function babies()
+    {
+        return $this->hasMany(Baby::class, 'guardian_id');
+    }
+
+
 
 
 }

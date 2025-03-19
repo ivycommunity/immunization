@@ -18,11 +18,11 @@ Route::post('/register', [AuthController::class,'register']);
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('babies', BabyController::class);
-});
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('babies', BabyController::class);
+    Route::get('/guardians/{guardianId}/babies', [BabyController::class, 'getBabyByGuardianId']);
+    
     Route::get('/guardians', [GuardianController::class,'getGuardians']);
     Route::get('/guardians/{id}', [GuardianController::class,'getGuardian']);
     Route::put('/guardians/{id}', [GuardianController::class,'updateGuardian']);

@@ -5,13 +5,14 @@
     :class="buttonClass"
     class="w-full flex items-center hover:cursor-pointer py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
   >
-    <span v-if="isLoading" :class="`loader border-3 ${props.variant !== 'secondary' ? 'border-white': 'border-[#432C81]' }`"></span>
+    <spinner :is-loading="isLoading" :variant="props.variant || 'primary'"/>
     <span>{{ text }}</span>
   </button>
 </template>
 
 <script setup>
 import { computed } from "vue";
+import spinner from "./spinner.vue";
 
 // Props
 const props = defineProps({
@@ -46,23 +47,3 @@ const buttonClass = computed(() => {
   return `${variantClass} ${props.class}`;
 });
 </script>
-
-<style scoped>
-/* Simple CSS spinner */
-.loader {
-  width: 16px;
-  height: 16px;
-  border-top: 2px solid transparent;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-</style>

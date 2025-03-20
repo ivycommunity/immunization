@@ -33,7 +33,7 @@
             <td class="py-3 px-4">
               {{ patient.guardian ? patient.guardian.first_name + ' ' + patient.guardian.last_name : 'N/A' }}
             </td>
-            <td class="py-3 px-4">{{ patient.first_name + ' ' + patient.last_name }}</td>
+            <td class="py-3 px-4">{{ patient.first_name }}</td>
             <td class="py-3 px-4">{{ patient.last_vaccine_received ? patient.last_vaccine_received : 'No Record' }}</td>
             <td class="py-3 px-4" :class="getStatusClass(patient.immunization_status)">
               {{ patient.immunization_status }}

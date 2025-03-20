@@ -3,8 +3,7 @@ import Sidebar from "@/components/Hospital/Sidebar.vue";
 import { ref, onMounted } from "vue";
 
 const form = ref({
-  firstName: "",
-  lastName: "",
+  fullName: "",
   guardian: "",
   gender: "",
   dateOfBirth: "",
@@ -77,13 +76,12 @@ const submitForm = async () => {
                 "Authorization": `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify({
-                first_name: form.value.firstName,
-                last_name: form.value.lastName,
+                first_name: form.value.fullName,
                 guardian_id: form.value.guardian,
                 gender: form.value.gender,
                 date_of_birth: form.value.dateOfBirth,
                 nationality: form.value.nationality,
-                immunization_status: "Pending" // Default status for a new baby
+                immunization_status: "Pending" 
             })
         });
 
@@ -97,8 +95,7 @@ const submitForm = async () => {
         modalMessage.value = "Baby added successfully!";
         showModal.value = true;
         form.value = {
-          firstName: "",
-          lastName: "",
+          fullName: "",
           guardian: "",
           gender: "",
           dateOfBirth: "",
@@ -121,32 +118,17 @@ const closeModal = () => {
       <div class="bg-white rounded-lg shadow-sm p-6">
         <form @submit.prevent="submitForm">
           <div class="space-y-4">
-            <!-- First Name -->
+            <!-- Full Name -->
             <div>
-              <label for="firstName" class="block text-sm text-gray-600 mb-1"
-                >First Name</label
+              <label for="fullName" class="block text-sm text-gray-600 mb-1"
+                >Full Name</label
               >
               <input
-                id="firstName"
-                v-model="form.firstName"
+                id="fullName"
+                v-model="form.fullName"
                 type="text"
                 class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter Baby's First Name"
-                required
-              />
-            </div>
-
-            <!-- Last Name -->
-            <div>
-              <label for="lastName" class="block text-sm text-gray-600 mb-1"
-                >Last Name</label
-              >
-              <input
-                id="lastName"
-                v-model="form.lastName"
-                type="text"
-                class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter Baby's Last Name"
+                placeholder="Enter Baby's Full Name"
                 required
               />
             </div>
@@ -232,7 +214,7 @@ const closeModal = () => {
           <div class="mt-8 flex justify-center">
             <button
               type="submit"
-              class="bg-blue-600 text-white px-8 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              class="cursor-pointer bg-blue-600 text-white px-8 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Save
             </button>

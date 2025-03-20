@@ -8,7 +8,7 @@ import Error from '@/components/Error.vue';
 import { errorMessages } from 'vue/compiler-sfc';
 
 const { errors } = storeToRefs(useAuthStore())
-const { authenticate } = useAuthStore()
+const { login } = useAuthStore()
 
 const formData = reactive({
     email: "",
@@ -29,7 +29,7 @@ onMounted(() => (errors.value = {}))
                 <div class="flex flex-col justify-center">
                     <div class="mb-2 flex justify-center bg-black-100 text-xl font-bold md:text-4xl md:mb-5">Sign in
                     </div>
-                    <form @submit.prevent="authenticate('login', formData)">
+                    <form @submit.prevent="login(formData)">
                         <Input v-model="formData.email" type="email" label="Email or Phone Number" name="email"
                             placeholder="Enter your email" />
                         <Error v-if="errors.email_or_phone_number" :error="errors.email_or_phone_number[0]" />

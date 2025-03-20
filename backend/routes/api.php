@@ -18,12 +18,14 @@ Route::get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class,'register'])->middleware('auth:sanctum');
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
+Route::post('/forgot-password', [AuthController::class,'forgotPassword'])->name('password.email');
+Route::post('/reset-password', [AuthController::class,'resetPassword'])->name('password.reset');
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('babies', BabyController::class);
-});
-
-Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/guardians/{guardianId}/babies', [BabyController::class, 'getBabyByGuardianId']);
+    
     Route::get('/guardians', [GuardianController::class,'getGuardians']);
     Route::get('/guardians/{id}', [GuardianController::class,'getGuardian']);
     Route::put('/guardians/{id}', [GuardianController::class,'updateGuardian']);
@@ -38,6 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('appointments', AppointmentsController::class)->except(['create', 'edit']);
+    Route::get('/appointments/baby/vaccination-history/{babyId}', [AppointmentsController::class, 'getBabyVaccinationHistory']);
+    Route::get('/appointments/guardian/vaccination-history/{guardianId}', [AppointmentsController::class, 'getVaccinationHistoryByGuardian']);
 });
 
 

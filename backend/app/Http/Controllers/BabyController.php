@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+
 use App\Models\Baby;
+use App\Models\User;
 
 class BabyController extends Controller
 {
@@ -27,7 +30,6 @@ class BabyController extends Controller
     {
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
             'guardian_id' => 'required|exists:users,id',
             'gender' => 'required|string|in:Male,Female,Other',
             'immunization_status' => 'required|string|max:255',
@@ -92,5 +94,18 @@ class BabyController extends Controller
         $baby->delete();
         return response()->json(['message' => 'Baby deleted successfully']);
     }
+
+    public function getBabyByGuardianId($guardianId): JsonResponse
+    {
+        $guardian = User::with('babies')->find($guardianId);
+
+        if (!$guardian) {
+            return response()->json(['message' => 'Guardian not found'], 404);
+        }
+
+        return response()->json($guardian->babies);
+    }
+
+
 }
 

@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Auth\Passwords\CanResetPassword;
 
-class User extends Authenticatable
+class User extends Authenticatable implements CanResetPasswordContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -58,6 +60,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function babies()
+    {
+        return $this->hasMany(Baby::class, 'guardian_id');
+    }
+
 
 
 

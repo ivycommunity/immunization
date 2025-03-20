@@ -6,21 +6,26 @@
     import vaccinationIcon from "@/assets/userI/vaccination.png";
     
     import userStore from '@/stores/userStore';
-
-    let { first_name, } = {first_name: "", };
+    import { onMounted, ref } from "vue";
+    import { useRouter } from 'vue-router';
     
     const store = userStore();
-    
-    if (store.isAuthenticated){
-        ({ first_name, } = JSON.parse(localStorage.getItem('user_data') || "{}"));
-        console.log("the user in home page", first_name);
-    }
+    const f_name = ref("");
+    const router = useRouter();
+
+    onMounted(()=>{
+        if(!store.isAuthenticated) router.push({name: "userLogin"})
+        else{
+            let { first_name } = JSON.parse(localStorage.getItem("user_data")) || "{}";
+            f_name.value = first_name;
+        }
+    });
         
 
 </script>
 
 <template>
-    <Layout :user-data="{ first_name: first_name, avatar: null }" :topBarMove="false" :with-bottom-bar ="true" >
+    <Layout :user-data="{ first_name: f_name, avatar: null }" :topBarMove="false" :with-bottom-bar ="true" >
         <div class="mb-4 flex flex-col gap-4 w-full items-center justify-center">
             <homeNavButton
                 title="Child Details"

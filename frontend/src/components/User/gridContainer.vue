@@ -22,7 +22,7 @@ const showList = () => {
                 <Squares2X2Icon v-else class="h-5 w-5 text-gray-500" />
             </button>
         </div>
-        <div :class="`rounded-lg shadow-md bg-[#EDECF4] w-full grid gap-4 p-4 ${toList ? 'grid-cols-1' : 'grid-cols-2'}`">
+        <div :class="`rounded-lg shadow-md bg-[#EDECF4] w-full grid gap-8 p-4 ${toList ? 'grid-cols-1' : 'grid-cols-2'}`">
             <slot></slot>
         </div>
     </div>

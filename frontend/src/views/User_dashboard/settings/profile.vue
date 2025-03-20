@@ -13,8 +13,8 @@
     const router = useRouter()
 
     const userData = ref({ first_name: "", last_name: "", email: "", phone_number: "" });
-
-    if (store.isAuthenticated) {
+    if(!store.isAuthenticated) router.push({ name: "userLogin" });
+    else {
         userData.value = JSON.parse(localStorage.getItem('user_data') || "{}");
     }
 

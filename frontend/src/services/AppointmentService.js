@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { useUserStore } from '@/stores/user';
+import userStore from '@/stores/userStore';
 
 export default class AppointmentsService {
   constructor() {
-    this.userStore = useUserStore();
+    this.userStore = userStore();
     this.api = axios.create({
       baseURL: '/api',
       withCredentials: true
@@ -25,7 +25,6 @@ export default class AppointmentsService {
       const response = await this.api.get('/appointments');
       return response.data;
     } catch (error) {
-      console.error('Error fetching appointments:', error);
       throw error;
     }
   }
@@ -42,15 +41,15 @@ export default class AppointmentsService {
   }
   
   // // Create a new appointment
-  // async createAppointment(appointmentData) {
-  //   try {
-  //     const response = await this.api.post('/appointments', appointmentData);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error('Error creating appointment:', error);
-  //     throw error;
-  //   }
-  // }
+  async createAppointment(appointmentData) {
+    try {
+      const response = await this.api.post('/appointments', appointmentData);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+      throw error;
+    }
+  }
   
   // Update an appointment
   async updateAppointment(id, appointmentData) {
@@ -74,7 +73,7 @@ export default class AppointmentsService {
     }
   }
   
-  // Get appointments for a specific baby
+  // Get appointments for a specific baby by filtering all appointments
   async getAppointmentsByBaby(babyId) {
     try {
       const allAppointments = await this.getAllAppointments();
@@ -86,15 +85,15 @@ export default class AppointmentsService {
   }
   
   // // Get appointments for a specific guardian
-  // async getAppointmentsByGuardian(guardianId) {
-  //   try {
-  //     const allAppointments = await this.getAllAppointments();
-  //     return allAppointments.filter(appointment => appointment.guardian.id === guardianId);
-  //   } catch (error) {
-  //     console.error(`Error fetching appointments for guardian ${guardianId}:`, error);
-  //     throw error;
-  //   }
-  // }
+  async getAppointmentsByGuardian(guardianId) {
+    try {
+      const allAppointments = await this.getAllAppointments();
+      return allAppointments.filter(appointment => appointment.guardian.id === guardianId);
+    } catch (error) {
+      console.error(`Error fetching appointments for guardian ${guardianId}:`, error);
+      throw error;
+    }
+  }
   
   // Get appointments for a specific doctor
   async getAppointmentsByDoctor(doctorId) {

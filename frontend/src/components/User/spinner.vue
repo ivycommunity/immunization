@@ -17,7 +17,7 @@
     },
     class: {
       type: String,
-      default: "h-4 w-4 border-2",
+      default: "border-2",
     },
   });
   
@@ -35,6 +35,8 @@
   <style scoped>
   /* Simple CSS spinner */
   .loader {
+    width: 16px;
+    height: 16px;
     animation: spin 0.7s linear infinite;
   }
   

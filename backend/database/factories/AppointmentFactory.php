@@ -16,6 +16,7 @@ class AppointmentFactory extends Factory
             'guardian_id'       => User::query()->where('role', 'guardian')->inRandomOrder()->value('id'),
             'vaccine_id'        => Vaccine::query()->inRandomOrder()->value('id'),
             'doctor_id'         => User::query()->where('role', 'doctor')->inRandomOrder()->value('id'),
+            'nurse_id'         => User::query()->where('role', 'nurse')->inRandomOrder()->value('id'),
             'appointment_date'  => now()->addDays($this->faker->numberBetween(1, 30)),
             'status'            => $this->faker->randomElement(['scheduled', 'completed', 'cancelled']),
             'reminder_sent'     => $this->faker->boolean(),

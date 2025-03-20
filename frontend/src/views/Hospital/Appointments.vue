@@ -40,7 +40,7 @@ const fetchPatients = async () => {
         Authorization: `Bearer ${token}`
       }
     })
-    patients.value = response.data
+    patients.value = response.data.babies || []
   } catch (error) {
     console.error('Error fetching patients:', error)
   }
@@ -55,7 +55,7 @@ const fetchParents = async () => {
         Authorization: `Bearer ${token}`
       }
     })
-    parents.value = response.data
+    parents.value = response.data.guardians || []
   } catch (error) {
     console.error('Error fetching parents:', error)
   }
@@ -70,7 +70,7 @@ const fetchVaccines = async () => {
         Authorization: `Bearer ${token}`
       }
     })
-    vaccines.value = response.data
+    vaccines.value = response.data.vaccines || []
   } catch (error) {
     console.error('Error fetching vaccines:', error)
   }
@@ -147,12 +147,20 @@ const calendarOptions = computed(() => ({
 
 // Modal logic for adding a new appointment
 const isModalOpen = ref(false)
+const userData = localStorage.getItem("user_data");
 const newAppointment = ref({
-  patientName: '',
-  parentName: '',
-  vaccine: '',
-  appointmentDate: ''
-})
+  baby_id: "",        // Should be an ID, not a name
+  guardian_id: "",    // Should be an ID, not a name
+  vaccine_id: "",     // Should be an ID, not a name
+  doctor_id: null,    // Ensure it's `null`, not `"null"`
+  appointment_date: "",
+  status: "Scheduled",
+  reminder_sent: false,
+  notes: "Empty",
+  nurse_id: userData.id
+});
+
+
 
 const closeModal = () => {
   isModalOpen.value = false
@@ -166,15 +174,45 @@ const closeModal = () => {
 
 const addAppointment = async () => {
   try {
-    // Post new appointment data to the backend
-    const response = await axios.post('/api/appointments', newAppointment.value)
+    const token = localStorage.getItem("token"); // Get token from local storage
+
+    if (!token) {
+      alert("Authentication failed: No token found. Please log in again.");
+      return;
+    }
+
+    const response = await axios.post(
+      "/api/appointments", 
+      newAppointment.value, 
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`, // Add Bearer Token
+          "Content-Type": "application/json",
+        }
+      }
+    );
+
     // Append the newly created appointment to the local array
-    appointments.value.push(response.data)
-    closeModal()
+    appointments.value.push(response.data.appointment);
+    closeModal();
+    alert("Appointment added successfully!");
   } catch (error) {
-    console.error('Error adding appointment:', error)
+    console.error("Error adding appointment:", error);
+
+    if (error.response) {
+      console.log("Backend response:", error.response.data);
+
+      if (error.response.status === 401) {
+        alert("Unauthorized: Your session might have expired. Please log in again.");
+      } else if (error.response.status === 422) {
+        alert("Validation error: " + JSON.stringify(error.response.data.errors));
+      }
+    } else {
+      alert("An error occurred. Check the console for details.");
+    }
   }
-}
+};
+
 </script>
 
 <template>
@@ -264,41 +302,41 @@ const addAppointment = async () => {
                           <div>
                             <label for="patientName" class="block text-sm font-medium text-gray-700">Patient
                               Name</label>
-                            <select id="patientName" v-model="newAppointment.patientName"
+                            <select id="patientName" v-model="newAppointment.baby_id"
                               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                               required>
                               <option value="">Select Patient</option>
-                              <option v-for="patient in patients" :key="patient.id" :value="patient.name">
-                                {{ patient.name }}
+                              <option v-for="patient in patients" :key="patient.id" :value="patient.id">
+                                {{ patient.first_name }} {{ patient.last_name }}
                               </option>
                             </select>
                           </div>
                           <div>
                             <label for="parentName" class="block text-sm font-medium text-gray-700">Parent Name</label>
-                            <select id="parentName" v-model="newAppointment.parentName"
+                            <select id="parentName" v-model="newAppointment.guardian_id"
                               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                               required>
                               <option value="">Select Parent</option>
-                              <option v-for="parent in parents" :key="parent.id" :value="parent.name">
-                                {{ parent.name }}
+                              <option v-for="parent in parents" :key="parent.id" :value="parent.id">
+                                {{ parent.first_name }} {{ parent.last_name }}
                               </option>
                             </select>
                           </div>
                           <div>
                             <label for="vaccine" class="block text-sm font-medium text-gray-700">Vaccine</label>
-                            <select id="vaccine" v-model="newAppointment.vaccine"
+                            <select id="vaccine" v-model="newAppointment.vaccine_id"
                               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                               required>
                               <option value="">Select Vaccine</option>
-                              <option v-for="vaccine in vaccines" :key="vaccine.id" :value="vaccine.name">
-                                {{ vaccine.name }}
+                              <option v-for="vaccine in vaccines" :key="vaccine.id" :value="vaccine.id">
+                                {{ vaccine.vaccine_name }}
                               </option>
                             </select>
                           </div>
                           <div>
                             <label for="appointmentDate" class="block text-sm font-medium text-gray-700">Appointment
                               Date</label>
-                            <input type="datetime-local" id="appointmentDate" v-model="newAppointment.appointmentDate"
+                            <input type="datetime-local" id="appointmentDate" v-model="newAppointment.appointment_date"
                               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                               required>
                           </div>

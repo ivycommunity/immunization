@@ -44,7 +44,7 @@ class UserAndBabySeeder extends Seeder
             for ($j = 1; $j <= 2; $j++) {
                 Baby::create([
                     'first_name'            => "Baby{$j}",
-                    'last_name'             => $guardian->last_name,
+                    // 'last_name'             => $guardian->last_name,
                     'guardian_id'           => $guardian->id,
                     'gender'                => (rand(0, 1) ? 'Male' : 'Female'),
                     'immunization_status'   => ['Up to date', 'Pending', 'Overdue'][rand(0, 2)],

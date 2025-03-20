@@ -86,7 +86,10 @@ onMounted(async () => {
   ])
 })
 
-console.log(appointments)
+console.log("APP", appointments)
+console.log("patients", patients)
+console.log("parents", parents)
+console.log("vaccines", vaccines)
 
 // Format a date string into a human-readable format
 const formatDate = (dateString) => {
@@ -134,20 +137,19 @@ const calendarOptions = computed(() => ({
   plugins: [dayGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
   events: appointments.value.map(appointment => ({
-    title: `${appointment.patientName} - ${appointment.doctorName}`,
-    start: appointment.date,
+    title: `${appointment.baby.first_name} - ${appointment.doctor.first_name} ${appointment.doctor.last_name}`,
+    start: appointment.appointment_date,
     allDay: false,
     backgroundColor: getEventColor(appointment.status)
   })),
   eventClick: (info) => {
-    alert(`Appointment: ${info.event.title}`)
+    alert(`Appointment: ${info.event.title} on ${info.event.start}`)
     // Add detailed view or editing functionality as needed
   }
 }))
 
 // Modal logic for adding a new appointment
 const isModalOpen = ref(false)
-const userData = localStorage.getItem("user_data");
 const newAppointment = ref({
   baby_id: "",        // Should be an ID, not a name
   guardian_id: "",    // Should be an ID, not a name
@@ -155,9 +157,9 @@ const newAppointment = ref({
   doctor_id: null,    // Ensure it's `null`, not `"null"`
   appointment_date: "",
   status: "Scheduled",
-  reminder_sent: false,
+  reminder_sent: 0,
   notes: "Empty",
-  nurse_id: userData.id
+  nurse_id: localStorage.getItem("user_id")
 });
 
 
@@ -245,6 +247,9 @@ const addAppointment = async () => {
             <thead>
               <tr class="bg-gray-100">
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Parent Name
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Patient Name
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -260,12 +265,13 @@ const addAppointment = async () => {
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="appointment in appointments" :key="appointment.id">
-                <td class="px-6 py-4 whitespace-nowrap">{{ appointment.baby.full_name }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ appointment.doctor }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ formatDate(appointment.appointment_details.date) }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ appointment.guardian.first_name }} {{ appointment.guardian.last_name }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ appointment.baby.first_name }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ appointment.doctor ? appointment.doctor.first_name + ' ' + appointment.doctor.last_name : 'No doctor assigned' }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ formatDate(appointment.appointment_date) }}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span :class="getStatusClass(appointment.appointment_details.status)">
-                    {{ appointment.appointment_details.status }}
+                  <span :class="getStatusClass(appointment.status)">
+                    {{ appointment.status }}
                   </span>
                 </td>
               </tr>

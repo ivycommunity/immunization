@@ -19,8 +19,9 @@ class AppointmentsController extends Controller
         $user = auth()->guard()->user();
         $status = $request->query('status');
 
-        $query = Appointment::with(['baby', 'guardian', 'doctor', 'vaccine', 'nurse']);
-                
+        // Eager load all the required relationships
+        $query = Appointment::with(['baby', 'guardian', 'doctor', 'nurse', 'vaccine']);
+
         if ($status && in_array($status, ['Scheduled', 'Completed', 'Missed', 'Cancelled'])) {
             $query->where('status', $status);
         }
@@ -35,7 +36,7 @@ class AppointmentsController extends Controller
             }
         } elseif ($user->role === 'doctor') {
             $doctor = Doctor::where('user_id', $user->id)->first();
-            
+
             if (!$doctor) {
                 return response()->json(['message' => 'Doctor profile not found'], 404);
             }
@@ -49,8 +50,10 @@ class AppointmentsController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        return AppointmentResource::collection($appointments);
+        // Return appointments with their relationships directly
+        return response()->json(['data' => $appointments]);
     }
+
 
     /**
      * Store a new appointment record.
@@ -71,10 +74,7 @@ class AppointmentsController extends Controller
             'vaccine_id' => 'required|exists:vaccines,id',
             'doctor_id' => 'nullable|exists:doctors,id',
             'appointment_date' => 'required',
-            'status' => 'required|string|in:Scheduled,Completed,Missed,Cancelled',
-            'reminder_sent' => 'required|boolean',
             'notes' => 'nullable|string',
-            'nurse_id' => 'required|exists:users,id',
         ]);
 
         $appointmentData = $request->only([

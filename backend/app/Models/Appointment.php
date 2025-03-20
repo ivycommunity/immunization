@@ -20,24 +20,24 @@ class Appointment extends Model
         'notes',
     ];
 
-    // Relationship with Guardian (User)
     public function guardian()
     {
         return $this->belongsTo(User::class, 'guardian_id');
     }
 
+    public function doctor()
+    {
+        return $this->belongsTo(User::class, 'doctor_id');
+    }
+
+    public function nurse()
+    {
+        return $this->belongsTo(User::class, 'nurse_id');
+    }
 
     public function baby()
     {
         return $this->belongsTo(Baby::class);
-    }
-    public function doctor()
-    {
-        return $this->belongsTo(Doctor::class);
-    }
-    public function nurse()
-    {
-        return $this->belongsTo(User::class, 'nurse_id');
     }
 
     public function vaccine()

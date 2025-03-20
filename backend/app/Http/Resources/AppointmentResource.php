@@ -16,36 +16,17 @@ class AppointmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'baby' => $this->whenLoaded('baby', function () {
-                return [
-                    'id' => $this->baby->id,
-                    'full_name' => $this->baby->first_name . ' ' . $this->baby->last_name,
-                ];
-            }),
-            'guardian' => $this->whenLoaded('guardian', function () {
-                return [
-                    'id' => $this->guardian->id,
-                    'full_name' => $this->guardian->first_name . ' ' . $this->guardian->last_name,
-                ];
-            }),
-            'doctor' => $this->whenLoaded('doctor', function () {
-                return [
-                    'id' => $this->doctor->id,
-                    'contact_number' => $this->doctor->work_phone_number,
-                ];
-            }),
-            'vaccine' => $this->whenLoaded('vaccine', function () {
-                return [
-                    'id' => $this->vaccine->id,
-                    'name' => $this->vaccine->vaccine_name,
-                ];
-            }),
-            'appointment_details' => [
-                'date' => $this->appointment_date,
-                'status' => $this->status,
-                'notes' => $this->notes,
-                'reminder_sent' => $this->reminder_sent,
-            ]
+            'baby_id' => $this->baby_id,
+            'guardian_id' => $this->guardian_id,
+            'doctor_id' => $this->doctor_id,
+            'nurse_id' => $this->nurse_id,
+            'vaccine_id' => $this->vaccine_id,
+            'appointment_date' => $this->appointment_date,
+            'status' => $this->status,
+            'reminder_sent' => $this->reminder_sent,
+            'notes' => $this->notes,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
     }
 }

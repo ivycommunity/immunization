@@ -13,6 +13,7 @@ class Appointment extends Model
         'guardian_id',
         'vaccine_id',
         'doctor_id',
+        'nurse_id',
         'appointment_date',
         'status',
         'reminder_sent',
@@ -33,6 +34,10 @@ class Appointment extends Model
     public function doctor()
     {
         return $this->belongsTo(Doctor::class);
+    }
+    public function nurse()
+    {
+        return $this->belongsTo(User::class, 'nurse_id');
     }
 
     public function vaccine()

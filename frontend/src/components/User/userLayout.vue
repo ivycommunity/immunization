@@ -16,7 +16,7 @@ const props = defineProps({
     type: [Boolean, String], // Accept both Boolean and String (from parent)
     default: true,
   },
-  bactTo: {
+  backTo: {
     type:  String, // Accept both Boolean and String (from parent)
   },
   className: {
@@ -38,12 +38,12 @@ const move = computed(() => props.topBarMove === true || props.topBarMove === 't
 <!-- ${props.withBottomBar ? 'pb-16 ' : 'overflow-y-auto scrollbar-hide'} -->
 <template>
   <div class="default-layout relative h-screen flex flex-col">
-    <Topbar :title="topBartitle" :user="userData" :move="move" :back-to="bactTo" class="fixed top-0 left-0 w-full z-10" />
+    <Topbar :title="topBartitle" :user="userData" :move="move" :back-to="backTo" class="fixed top-0 left-0 w-full z-10" />
     <main 
       :class="`
           w-full 
           mx-auto
-          mt-[64px]
+          mt-[80px]
           lg:mt-0
           lg:pt-[8%]
           px-4

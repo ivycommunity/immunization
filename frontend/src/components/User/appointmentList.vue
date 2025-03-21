@@ -4,39 +4,42 @@
     import spinner from './spinner.vue';
     
     const props = defineProps({
-        appointments: Array, // Changed from Object to Array
-        dataLoading: Boolean,
+        appointments : Array,
+        dataLoading : Boolean,
+        hasAppointment : Boolean
     });
 
-    console.log("in LIST ", props.appointments);
 </script>
 
 <template>
     <div>
         <spinner :is-loading="dataLoading" />
-        <gridContainer v-if="!dataLoading">
-            <div v-if="props.appointments && props.appointments.length > 0">
+
+        <div v-if="hasAppointment">
+            <gridContainer>
                 <div v-for="item in props.appointments" :key="item.id">
-                    <vaccineRecord 
-                        v-if="item.appointment_details && item.baby?.full_name"
-                        :date="item.appointment_details.date"
-                        :status="item.appointment_details.status"
-                        :baby="item.baby.full_name"
-                        :vaccine-type="item.vaccine?.name" 
-                        :doctor="item.doctor?.contact_number"
+                    <vaccineRecord
+                        :date="item.appointment_date"
+                        :status="item.status"
+                        :baby="item.baby.first_name"
+                        :vaccine-type="item.vaccine.vaccine_name" 
+                        :doctor="item.doctor.first_name"
                     />
-                    <div v-else class="p-4 rounded rounded-lg bg-white">
-                        <h3 class="text-[#432C81] text-lg flex justify-between">
-                            <span>{{ item.baby?.full_name || 'Unknown Baby' }}</span>
-                            <span>-</span>
-                            <span>No appointment details available</span>
-                        </h3>
-                    </div>
                 </div>
-            </div>
-            <div v-else class="p-4 rounded rounded-lg bg-white">
-                <h3 class="text-[#432C81] text-lg text-center">No vaccination records found</h3>
-            </div>
-        </gridContainer>
+            </gridContainer>
+        </div>
+        <div v-else class="p-4 text-center">
+            <p>No appointment details available.</p>
+            <p class="mt-2">
+                For any enquiry on this matter, please contact 
+                <a 
+                    href="#" 
+                    @click.prevent="navigator.clipboard.writeText('+1234567890')"
+                    class="text-blue-500 hover:underline"
+                >
+                    +1234567890
+                </a>
+            </p>
+        </div>
     </div>
 </template>

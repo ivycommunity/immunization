@@ -1,13 +1,13 @@
 <script setup>
-
 // In vaccineRecord.vue
 const props = defineProps({
     date: String,
-    status: String,
-    baby: String,
-    vaccineType: String,
-    doctor: String
+    status: [String, Number],
+    baby: [String, Number],
+    vaccineType: [String, Number],
+    doctor: [String, Number]
 });
+
 </script>
 
 <template>

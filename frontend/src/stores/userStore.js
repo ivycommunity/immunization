@@ -9,6 +9,13 @@ const API = axios.create({
     withCredentials: true,
 })
 
+API.interceptors.request.use(config => {
+    if (TOKEN) {
+        config.headers.Authorization = `Bearer ${TOKEN}`;
+    }
+    return config;
+});
+
 export default defineStore('user', {
     state: () => ({
         token: TOKEN,
@@ -87,14 +94,13 @@ export default defineStore('user', {
         },
 
         async logout() {
-            this.token = "";
-            this.user = {};
-            this.isAuthenticated = false;
-            
             try {
                 await API.post('/logout');
                 localStorage.removeItem('user_token');
                 localStorage.removeItem('user_data');
+                this.token = "";
+                this.user = {};
+                this.isAuthenticated = false;
             } catch (error) {
                 console.error('Logout failed:', error);
                 return Promise.reject(error);
@@ -102,6 +108,9 @@ export default defineStore('user', {
         }
     },
     getters: {
+        getUserID: (state) => {
+            return state.user.id || '';
+        },
         userFullName: (state) => {
             if (state.user.first_name || state.user.last_name) {
                 return `${state.user.first_name || ''} ${state.user.last_name || ''}`.trim();

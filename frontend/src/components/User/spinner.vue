@@ -1,11 +1,10 @@
 <template>
-    <span v-if="isLoading" :class="`loader rounded-full ${ loaderClass }`"></span>
+  <span v-if="isLoading" :class="`loader ${loaderClass}`"></span>
 </template>
-  
-  <script setup>
+
+<script setup>
   import { computed } from "vue";
-  
-  // Props
+    
   const props = defineProps({
     isLoading: {
       type: Boolean,
@@ -17,29 +16,32 @@
     },
     class: {
       type: String,
-      default: "border-2",
+      default: "",
     },
   });
-  
-  // Computed property for dynamic button classes
+
+  // Computed property for dynamic loader classes
   const loaderClass = computed(() => {
     const variantClass =
       props.variant === "secondary"
-        ? "border-[#432C81]"
-        : "border-white";
+        ? "border-t-[#432C81]"
+        : "border-t-white";
 
-    return `${variantClass} ${props.class}`;
+    return `border-2 border-solid border-transparent rounded-full ${variantClass} ${props.class}`;
   });
-  </script>
-  
-  <style scoped>
+</script>
+
+<style scoped>
   /* Simple CSS spinner */
   .loader {
     width: 16px;
     height: 16px;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 50%;
     animation: spin 0.7s linear infinite;
   }
-  
+
   @keyframes spin {
     from {
       transform: rotate(0deg);
@@ -48,5 +50,4 @@
       transform: rotate(360deg);
     }
   }
-  </style>
-  
+</style>

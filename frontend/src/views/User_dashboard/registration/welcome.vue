@@ -23,7 +23,7 @@
     <!-- Buttons Section -->
     <div class="w-full flex flex-col gap-6 max-w-md mx-auto">
       <router-link
-        :href="{name: 'signin'}"
+        to="/user/login"
         class="bg-[#432C81] text-center text-white py-3 px-6 rounded-lg font-medium hover:bg-opacity-90 transition-colors"
       >
         Get Started

@@ -29,7 +29,7 @@
         <div class="mb-4 flex flex-col gap-4 w-full items-center justify-center">
             <homeNavButton
                 title="Child Details"
-                link="/user/add-record"
+                link="#"
                 :illustration-icon= "clinicDetailsIocn"
             />
             <homeNavButton
@@ -39,7 +39,7 @@
             />
             <homeNavButton
                 title="Vaccination Chart"
-                link="/user/view-records"
+                link="#"
                 :illustration-icon= "vaccinationIcon"
             />
         </div>
@@ -47,12 +47,12 @@
         <div class="flex gap-4 flex-grow flex-wrap md:flex-nowrap">
             <homeNavButton
                 title="Why the OPV vaccine is important for your child"
-                link="/user/view-records"
+                link="#"
                 className = "aspect-square max-h-[100px] text-xs sm:text-sm md:text-base"
             />
             <homeNavButton
                 title="Tetanus Prevention measures"
-                link="/user/view-records"
+                link="#"
                 className = "aspect-square max-h-[100px] text-xs sm:text-sm md:text-base "
             />
         </div>

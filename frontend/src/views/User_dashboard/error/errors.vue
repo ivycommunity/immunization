@@ -35,14 +35,22 @@ const errorMessages = {
         Link: '/user/home',
         topBarTitle : "Vaccination record",
     },
+    401: {
+        title: 'Opps! Something went wrong.',
+        image: defaultErrorImage,
+        action_text: 'Click on the plus button to add.',
+        Link: '/user/profile',
+        topBarTitle : "Settings",
+    },
 };
 
 const errorDetails = errorMessages[errorCode];
+    console.log(errorDetails.topBarTitle);
 </script>
 
 <template>
     <div>
-        <topbar :move="false" :title="errorDetails.topBarTitle ? errorDetails.topBarTitle : ''" :back-to="errorDetails.Link ? errorDetails.Link : ''" />
+        <topbar :move="false" :title="errorDetails.topBarTitle ? errorDetails.topBarTitle : '' " :back-to="errorDetails.Link ? errorDetails.Link : ''" />
         <router-link 
             :to="errorDetails.Link"
             class="flex flex-wrap items-center justify-between h-svh p-6 box-border bg-white"   

@@ -26,16 +26,13 @@
 
     const handleLogout = async () => {
         isLoading.value = true;
-        console.log("is loading is on -> value : ", isLoading.value);
         try {
-            await new Promise(resolve => setTimeout(resolve, 5000));
             await store.logout();
             router.push({ name: "userWelcome" });
         } catch (error) {
             router.push(`/user/error/${error.response ? error.response.status : '415'}`);
         } finally {
             isLoading.value = false;
-            console.log("is loading is off -> value : ", isLoading);
         }
     };
 </script>

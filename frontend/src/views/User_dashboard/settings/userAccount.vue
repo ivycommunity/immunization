@@ -75,7 +75,7 @@
 
 <template>
     <userLayout 
-        bact-to="/user/profile" 
+        back-to="/user/profile" 
         :topBartitle="'Account'"
         :with-bottom-bar ="true"
     >

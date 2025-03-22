@@ -43,7 +43,7 @@ export default class BabiesService {
   // Get a specific baby
   async getBabyByGuardian(guardian_id) {
     try {
-      const response = await this.api.get(`/babies/${guardian_id}`);
+      const response = await this.api.get(`/guardians/${guardian_id}/babies`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching baby ${id}:`, error);

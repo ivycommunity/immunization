@@ -24,6 +24,7 @@
         try {
             const currentUserID = userStore().getUserID;
             const response = await appointmentStore.fetchAllAppointments();
+            console.log("The appointments: ",response.data);
             const appointments_for_current_user = response.data.filter(appointment => appointment.guardian_id === currentUserID);
             //filter this data to get only the appointments of the current user
 

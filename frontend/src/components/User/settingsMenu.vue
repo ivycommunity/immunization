@@ -9,44 +9,52 @@
     ChevronRightIcon 
   } from '@heroicons/vue/24/outline'
   
-  const menuItems = [
-    {
-      label: 'Account',
-      to: `/user/profile/`,
-      icon: UserCircleIcon,
-      isDisabled: false,
-    },
-    {
-      label: 'Notification',
-      to: `/user/profile/`,
-      icon: BellIcon,
-      isDisabled: true,
-    },
-    {
-      label: 'Appearance',
-      to: `/user/profile/`,
-      icon: EyeIcon,
-      isDisabled: true,
-    },
-    {
-      label: 'Privacy & Security',
-      to: `/user/profile/`,
-      icon: ShieldCheckIcon,
-      isDisabled: true,
-    },
-    {
-      label: 'Sound',
-      to: `/user/profile/`,
-      icon: SpeakerWaveIcon,
-      isDisabled: true,
-    },
-    {
-      label: 'Language',
-      to: `/user/profile/`,
-      icon: LanguageIcon,
-      isDisabled: true,
-    }
-  ]
+  const props = defineProps({
+    menuItems: 
+      {
+        type: Array,
+        default: () => (
+          [
+            {
+              label: 'Account',
+              to: `/user/profile/`,
+              icon: UserCircleIcon,
+              isDisabled: false,
+            },
+            {
+              label: 'Notification',
+              to: `/user/profile/`,
+              icon: BellIcon,
+              isDisabled: true,
+            },
+            {
+              label: 'Appearance',
+              to: `/user/profile/`,
+              icon: EyeIcon,
+              isDisabled: true,
+            },
+            {
+              label: 'Privacy & Security',
+              to: `/user/profile/`,
+              icon: ShieldCheckIcon,
+              isDisabled: true,
+            },
+            {
+              label: 'Sound',
+              to: `/user/profile/`,
+              icon: SpeakerWaveIcon,
+              isDisabled: true,
+            },
+            {
+              label: 'Language',
+              to: `/user/profile/`,
+              icon: LanguageIcon,
+              isDisabled: true,
+            }
+          ]
+        )
+      }
+  })
 </script>
 
 <template>

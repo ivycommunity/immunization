@@ -87,10 +87,20 @@ export default class AppointmentsService {
   // // Get appointments for a specific guardian
   async getAppointmentsByGuardian(guardianId) {
     try {
-      const allAppointments = await this.getAllAppointments();
-      return allAppointments.filter(appointment => appointment.guardian.id === guardianId);
+      const response = await this.api.get(`/appointments/guardian/vaccination-history/${guardianId}`);
+      return response.data;
     } catch (error) {
       console.error(`Error fetching appointments for guardian ${guardianId}:`, error);
+      throw error;
+    }
+  }
+  // // Get vacsHistory for a specific baby
+  async vaccinationBabyHistory(babyId) {
+    try {
+      const response = await this.api.get(`/appointments/baby/vaccination-history/${babyId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching appointments for Baby ${guardianId}:`, error);
       throw error;
     }
   }

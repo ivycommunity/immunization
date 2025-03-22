@@ -11,16 +11,22 @@
     
     const store = userStore();
     const f_name = ref("");
+    const no_of_child = ref(0);
     const router = useRouter();
 
     onMounted(()=>{
         if(!store.isAuthenticated) router.push({name: "userLogin"})
         else{
-            let { first_name } = JSON.parse(localStorage.getItem("user_data")) || "{}";
+            let { first_name, no_of_children } = JSON.parse(localStorage.getItem("user_data")) || "{}";
             f_name.value = first_name;
+            no_of_child.value = no_of_children;
+
         }
     });
         
+    function childTitle (no_of_children){
+        return no_of_children > 1 ? "Children" : "Child";
+    }
 
 </script>
 
@@ -28,13 +34,13 @@
     <Layout :user-data="{ first_name: f_name, avatar: null }" :topBarMove="false" :with-bottom-bar ="true" >
         <div class="mb-4 flex flex-col gap-4 w-full items-center justify-center">
             <homeNavButton
-                title="Child Details"
-                link="#"
+                :title="childTitle(no_of_child).toString().concat(' Records')"
+                link="/user/records/babies"
                 :illustration-icon= "clinicDetailsIocn"
             />
             <homeNavButton
                 title="Vaccination Records"
-                link="/user/reccords/vaccination"
+                link="/user/records/vaccination"
                 :illustration-icon= "clinicRecordsIcon"
             />
             <homeNavButton

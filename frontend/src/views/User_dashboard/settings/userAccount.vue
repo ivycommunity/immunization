@@ -45,6 +45,12 @@
             if (!['id', 'national_id', 'role', 'no_of_children'].includes(key)) {
                 filtered[key] = value;
             }
+
+            if (['date_of_birth'].includes(key)) {
+                const date = new Date(value);
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                filtered[key] = date.toLocaleDateString(undefined, options);
+            }
         }
         return filtered;
     });

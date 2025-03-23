@@ -176,6 +176,24 @@ export const useAppointmentsStore = defineStore('appointments', {
         this.setLoading(false);
       }
     },
+    // Fetch Vaccination History by baby ID
+    async fetchVaccinationHystoryByBaby(babyId) {
+      const appointmentService = new AppointmentsService();
+      this.setLoading(true);
+      this.error = null;
+      this.filters.babyId = babyId;
+      
+      try {
+        const appointments = await appointmentService.vaccinationBabyHistory(babyId);
+        // Don't override all appointments, just filter the view
+        return appointments;
+      } catch (error) {
+        this.setError(error.message || `Failed to fetch appointments for baby with ID ${babyId}`);
+        throw error;
+      } finally {
+        this.setLoading(false);
+      }
+    },
     
     // Fetch appointments by guardian ID
     async fetchAppointmentsByGuardian(guardianId) {

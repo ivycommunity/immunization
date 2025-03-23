@@ -15,7 +15,7 @@
     const router = useRouter();
 
     onMounted(()=>{
-        if(!store.isAuthenticated) router.push({name: "userLogin"})
+        if(!store.isLoggedIn) router.push({name: "userLogin"})
         else{
             let { first_name, no_of_children } = JSON.parse(localStorage.getItem("user_data")) || "{}";
             f_name.value = first_name;

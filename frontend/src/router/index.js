@@ -27,7 +27,7 @@ import userProfile from "@/views/User_dashboard/settings/profile.vue";
 import vaccineRecord from '@/views/User_dashboard/home/vaccineRecordPage.vue'
 import userAccount from '@/views/User_dashboard/settings/userAccount.vue'
 import childrenRecordPage from '@/views/User_dashboard/home/childrenRecordPage.vue'
-
+import baby from '@/views/User_dashboard/records/baby.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -107,6 +107,11 @@ const router = createRouter({
       path: '/user/records/babies',
       name: 'childrenRecord',
       component: childrenRecordPage,
+    },
+    {
+      path: '/user/records/babies/:id',
+      name: 'baby',
+      component: baby,
     },
     {
       path: '/user/profile',

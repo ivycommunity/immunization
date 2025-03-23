@@ -43,7 +43,11 @@
         topBarMove="false"
         :with-bottom-bar ="true"
     >
-        <profileComponent :user-full-name = "userFullName" :user-email = "userEmail" :user-phone="userPhone_number"/>
+        <profileComponent 
+            :user-full-name = "userFullName" 
+            :user-email = "userEmail" 
+            :user-phone="userPhone_number"
+        />
         <settingsMenu/>
         <LogoutButton @click="handleLogout"  text="Logout" :is-loading="isLoading" variant="secondary" class="hover:bg-[#F8F4F8]"/>
     </userLayout>

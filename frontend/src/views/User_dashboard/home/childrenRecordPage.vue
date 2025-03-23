@@ -1,13 +1,13 @@
 <script setup>
-    import profileComponent from '@/components/User/profileComponent.vue';
     import userLayout from '@/components/User/userLayout.vue';
-    import settingsMenu from '@/components/User/settingsMenu.vue';
+    import babyCard from '@/components/User/babyCard.vue';
     import { useBabiesStore } from '@/stores/babyStore';
     import userStore from '@/stores/userStore';
     import { onMounted, ref } from 'vue';
 
     const babiesStore = useBabiesStore();
     const currentUserID = userStore().getUserID;
+    const no_of_child = userStore().no_of_children;
     const isAuthenticated = userStore().isAuthenticated;
     const babies = ref([]);
 
@@ -30,12 +30,20 @@
         }
     });
 
+    function childTitle (no_of_children){
+        return no_of_children > 1 ? "Children" : "Child";
+    }
+
 </script>
 
 <template>
-    <userLayout :topBarMove="false" :with-bottom-bar="true">
+    <userLayout
+        :topBartitle="'My '.concat(childTitle(no_of_child).toString())"
+        :topBarMove="false" 
+        :with-bottom-bar="true"
+    >
         <div v-for="baby in babies" :key="baby.id">
-            <h1>{{ baby.first_name }}</h1>  
+            <babyCard :baby="baby"/>
         </div>
     </userLayout>
 </template>

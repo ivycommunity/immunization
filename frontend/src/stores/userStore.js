@@ -117,6 +117,13 @@ export default defineStore('user', {
             }
             return '';
         },
-        isLoggedIn: (state) => state.isAuthenticated
+        isLoggedIn: (state) => state.isAuthenticated,
+        
+        fullName: (state) => {
+            return `${state.user.first_name || ''} ${state.user.last_name || ''}`.trim();
+        },
+        no_of_children: (state) => {
+            return state.user.no_of_children || 0;
+        }
     },
 });

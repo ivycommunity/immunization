@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores/auth';
 import Error from '@/components/Error.vue';
 
 const { errors } = storeToRefs(useAuthStore())
-const { authenticate } = useAuthStore()
+const { register } = useAuthStore()
 
 const form = reactive({
     first_name: '',
@@ -29,7 +29,7 @@ const showModal = ref(false)
 const modalMessage = ref('')
 
 const submitForm = async () => {
-    const response = await authenticate('register', form)
+    const response = await register(form)
     if (response?.success) {
         modalMessage.value = 'Guardian registered successfully!'
         showModal.value = true

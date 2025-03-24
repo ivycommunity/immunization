@@ -59,7 +59,7 @@ class DoctorSeeder extends Seeder
                 'first_name'        => $data['first_name'],
                 'last_name'         => $data['last_name'],
                 'email'             => $data['email'],
-                'password'          => Hash::make('securepassword456'),
+                'password'          => Hash::make('password123'),
                 'phone_number'      => $data['phone_number'],
                 'gender'            => 'Male',
                 'role'              => 'doctor',

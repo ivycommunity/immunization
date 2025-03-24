@@ -10,9 +10,9 @@
         <p class="text-xl mb-8">
           Easy, reliable, and up-to-date vaccination tracking from birth to adulthood.
         </p>
-        <button class="bg-[#04A699] text-[#F8F8FF] px-8 py-3 rounded-lg font-semibold hover:bg-[#038C7F] transition duration-300">
+        <router-link to="/signin" class="bg-[#04A699] text-[#F8F8FF] px-8 py-3 rounded-lg font-semibold hover:bg-[#038C7F] transition duration-300">
           Get Started
-        </button>
+        </router-link>
       </section>
 
       <!-- Why Choose IVY Section -->

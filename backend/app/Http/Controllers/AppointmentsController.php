@@ -19,8 +19,9 @@ class AppointmentsController extends Controller
         $user = auth()->guard()->user();
         $status = $request->query('status');
 
-        $query = Appointment::with(['baby', 'guardian', 'doctor', 'vaccine', 'nurse']);
-                
+        // Eager load all the required relationships
+        $query = Appointment::with(['baby', 'guardian', 'doctor', 'nurse', 'vaccine']);
+
         if ($status && in_array($status, ['Scheduled', 'Completed', 'Missed', 'Cancelled'])) {
             $query->where('status', $status);
         }
@@ -35,7 +36,7 @@ class AppointmentsController extends Controller
             }
         } elseif ($user->role === 'doctor') {
             $doctor = Doctor::where('user_id', $user->id)->first();
-            
+
             if (!$doctor) {
                 return response()->json(['message' => 'Doctor profile not found'], 404);
             }
@@ -49,8 +50,10 @@ class AppointmentsController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        return AppointmentResource::collection($appointments);
+        // Return appointments with their relationships directly
+        return response()->json(['data' => $appointments]);
     }
+
 
     /**
      * Store a new appointment record.
@@ -65,13 +68,15 @@ class AppointmentsController extends Controller
             ], 403);
         }
 
+        // The commented fields are not set by the user sometimes, they are sent automatically
         $request->validate([
             'baby_id' => 'required|exists:babies,id',
             'guardian_id' => 'required|exists:users,id',
             'vaccine_id' => 'required|exists:vaccines,id',
-            'appointment_date' => 'required|date',
-            'status' => 'required|string|in:Scheduled,Completed,Missed,Cancelled',
-            'reminder_sent' => 'required|boolean',
+            'doctor_id' => 'nullable|exists:doctors,id',
+            'appointment_date' => 'required',
+            // 'status' => 'required|string|in:Scheduled,Completed,Missed,Cancelled',
+            // 'reminder_sent' => 'required|boolean',
             'notes' => 'nullable|string',
         ]);
 
@@ -81,7 +86,7 @@ class AppointmentsController extends Controller
         ]);
 
         $appointmentData['doctor_id'] = null;
-        $appointmentData['nurse_id'] = null;
+        $appointmentData['nurse_id'] = $user->id;
 
         $appointment = Appointment::create($appointmentData);
 
@@ -129,28 +134,29 @@ class AppointmentsController extends Controller
         }
 
         if (in_array($user->role, ['admin', 'nurse', 'doctor'])) {
-            $request->validate([
+            // Remove nurse_id from validation and request data
+            $validatedData = $request->validate([
                 'baby_id' => 'integer|exists:babies,id',
                 'guardian_id' => 'integer|exists:users,id',
                 'vaccine_id' => 'integer|exists:vaccines,id',
                 'doctor_id' => 'integer|exists:doctors,id',
-                'nurse_id'=> 'integer|exists:users,id',
                 'appointment_date' => 'date',
                 'status' => 'in:Scheduled,Completed,Missed,Cancelled',
                 'reminder_sent' => 'boolean',
                 'notes' => 'nullable|string',
             ]);
 
-            $appointment->update($request->only([
-                'baby_id','guardian_id','vaccine_id', 'doctor_id','nurse_id', 'appointment_date', 'status', 'reminder_sent', 'notes'
-            ]));
+            // Force nurse_id to be the authenticated user's ID
+            $validatedData['nurse_id'] = $user->id;
+
+            $appointment->update($validatedData);
         } else {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         return response()->json([
             'message' => 'Appointment updated successfully',
-            'appointment' => new AppointmentResource($appointment->load(['baby', 'guardian','doctor', 'vaccine', 'nurse'])),
+            'appointment' => new AppointmentResource($appointment->load(['baby', 'guardian', 'doctor', 'vaccine', 'nurse'])),
         ]);
     }
 

@@ -30,7 +30,6 @@ class BabyController extends Controller
     {
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
             'guardian_id' => 'required|exists:users,id',
             'gender' => 'required|string|in:Male,Female,Other',
             'immunization_status' => 'required|string|max:255',

@@ -254,7 +254,7 @@ class AppointmentsController extends Controller
                 
                 $babyData = [
                     'baby_id' => $babyId,
-                    'baby_name' => $baby->first_name . ' ' . $baby->last_name,
+                    'baby_name' => $baby->first_name,
                     'total_appointments' => count($babyAppointments),
                     'by_status' => $statusData
                 ];

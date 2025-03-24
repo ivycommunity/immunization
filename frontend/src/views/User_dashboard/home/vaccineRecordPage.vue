@@ -22,13 +22,40 @@
     const allAppointments = async () => {
         dataLoading.value = true;
         try {
+            // const currentUserID = userStore().getUserID;
+            // const response = await appointmentStore.fetchAllAppointments();
+            // console.log("The appointments: ",response.data);
+            // const appointments_for_current_user = response.data.filter(appointment => appointment.guardian_id === currentUserID);
+            // console.log("current user ID: ",currentUserID);
+            // //filter this data to get only the appointments of the current user
+
+            // appointments.value = appointments_for_current_user.data;
+            // console.log("The appointments after filter: ",appointments_for_current_user);
+
             const currentUserID = userStore().getUserID;
             const response = await appointmentStore.fetchAllAppointments();
-            console.log("The appointments: ",response.data);
-            const appointments_for_current_user = response.data.filter(appointment => appointment.guardian_id === currentUserID);
-            //filter this data to get only the appointments of the current user
 
-            appointments.value = appointments_for_current_user.data;
+            // Log the full response data to see structure
+            console.log("The appointments: ", response.data);
+            console.log("current user ID: ", currentUserID);
+            console.log("current user ID type: ", typeof currentUserID);
+
+            // Log a sample appointment to check structure
+            if (response.data && response.data.length > 0) {
+            console.log("Sample appointment: ", response.data[0]);
+            console.log("Sample guardian_id: ", response.data[0].guardian_id);
+            console.log("Sample guardian_id type: ", typeof response.data[0].guardian_id);
+            }
+
+            // Try the filter with more detailed logging
+            const appointments_for_current_user = response.data.filter(appointment => {
+            console.log("Comparing: ", appointment.guardian_id, currentUserID, appointment.guardian_id === currentUserID);
+            return appointment.guardian_id === currentUserID;
+            });
+
+            // Check the result
+            console.log("Filtered appointments: ", appointments_for_current_user);
+            appointments.value = appointments_for_current_user;
             
         } catch (error) {
             console.error("Error fetching appointments:", error);

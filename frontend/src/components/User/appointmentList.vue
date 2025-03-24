@@ -12,10 +12,8 @@
 </script>
 
 <template>
-    <div>
-        <spinner :is-loading="dataLoading" />
-
-        <div v-if="hasAppointment">
+    <div class="w-full mx-auto p-4">
+        <div v-if="hasAppointment && !dataLoading">
             <gridContainer>
                 <div v-for="item in props.appointments" :key="item.id">
                     <vaccineRecord
@@ -28,7 +26,7 @@
                 </div>
             </gridContainer>
         </div>
-        <div v-else class="p-4 text-center">
+        <div v-if="!hasAppointment && !dataLoading" class="p-4 text-center">
             <p>No appointment details available.</p>
             <p class="mt-2">
                 For any enquiry on this matter, please contact 
@@ -40,6 +38,10 @@
                     +1234567890
                 </a>
             </p>
+        </div>
+         <!-- Add a container for the spinner with proper positioning -->
+         <div v-if="dataLoading" class="flex justify-center items-center py-8">
+            <spinner :is-loading="dataLoading" variant="secondary" />
         </div>
     </div>
 </template>

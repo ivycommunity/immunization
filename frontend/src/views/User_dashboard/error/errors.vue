@@ -50,7 +50,7 @@ const errorDetails = errorMessages[errorCode];
 
 <template>
     <div>
-        <topbar :move="false" :title="errorDetails.topBarTitle ? errorDetails.topBarTitle : '' " :back-to="errorDetails.Link ? errorDetails.Link : ''" />
+        <topbar :move="false" :title="errorDetails.topBarTitle ? errorDetails.topBarTitle : null " :back-to="errorDetails.Link ? errorDetails.Link : ''" />
         <router-link 
             :to="errorDetails.Link"
             class="flex flex-wrap items-center justify-between h-svh p-6 box-border bg-white"   

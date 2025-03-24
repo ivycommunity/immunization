@@ -12,7 +12,7 @@
 
       <!-- Dynamic Title -->
       <h2 v-if="!!title" class="text-2xl font-bold text-[#432C81] md:text-3xl xl:text-4xl">{{ title }}</h2>
-      <h2 v-else class="text-2xl font-bold text-[#432C81] md:text-3xl xl:text-4xl">{{ `👋🏻 Hi, ${props.user.first_name}` }}</h2>
+      <h2 v-else-if="user && user.first_name" class="text-2xl font-bold text-[#432C81] md:text-3xl xl:text-4xl">{{ `👋🏻 Hi, ${user.first_name}` }}</h2>
     </div>
 
     <!-- Avatar Section -->

@@ -11,6 +11,8 @@
         ClipboardDocumentCheckIcon
     } from '@heroicons/vue/24/outline'
     import { useAppointmentsStore } from '@/stores/AppointmentStore';
+    import vacsHistory from '@/components/User/vacsHistory.vue';
+    import spinner from '@/components/User/spinner.vue';
 
 
     const babiesStore = useBabiesStore();
@@ -18,6 +20,7 @@
     const isAuthenticated = userStore().isAuthenticated;
     const currentBaby = ref({});
     const VaccinationHistory = ref({});
+    const dataLoading = ref(true);
 
     const route = useRoute();
     const router = useRouter();
@@ -34,11 +37,14 @@
     const getVaccinationHistory = async () => {
         try{
             const response = await appointmentStore.fetchVaccinationHystoryByBaby(babyId);
-            VaccinationHistory.value = response;
+            VaccinationHistory.value = response.data;
             console.log("V H response",response);
             console.log("V H ref",VaccinationHistory.value);
         } catch (error) {
             console.error("Error vaccination History:", error);
+        }
+        finally{
+            dataLoading.value = false;
         }
     }
 
@@ -81,9 +87,6 @@
         return filtered;
     });
 
-
-
-
 </script>
 
 <template>
@@ -93,7 +96,11 @@
         topBarMove="false"
         back-to="/user/records/babies"
     >
-
+        <!-- Add a container for the spinner with proper positioning -->
+        <div v-if="dataLoading" class="flex justify-center items-center py-8">
+            <spinner :is-loading="dataLoading" variant="secondary" />
+        </div>
+    <div v-else>
         <profileComponent 
             :user-full-name = "currentBaby.first_name" 
         />
@@ -164,21 +171,10 @@
             v-show="vaccinationOpen" 
             class="mt-2 p-4 bg-white border border-gray-200 rounded shadow-sm transition-all duration-300"
             >
-                <!-- Vaccination content goes here -->
-                <div v-for="(value, key) in VaccinationHistory.data" :key="key" class="grid grid-cols-12 gap-2 mb-4 items-center">
-                    <div class="col-span-5 text-left">
-                        <label for="first_name" class="block text-[#432C81] font-medium">
-                            {{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}
-                        </label>
-                    </div>
-                    <div class="col-span-1 text-center font-medium">:</div>
-                    <div class="col-span-6 text-left">
-                        <p>{{ value }}</p>
-                    </div>
-                </div>
-
+                <vacsHistory :baby-id="VaccinationHistory.babyId" :total-appointments="VaccinationHistory.total_appointments" :by-status="VaccinationHistory.by_status" />
             </div>
         </div>
         </div>
+    </div>
 </userLayout>
 </template>

@@ -26,10 +26,10 @@
         <div class="flex items-center">
             <!-- Avatar circle -->
             <div class="relative w-14 h-14 rounded-full flex-shrink-0 flex items-center justify-center" 
-                :class="baby.gender === 'male' ? 'bg-blue-200' : 'bg-pink-200'"
+                :class="baby.gender === 'Male' ? 'bg-blue-200' : 'bg-pink-200'"
             >
                 <span class="text-xl font-medium" 
-                        :class="baby.gender === 'male' ? 'text-blue-700' : 'text-pink-700'">
+                        :class="baby.gender === 'Male' ? 'text-blue-700' : 'text-pink-700'">
                     {{ baby.first_name.charAt(0).toUpperCase() }}
                 </span>
             </div>

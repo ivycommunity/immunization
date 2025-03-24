@@ -12,6 +12,7 @@ export default class AppointmentsService {
     // Add request interceptor to automatically add auth token
     this.api.interceptors.request.use(config => {
       const token = this.userStore.token;
+      console.log('token', token);
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

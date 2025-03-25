@@ -2,7 +2,7 @@
 import { Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
 import { ref } from 'vue';
 
-const toList = ref(false);
+const toList = ref(true);
 
 const showList = () => {
     toList.value = !toList.value;

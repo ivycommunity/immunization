@@ -66,7 +66,7 @@ export default defineStore('user', {
             no_of_children = USER.no_of_children || 0
         }) {
             try {
-            const response = await API.put('/updateGuardian', {
+            const response = await API.put(`/guardians/${USER.id}`, {
                 first_name,
                 last_name,
                 email,

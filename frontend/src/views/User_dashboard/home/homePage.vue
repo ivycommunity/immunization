@@ -39,13 +39,13 @@
                 :illustration-icon= "clinicDetailsIocn"
             />
             <homeNavButton
-                title="Vaccination Records"
+                title="Vaccination Appointments"
                 link="/user/records/vaccination"
                 :illustration-icon= "clinicRecordsIcon"
             />
             <homeNavButton
                 title="Vaccination Chart"
-                link="#"
+                link="/user/records/vaccination-chart"
                 :illustration-icon= "vaccinationIcon"
             />
         </div>

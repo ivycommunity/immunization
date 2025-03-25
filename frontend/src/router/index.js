@@ -24,10 +24,12 @@ import AddBaby from '@/views/Hospital/AddBaby.vue'
 import { useAuthStore } from '@/stores/auth'
 import homePage from '@/views/User_dashboard/home/homePage.vue'
 import userProfile from "@/views/User_dashboard/settings/profile.vue";
-import vaccineRecord from '@/views/User_dashboard/home/vaccineRecordPage.vue'
+import vaccinationAppointment from '@/views/User_dashboard/home/AppointmentPage.vue'
 import userAccount from '@/views/User_dashboard/settings/userAccount.vue'
 import childrenRecordPage from '@/views/User_dashboard/home/childrenRecordPage.vue'
 import baby from '@/views/User_dashboard/records/baby.vue'
+import vaccinesInfo from '@/views/User_dashboard/home/vaccinesInfo.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -99,9 +101,14 @@ const router = createRouter({
       component: userHomePage,
     },
     {
+      path: '/user/records/vaccination-chart',
+      name: 'vaccinesInfo',
+      component: vaccinesInfo,
+    },
+    {
       path: '/user/records/vaccination',
-      name: 'vaccineRecord',
-      component: vaccineRecord,
+      name: 'vaccinationAppointment',
+      component: vaccinationAppointment,
     },
     {
       path: '/user/records/babies',

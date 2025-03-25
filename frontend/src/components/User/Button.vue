@@ -31,6 +31,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: "primary",
+    validator: (value) => ["primary", "secondary", "cancel"].includes(value),
   },
   class: {
     type: String,
@@ -40,10 +41,12 @@ const props = defineProps({
 
 // Computed property for dynamic button classes
 const buttonClass = computed(() => {
-  const variantClass =
-    props.variant === "secondary"
-      ? "text-[#432C81] text-center border border-[#432C81] bg-white"
-      : "bg-[#432C81] text-center text-white";
-  return `${variantClass} ${props.class}`;
+  const variantClasses = {
+    primary: "bg-[#432C81] text-center text-white",
+    secondary: "text-[#432C81] text-center border border-[#432C81] bg-white",
+    cancel: "bg-[#D7331D] text-center text-white hover:bg-red-700",
+  };
+  
+  return `${variantClasses[props.variant]} ${props.class}`;
 });
 </script>

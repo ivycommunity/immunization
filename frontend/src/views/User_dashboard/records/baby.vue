@@ -38,8 +38,8 @@
         try{
             const response = await appointmentStore.fetchVaccinationHystoryByBaby(babyId);
             VaccinationHistory.value = response.data;
-            console.log("V H response",response);
-            console.log("V H ref",VaccinationHistory.value);
+            // console.log("V H response",response);
+            // console.log("V H ref",VaccinationHistory.value);
         } catch (error) {
             console.error("Error vaccination History:", error);
         }
@@ -134,12 +134,12 @@
             <!-- Account content goes here -->
                 <div v-for="(value, key) in filteredBabyData" :key="key" class="grid grid-cols-12 gap-2 mb-4 items-center">
                     <div class="col-span-5 text-left">
-                        <label for="first_name" class="block text-[#432C81] font-medium">
+                        <label :for="key" class="block text-[#432C81] font-medium">
                             {{ key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}
                         </label>
                     </div>
-                    <div class="col-span-1 text-center font-medium">:</div>
-                    <div class="col-span-6 text-left">
+                    <div class="col-span-1 text-center font-medium text-gray-900/90">:</div>
+                    <div class="col-span-6 text-left text-gray-900/90">
                         <p>{{ value }}</p>
                     </div>
                 </div>

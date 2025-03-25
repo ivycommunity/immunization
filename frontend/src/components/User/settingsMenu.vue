@@ -23,31 +23,31 @@
             },
             {
               label: 'Notification',
-              to: `/user/profile/`,
+              to: `#/`,
               icon: BellIcon,
               isDisabled: true,
             },
             {
               label: 'Appearance',
-              to: `/user/profile/`,
+              to: `#/`,
               icon: EyeIcon,
               isDisabled: true,
             },
             {
               label: 'Privacy & Security',
-              to: `/user/profile/`,
+              to: `#/`,
               icon: ShieldCheckIcon,
               isDisabled: true,
             },
             {
               label: 'Sound',
-              to: `/user/profile/`,
+              to: `#/`,
               icon: SpeakerWaveIcon,
               isDisabled: true,
             },
             {
               label: 'Language',
-              to: `/user/profile/`,
+              to: `#/`,
               icon: LanguageIcon,
               isDisabled: true,
             }

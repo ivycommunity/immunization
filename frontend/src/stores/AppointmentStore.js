@@ -132,6 +132,35 @@ export const useAppointmentsStore = defineStore('appointments', {
       }
     },
     
+    // Update an appointment
+    async cancelAppointment(id) {
+      const appointmentService = new AppointmentsService();
+      this.setLoading(true);
+      this.error = null;
+      
+      try {
+        const updatedAppointment = await appointmentService.updateAppointment(id, { ...this.currentAppointment, status: 'canceled' });
+        
+        // Update in allAppointments array
+        const index = this.allAppointments.findIndex(a => a.id === id);
+        if (index !== -1) {
+          this.allAppointments[index] = updatedAppointment;
+        }
+        
+        // Update currentAppointment if it's the same appointment
+        if (this.currentAppointment && this.currentAppointment.id === id) {
+          this.currentAppointment = updatedAppointment;
+        }
+        
+        return updatedAppointment;
+      } catch (error) {
+        this.setError(error.message || `Failed to update appointment with ID ${id}`);
+        throw error;
+      } finally {
+        this.setLoading(false);
+      }
+    },
+    
     // Delete an appointment
     async deleteAppointment(id) {
       const appointmentService = new AppointmentsService();

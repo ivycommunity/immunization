@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentsController;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\SmsController;
@@ -19,3 +20,8 @@ Schedule::call(function () {
     $affected = Appointment::where('reminder_sent', true)
         ->update(['reminder_sent' => false]);
 })->dailyAt('00:01');
+
+Schedule::call(function () {
+    $appointmentController = new AppointmentsController();
+    $appointmentController->updateMissedAppointments();
+})->hourly()->between('8:00', '20:00');

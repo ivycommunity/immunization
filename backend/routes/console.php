@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentsController;
+use App\Http\Controllers\BabyController;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\SmsController;
@@ -25,3 +26,8 @@ Schedule::call(function () {
     $appointmentController = new AppointmentsController();
     $appointmentController->updateMissedAppointments();
 })->hourly()->between('8:00', '20:00');
+
+Schedule::call(function () {
+    $babyController = new BabyController();
+    $babyController->updateImmunizationStatus();
+})->everyTwoHours();

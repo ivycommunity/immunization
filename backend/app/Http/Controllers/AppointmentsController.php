@@ -284,15 +284,13 @@ class AppointmentsController extends Controller
     public function updateMissedAppointments()
     {
         try {
-            // Get current timestamp
             $now = Carbon::now();
 
-            // Find appointments that are scheduled and have a date in the past
             $missedAppointments = Appointment::where('status', 'Scheduled')
                 ->where('appointment_date', '<', $now)
                 ->get();
 
-            // Track the number of updated appointments
+
             $updatedCount = 0;
 
             foreach ($missedAppointments as $appointment) {
@@ -302,22 +300,12 @@ class AppointmentsController extends Controller
                 $updatedCount++;
             }
 
-            /*Log::channel('daily')->info('Missed Appointments Update', [
-                'timestamp' => $now,
-                'total_missed_appointments' => $updatedCount
-            ]);*/
-
             return response()->json([
                 'message' => 'Missed appointments updated successfully',
                 'total_updated' => $updatedCount
             ], 200);
 
         } catch (\Exception $e) {
-           /* Log::channel('daily')->error('Failed to update missed appointments', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);*/
-
             return response()->json([
                 'message' => 'Failed to update missed appointments',
                 'error' => $e->getMessage()

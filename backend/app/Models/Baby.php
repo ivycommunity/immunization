@@ -28,4 +28,10 @@ class Baby extends Model
     {
         return $this->belongsTo(User::class, 'guardian_id');
     }
+    /**
+     * Define the relationship with appointments.
+     */
+    public function appointments()     {         
+        return $this->hasMany(Appointment::class);     
+    }
 }

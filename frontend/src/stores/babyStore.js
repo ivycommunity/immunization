@@ -71,14 +71,7 @@ export const useBabiesStore = defineStore('babies', {
       
       try {
         const babies = await babyService.getBabyByGuardian(guardian_id);
-        this.allGuardianBabies = babies; // because it returns an array of all the babies since one guardian can have more than one babies.
-        
-        // Also update this babies in the allBabies array if it exists there
-        const index = this.allBabies.findIndex(b => b.guardian_id === guardian_id);
-        if (index !== -1) {
-          this.allBabies[index] = babies;
-        }
-        
+        this.allGuardianBabies = Array.isArray(babies) ? babies : [];
         return this.allGuardianBabies;
       } catch (error) {
         this.setError(error.message || `Failed to fetch baby with ID ${id}`);

@@ -27,7 +27,7 @@
             else{
                 const response = await vaccineStore.fetchAllVaccines();
                 console.log("The vaccines: ", response);
-                vaccines.value = response;
+                vaccines.value = response.vaccines;
             }
         } catch (error) {
             console.error("Error fetching vaccines:", error);

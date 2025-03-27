@@ -53,8 +53,8 @@ const handleSubmit = async () => {
   
   if (!password.value) {
     errors.value.password = "Please enter your Password";
-  } else if (password.value.length < 6) {
-    errors.value.password = "Password must be at least 6 characters";
+  } else if (password.value.length < 8) {
+    errors.value.password = "Password must be at least 8 characters";
   } else {
     errors.value.password = null;
   }
@@ -64,17 +64,6 @@ const handleSubmit = async () => {
 
     try {
       console.log('Email:', email.value, 'Phone:', phone_number.value, 'Password:', password.value);
-      
-      // const response = await axios
-      //   .create({
-      //     baseURL:'/api',
-      //     withCredentials: true,
-      //   })
-      //   .post('/login', {
-      //     email: email.value || null,
-      //     phone_number: phone_number.value || null,
-      //     password: password.value,
-      //   });
 
       const user = await store.login({
         email : email.value,

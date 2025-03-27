@@ -6,7 +6,7 @@
     import vaccinationIcon from "@/assets/userI/vaccination.png";
     
     import userStore from '@/stores/userStore';
-    import { onMounted, ref } from "vue";
+    import {computed, onMounted, ref } from "vue";
     import { useRouter } from 'vue-router';
     
     const store = userStore();
@@ -24,9 +24,11 @@
         }
     });
         
-    function childTitle (no_of_children){
-        return no_of_children > 1 ? "Children" : "Child";
-    }
+    const childTitle = computed(() => {
+        return store.no_of_children > 1 ? "Children" : "Child";
+    });
+
+    console.log("childtitle in home : ",childTitle);
 
 </script>
 
@@ -34,7 +36,7 @@
     <Layout :user-data="{ first_name: f_name, avatar: null }" :topBarMove="false" :with-bottom-bar ="true" >
         <div class="mb-4 flex flex-col gap-4 w-full items-center justify-center">
             <homeNavButton
-                :title="childTitle(no_of_child).toString().concat(' Records')"
+                :title="childTitle.concat(' Records')"
                 link="/user/records/babies"
                 :illustration-icon= "clinicDetailsIocn"
             />

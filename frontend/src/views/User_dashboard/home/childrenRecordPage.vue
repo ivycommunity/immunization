@@ -3,15 +3,18 @@
     import babyCard from '@/components/User/babyCard.vue';
     import { useBabiesStore } from '@/stores/babyStore';
     import userStore from '@/stores/userStore';
-    import { onMounted, ref } from 'vue';
+    import { computed, onMounted, ref } from 'vue';
+    import spinner from '@/components/User/spinner.vue';
 
     const babiesStore = useBabiesStore();
     const currentUserID = userStore().getUserID;
-    const no_of_child = userStore().no_of_children;
+    const useStore = userStore();
     const isAuthenticated = userStore().isAuthenticated;
     const babies = ref([]);
+    const dataLoading = ref(false);
 
     const getBabies = async () => {
+        dataLoading.value = true;
         try{
             console.log("current user id is : ",currentUserID);
             const response = await babiesStore.fetchBabyByGuardian(currentUserID);
@@ -19,6 +22,8 @@
             babies.value = response;
         } catch (error) {
             console.error("Error fetching babies:", error);
+        } finally{
+            dataLoading.value = false;
         }
     }
 
@@ -30,20 +35,27 @@
         }
     });
 
-    function childTitle (no_of_children){
-        return no_of_children > 1 ? "Children" : "Child";
-    }
+    const childTitle = computed(() => {
+        return useStore.no_of_children > 1 ? "Children" : "Child";
+    });
 
+    console.log("childtitle in records : ",childTitle);
 </script>
 
 <template>
     <userLayout
-        :topBartitle="'My '.concat(childTitle(no_of_child).toString())"
+        :topBartitle="'My '.concat(childTitle)"
         :topBarMove="false" 
         :with-bottom-bar="true"
-    >
-        <div v-for="baby in babies" :key="baby.id">
+    >   
+        <!-- Add a container for the spinner with proper positioning -->
+        <div v-if="dataLoading" class="flex justify-center items-center py-8">
+            <spinner :is-loading="dataLoading" variant="secondary" />
+        </div>
+        
+        <div v-else v-for="baby in babies" :key="baby.id">
             <babyCard :baby="baby"/>
         </div>
+    
     </userLayout>
 </template>

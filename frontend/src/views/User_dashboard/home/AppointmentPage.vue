@@ -2,7 +2,7 @@
     import UserLayout from '@/components/User/userLayout.vue';
     import homeNavButton from '@/components/User/homeNavButton.vue';
     import illustration from '@/assets/userI/Electrocardiogram.png';
-    import { ref, onMounted, computed} from 'vue';
+    import { ref, onMounted, watch, computed} from 'vue';
     import userStore from '@/stores/userStore';
     import { useAppointmentsStore } from '@/stores/AppointmentStore';
     import { useRouter } from 'vue-router';
@@ -38,6 +38,7 @@
             dataLoading.value = false;
         }
     };
+    
     onMounted(() => {
         if (!isAuthenticated) {
             router.push({ name: "userLogin" });

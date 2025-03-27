@@ -99,7 +99,7 @@ const handleCancelAppointment = async () => {
     try {
         await useAppointmentsStore().cancelAppointment(appointment.value.id);
         console.log(`Appointment ${appointment.value.id} cancelled successfully`);
-
+        appointment.value.status = 'Cancelled';
         selectedAppointment.value = null;
     } catch (error) {
         console.error('Error cancelling appointment:', error);

@@ -3,8 +3,8 @@ import AppointmentsService from '@/services/AppointmentService';
 
 export const useAppointmentsStore = defineStore('appointments', {
   state: () => ({
-    allAppointments: [],
-    currentAppointment: {},
+    allAppointments: null, // Change from empty array to null
+    currentAppointment: null,
     filters: {
       babyId: null,
       guardianId: null,
@@ -18,11 +18,13 @@ export const useAppointmentsStore = defineStore('appointments', {
     async updateAppointment(id, updateData) {
       const service = new AppointmentsService();
       
-      this.currentAppointment = this.allAppointments.data.filter(a => a.id === id);
-      
       console.log("currentAppointment", this.currentAppointment); 
       
       const originalAppointment = this.allAppointments.data.find(a => a.id === id);
+      
+      if (!originalAppointment) {
+        throw new Error(`Appointment with id ${id} not found`);
+      }
       
       console.log("Original Appointment", originalAppointment);
       
@@ -31,7 +33,9 @@ export const useAppointmentsStore = defineStore('appointments', {
       // console.log("All Appointments Before Update", this.allAppointments);
       try {
         if (originalAppointment) {
+          
           const optimisticUpdate = { ...originalAppointment, ...updateData };
+          
           this.allAppointments.data = this.allAppointments.data.map(a => 
             a.id === id ? optimisticUpdate : a
           );
@@ -42,13 +46,20 @@ export const useAppointmentsStore = defineStore('appointments', {
         }
 
         // Actual API call
-        const updatedAppointment = await service.updateAppointment(id, updateData);
+        const { updatedAppointment } = await service.updateAppointment(id, updateData);
         console.log("Updated Appointment", updateData);
         
         // Confirm update with actual data
-        this.allAppointments = this.allAppointments.data.map(a => 
-          a.id === id ? updatedAppointment : a
-        );
+        // this.allAppointments = this.allAppointments.data.map(a => 
+        //   a.id === id ? updatedAppointment : a
+        // );
+
+        this.allAppointments = {
+          ...this.allAppointments,
+          data: this.allAppointments.data.map(a => 
+            a.id === id ? updatedAppointment : a
+          )
+        };
         
         if (this.currentAppointment?.id === id) {
           this.currentAppointment = updatedAppointment;
@@ -75,27 +86,44 @@ export const useAppointmentsStore = defineStore('appointments', {
     },
 
     async cancelAppointment(id) {
-      this.currentAppointment = this.allAppointments.data.filter(a => a.id === id);
-      try {
-        // const cancelData = { 
-        //   ...this.currentAppointment,
-        //   this.currentAppointment:
-        //   {
-        //     status = 'canceled',
-        //     updated_at = new Date().toISOString(),
+      
+      // Check if allAppointments and data exist
+      if (!this.allAppointments || !this.allAppointments.data) {
+        console.error('No appointments data available');
+        throw new Error('No appointments data available');
+      }
 
-        const cancelData = this.currentAppointment[0];
+      // Find the appointment by id
+      const appointmentToCancel = this.allAppointments.data.find(a => a.id === id);
+
+      if (!appointmentToCancel) {
+        console.error(`Appointment with id ${id} not found`);
+        throw new Error(`Appointment with id ${id} not found`);
+      }
+
+      // Set current appointment
+      this.currentAppointment = appointmentToCancel;
+
+      try {
+        // Create a copy of the appointment to modify
+        const cancelData = { ...appointmentToCancel };
         cancelData.status = 'Cancelled';
+        
+        // Create MySQL-formatted timestamp
         const mysqlFormat = new Date().toISOString()
                                       .replace('T', ' ')
                                       .replace(/\..+/, '');
+        cancelData.updated_at = mysqlFormat;
         
         console.log("Cancel Data", cancelData);
 
         return await this.updateAppointment(id, cancelData);
       } catch (error) {
-        console.log("Error in updateAppointment", error);
+        console.log("Error in cancelAppointment", error);
         throw error;
+      } finally {
+        // Reset current appointment
+        this.currentAppointment = null;
       }
     },
 
@@ -111,6 +139,43 @@ export const useAppointmentsStore = defineStore('appointments', {
         throw error;
       }
     },
+
+    async fetchAppointmentsByBaby(babyId) {
+      const appointmentService = new AppointmentsService();
+      try {
+        const appointments = await appointmentService.getAppointmentsByBaby(babyId);
+        return appointments;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    // Fetch Vaccination History by baby ID
+    async fetchVaccinationHistoryByBaby(babyId) {
+      const appointmentService = new AppointmentsService();
+      try {
+        const appointments = await appointmentService.vaccinationBabyHistory(babyId);
+        return appointments;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+
+    // Fetch appointments by guardian ID
+    async fetchAppointmentsByGuardian(guardianId) {
+      const appointmentService = new AppointmentsService();
+      this.filters.guardianId = guardianId;
+
+      try {
+        const appointments = await appointmentService.getAppointmentsByGuardian(guardianId);
+        return appointments;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+
 
   },
   
@@ -128,6 +193,14 @@ export const useAppointmentsStore = defineStore('appointments', {
         );
       });
     },
+
+    getAllAppointments: (state) => {
+      return state.allAppointments ? state.allAppointments.data : null;
+    },
+    getCurrentAppointment: (state) => {
+      return state.currentAppointment;
+    },
+
 
     // ... other getters remain similar
   },

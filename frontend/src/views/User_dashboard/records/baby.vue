@@ -17,7 +17,7 @@
 
     const babiesStore = useBabiesStore();
     const appointmentStore = useAppointmentsStore();
-    const isAuthenticated = userStore().isAuthenticated;
+    const useStore = userStore();
     const currentBaby = ref({});
     const VaccinationHistory = ref({});
     const dataLoading = ref(true);
@@ -36,7 +36,7 @@
     }
     const getVaccinationHistory = async () => {
         try{
-            const response = await appointmentStore.fetchVaccinationHystoryByBaby(babyId);
+            const response = await appointmentStore.fetchVaccinationHistoryByBaby(babyId);
             VaccinationHistory.value = response.data;
             // console.log("V H response",response);
             // console.log("V H ref",VaccinationHistory.value);
@@ -49,7 +49,7 @@
     }
 
     onMounted(() => {
-        if(!isAuthenticated) {
+        if(!useStore.isAuthenticated) {
             router.push({name: "userLogin"});
         } else {
             getBaby();
@@ -87,12 +87,18 @@
         return filtered;
     });
 
+    const childTitle = computed(() => {
+        return useStore.no_of_children > 1 ? "Children" : "Child";
+    });
+
+    console.log("childtitle in baby : ",childTitle);
+
 </script>
 
 <template>
 
     <userLayout
-        topBartitle="My Children"
+        :topBartitle="'My '.concat(childTitle)"
         topBarMove="false"
         back-to="/user/records/babies"
     >
@@ -102,7 +108,7 @@
         </div>
     <div v-else>
         <profileComponent 
-            :user-full-name = "currentBaby.first_name" 
+            :user-full-name = "currentBaby.first_name || 'Baby'" 
         />
 
         <div class="container mx-auto p-4">

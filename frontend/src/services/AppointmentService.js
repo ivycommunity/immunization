@@ -41,7 +41,10 @@ export default class AppointmentsService {
     console.log('updateAppointment in service', id, appointmentData);
     try {
       const response = await this.api.put(`/appointments/${id}`, appointmentData);
-      return response.data;
+      return {
+        response : response.data, 
+        updatedAppointment: appointmentData
+      };
     } catch (error) {
       console.error(`Error updating appointment ${id}:`, error);
       throw error;

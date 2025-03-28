@@ -51,7 +51,7 @@ export default class AppointmentsService {
     }
   }
 
-  async deleteAppointment(id) {
+  async deleteAppointment(id) { //not being used
     try {
       const response = await this.api.delete(`/appointments/${id}`);
       return response.data;
@@ -61,7 +61,7 @@ export default class AppointmentsService {
     }
   }
 
-  async getAppointmentsByBaby(babyId) {
+  async getAppointmentsByBaby(babyId) { //not being used
     try {
       const response = await this.api.get(`/appointments?babyId=${babyId}`);
       return response.data;

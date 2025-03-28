@@ -14,6 +14,7 @@
     import vacsHistory from '@/components/User/vacsHistory.vue';
     import spinner from '@/components/User/spinner.vue';
 
+    import vacsHistoryCopy from '@/components/User/vacsHistory-copy.vue';
 
     const babiesStore = useBabiesStore();
     const appointmentStore = useAppointmentsStore();
@@ -25,6 +26,9 @@
     const route = useRoute();
     const router = useRouter();
     const babyId = route.params.id;
+    const user = userStore();
+    const isAuthenticated = computed(() => user.isAuthenticated);
+    const currentUserID = computed(() => user.getUserID);
 
     const getBaby = async () => {
         try{
@@ -36,10 +40,17 @@
     }
     const getVaccinationHistory = async () => {
         try{
-            const response = await appointmentStore.fetchVaccinationHistoryByBaby(babyId);
-            VaccinationHistory.value = response.data;
-            // console.log("V H response",response);
-            // console.log("V H ref",VaccinationHistory.value);
+            // const response = await appointmentStore.fetchVaccinationHistoryByBaby(babyId);
+            const response = await appointmentStore.fetchAllAppointments();
+            // VaccinationHistory.value = response.data;
+            console.log("currentUserID.value", currentUserID.value);
+            console.log("babyID.value", babyId);
+            VaccinationHistory.value = response.data.filter(appointment => {
+                // return appointment.baby_id === babyId;
+                return String(appointment.baby_id) === String(babyId);
+            });
+            console.log("V H response",response.data); //shows all appointments
+            console.log("V H ref",VaccinationHistory.value); //shows filtered appointments but I am getting 0
         } catch (error) {
             console.error("Error vaccination History:", error);
         }
@@ -177,7 +188,11 @@
             v-show="vaccinationOpen" 
             class="mt-2 p-4 bg-white border border-gray-200 rounded shadow-sm transition-all duration-300"
             >
-                <vacsHistory :baby-id="VaccinationHistory.babyId" :total-appointments="VaccinationHistory.total_appointments" :by-status="VaccinationHistory.by_status" />
+                <!-- <vacsHistory :baby-id="VaccinationHistory.babyId" :total-appointments="VaccinationHistory.total_appointments" :by-status="VaccinationHistory.by_status" /> -->
+                <vacsHistoryCopy
+                    :appointments="VaccinationHistory"
+                    :total-appointments="VaccinationHistory.total_appointments" 
+                />
             </div>
         </div>
         </div>

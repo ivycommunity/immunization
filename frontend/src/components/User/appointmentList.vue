@@ -6,8 +6,14 @@ import spinner from './spinner.vue';
 
 const props = defineProps({
     appointments: Array,
-    dataLoading: Boolean,
-    hasAppointment: Boolean
+    dataLoading:{
+        type: Boolean,
+        default: false
+    },
+    hasAppointment: {
+        type: Boolean,
+        default: true
+    },
 });
 
 // Holds the selected status from the child

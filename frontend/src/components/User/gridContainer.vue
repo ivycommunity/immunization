@@ -14,7 +14,7 @@ const handleChange = () => {
 </script>
 
 <template>
-    <div class="mt-8 min-h-screen">
+    <div class="mt-8">
         <div class="rounded-tl-lg rounded-tr-lg w-full flex justify-between p-2">
             <select
                 v-model="selectedOption"

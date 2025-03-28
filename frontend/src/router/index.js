@@ -29,6 +29,7 @@ import userAccount from '@/views/User_dashboard/settings/userAccount.vue'
 import childrenRecordPage from '@/views/User_dashboard/home/childrenRecordPage.vue'
 import baby from '@/views/User_dashboard/records/baby.vue'
 import vaccinesInfo from '@/views/User_dashboard/home/vaccinesInfo.vue'
+import test from '@/views/User_dashboard/error/test.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -79,6 +80,11 @@ const router = createRouter({
       path: '/user',
       name: 'userWelcome',
       component: userWelcome,
+    },
+    {
+      path: '/user/test',
+      name: 'test',
+      component: test,
     },
     {
       path: '/user/login',

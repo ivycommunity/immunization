@@ -8,6 +8,7 @@ const props = defineProps({
         type: Object,
         required: true
     }
+    
 });
 
 const formattedDate = ref('');
@@ -114,7 +115,7 @@ const handleCancelAppointment = async () => {
 <template>
     <div>
         <div 
-            class="p-4 rounded-lg bg-white w-full h-full"
+            class="p-4 rounded-lg bg-white w-full"
             @click="handleShowAppointmentDetails"    
         >
             <!-- Header with baby name, dash, and vaccine type -->

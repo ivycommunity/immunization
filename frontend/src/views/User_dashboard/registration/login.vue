@@ -2,7 +2,6 @@
 import registrationForm from '@/components/User/registrationForm.vue';
 import FormInput from '@/components/User/formInput.vue';
 import { ref } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import userStore from '@/stores/userStore';
 

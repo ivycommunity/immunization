@@ -11,7 +11,7 @@
         ClipboardDocumentCheckIcon
     } from '@heroicons/vue/24/outline'
     import { useAppointmentsStore } from '@/stores/AppointmentStore';
-    import vacsHistory from '@/components/User/vacsHistory.vue';
+    // import vacsHistory from '@/components/User/vacsHistory.vue';
     import spinner from '@/components/User/spinner.vue';
 
     import vacsHistoryCopy from '@/components/User/vacsHistory-copy.vue';
@@ -27,7 +27,6 @@
     const router = useRouter();
     const babyId = route.params.id;
     const user = userStore();
-    const isAuthenticated = computed(() => user.isAuthenticated);
     const currentUserID = computed(() => user.getUserID);
 
     const getBaby = async () => {
@@ -52,6 +51,7 @@
             console.log("V H response",response.data); //shows all appointments
             console.log("V H ref",VaccinationHistory.value); //shows filtered appointments but I am getting 0
         } catch (error) {
+            router.push({name: "useError"});
             console.error("Error vaccination History:", error);
         }
         finally{

@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from 'vue';
 import { z } from 'zod';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import registrationForm from '@/components/User/registrationForm.vue';
 import formInput from '@/components/User/formInput.vue';
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
+import userStore from '@/stores/userStore';
+
+const store = userStore();
 
 // Reactive state
 const confirm_password = ref('');

@@ -96,14 +96,7 @@ const handleUpdate = async () => {
     canEdit.value = false;
         
     } catch (error) {
-        if (error.response?.status === 422) {
-            // Handle validation errors
-            errors.value = error.response.data.errors || {};
-        } else {
-            // Show error message but don't redirect
-            console.error("Update failed:", error);
-            // Optionally show a toast/notification
-        }
+        router.push({name: "useError"});
     } finally {
         isLoading.value = false;
     }

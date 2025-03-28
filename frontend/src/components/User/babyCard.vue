@@ -36,7 +36,7 @@
             
             <!-- Child name -->
             <div class="ml-4">
-                <h2 class="text-purple-800 text-xl font-medium">{{ baby.first_name }}</h2>
+                <h2 class="text-[#432C81] text-xl font-medium">{{ baby.first_name }}</h2>
             </div>
         </div>
         

@@ -8,9 +8,12 @@
     import illustration from '@/assets/userI/vaccination.png';
     import spinner from '@/components/User/spinner.vue';
     import vaccineCard from '@/components/User/vaccineCard.vue';
+    import { useRouter } from 'vue-router';
 
     const TITLE = 'Vaccination Chart';
     const dataLoading = ref(false);
+
+    const router = useRouter
     
     const vaccineStore = useVaccineStore();
     const vaccines = ref([]);
@@ -31,6 +34,7 @@
             }
         } catch (error) {
             console.error("Error fetching vaccines:", error);
+            router.push({name: "useError"});
             vaccines.value = [];
 
         } finally {

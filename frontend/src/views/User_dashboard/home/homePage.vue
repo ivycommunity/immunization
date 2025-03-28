@@ -20,7 +20,6 @@
             let { first_name, no_of_children } = JSON.parse(localStorage.getItem("user_data")) || "{}";
             f_name.value = first_name;
             no_of_child.value = no_of_children;
-
         }
     });
         

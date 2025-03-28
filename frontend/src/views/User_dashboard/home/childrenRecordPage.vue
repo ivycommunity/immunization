@@ -5,6 +5,7 @@
     import userStore from '@/stores/userStore';
     import { computed, onMounted, ref } from 'vue';
     import spinner from '@/components/User/spinner.vue';
+    import { useRouter } from 'vue-router';
 
     const babiesStore = useBabiesStore();
     const currentUserID = userStore().getUserID;
@@ -12,6 +13,7 @@
     const isAuthenticated = userStore().isAuthenticated;
     const babies = ref([]);
     const dataLoading = ref(false);
+    const router = useRouter
 
     const getBabies = async () => {
         dataLoading.value = true;
@@ -21,6 +23,7 @@
             console.log("babies are : ",response);
             babies.value = response;
         } catch (error) {
+            router.push({name: "useError"});
             console.error("Error fetching babies:", error);
         } finally{
             dataLoading.value = false;

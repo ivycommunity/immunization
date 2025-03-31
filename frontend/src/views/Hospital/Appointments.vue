@@ -8,6 +8,70 @@ import axios from 'axios'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 
 const activeTab = ref('list')
+// For patient search
+const patientSearchTerm = ref('');
+const filteredPatients = ref([]);
+const showPatientResults = ref(false);
+
+// For parent search
+const parentSearchTerm = ref('');
+const filteredParents = ref([]);
+const showParentResults = ref(false);
+
+// Function to search patients
+const searchPatients = () => {
+  if (patientSearchTerm.value.trim() === '') {
+    filteredPatients.value = [];
+    return;
+  }
+
+  const searchTermLower = patientSearchTerm.value.toLowerCase();
+  filteredPatients.value = patients.value.filter(patient => {
+    const fullName = `${patient.first_name}`.toLowerCase();
+    return fullName.includes(searchTermLower);
+  });
+};
+
+// Function to select a patient from search results
+const selectPatient = (patient) => {
+  newAppointment.value.baby_id = patient.id;
+  patientSearchTerm.value = `${patient.first_name}`;
+  showPatientResults.value = false;
+};
+
+// Function to search parents
+const searchParents = () => {
+  if (parentSearchTerm.value.trim() === '') {
+    filteredParents.value = [];
+    return;
+  }
+
+  const searchTermLower = parentSearchTerm.value.toLowerCase();
+  filteredParents.value = parents.value.filter(parent => {
+    const fullName = `${parent.first_name} ${parent.last_name}`.toLowerCase();
+    return fullName.includes(searchTermLower);
+  });
+};
+
+// Function to select a parent from search results
+const selectParent = (parent) => {
+  newAppointment.value.guardian_id = parent.id;
+  parentSearchTerm.value = `${parent.first_name} ${parent.last_name}`;
+  showParentResults.value = false;
+};
+
+// Update closeModal function to also clear search terms
+// const closeModal = () => {
+//   isModalOpen.value = false;
+//   newAppointment.value = {
+//     baby_id: '',
+//     guardian_id: '',
+//     vaccine_id: '',
+//     appointment_date: ''
+//   };
+//   patientSearchTerm.value = '';
+//   parentSearchTerm.value = '';
+// };
 
 // Reactive data for backend-fetched content
 const appointments = ref([])
@@ -528,30 +592,74 @@ const deleteAppointment = async (appointmentId) => {
                       </DialogTitle>
                       <div class="mt-2">
                         <form @submit.prevent="addAppointment" class="space-y-4">
-                          <!-- Fields for new appointment (same as before) -->
-                          <div>
-                            <label for="patientName" class="block text-sm font-medium text-gray-700">Patient
-                              Name</label>
-                            <select id="patientName" v-model="newAppointment.baby_id"
+                          <!-- Patient Search (replacing dropdown) -->
+                          <div class="relative">
+                            <label for="patientSearch" class="block text-sm font-medium text-gray-700">Patient Name</label>
+                            <input
+                              id="patientSearch"
+                              v-model="patientSearchTerm"
+                              type="text"
                               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
-                              required>
-                              <option value="">Select Patient</option>
-                              <option v-for="patient in patients" :key="patient.id" :value="patient.id">
-                                {{ patient.first_name }} {{ patient.last_name }}
-                              </option>
-                            </select>
+                              placeholder="Search for patient..."
+                              @input="searchPatients"
+                              @focus="showPatientResults = true"
+                              @blur="setTimeout(() => { showPatientResults = false }, 200)"
+                              required
+                            />
+                            <input type="hidden" v-model="newAppointment.baby_id" required />
+                            
+                            <!-- Patient Search Results -->
+                            <div v-if="showPatientResults && filteredPatients.length > 0" 
+                                class="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                              <div v-for="patient in filteredPatients" 
+                                  :key="patient.id"
+                                  @mousedown="selectPatient(patient)"
+                                  class="p-2 hover:bg-gray-100 cursor-pointer">
+                                {{ patient.first_name }}
+                              </div>
+                            </div>
+                            
+                            <!-- No Patient Results Message -->
+                            <div v-if="showPatientResults && patientSearchTerm && filteredPatients.length === 0" 
+                                class="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg p-2 text-gray-500">
+                              No matching patients found
+                            </div>
                           </div>
-                          <div>
-                            <label for="parentName" class="block text-sm font-medium text-gray-700">Parent Name</label>
-                            <select id="parentName" v-model="newAppointment.guardian_id"
+
+                          <!-- Parent Search (replacing dropdown) -->
+                          <div class="relative">
+                            <label for="parentSearch" class="block text-sm font-medium text-gray-700">Parent Name</label>
+                            <input
+                              id="parentSearch"
+                              v-model="parentSearchTerm"
+                              type="text"
                               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
-                              required>
-                              <option value="">Select Parent</option>
-                              <option v-for="parent in parents" :key="parent.id" :value="parent.id">
+                              placeholder="Search for parent..."
+                              @input="searchParents"
+                              @focus="showParentResults = true"
+                              @blur="setTimeout(() => { showParentResults = false }, 200)"
+                              required
+                            />
+                            <input type="hidden" v-model="newAppointment.guardian_id" required />
+                            
+                            <!-- Parent Search Results -->
+                            <div v-if="showParentResults && filteredParents.length > 0" 
+                                class="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                              <div v-for="parent in filteredParents" 
+                                  :key="parent.id"
+                                  @mousedown="selectParent(parent)"
+                                  class="p-2 hover:bg-gray-100 cursor-pointer">
                                 {{ parent.first_name }} {{ parent.last_name }}
-                              </option>
-                            </select>
+                              </div>
+                            </div>
+                            
+                            <!-- No Parent Results Message -->
+                            <div v-if="showParentResults && parentSearchTerm && filteredParents.length === 0" 
+                                class="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg p-2 text-gray-500">
+                              No matching parents found
+                            </div>
                           </div>
+
                           <div>
                             <label for="vaccine" class="block text-sm font-medium text-gray-700">Vaccine</label>
                             <select id="vaccine" v-model="newAppointment.vaccine_id"

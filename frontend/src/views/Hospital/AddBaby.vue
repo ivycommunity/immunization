@@ -2,6 +2,29 @@
 import Sidebar from "@/components/Hospital/Sidebar.vue";
 import { ref, onMounted } from "vue";
 
+const guardianSearchTerm = ref('');
+const filteredGuardians = ref([]);
+const showGuardianResults = ref(false);
+
+const searchGuardians = () => {
+  if (guardianSearchTerm.value.trim() === '') {
+    filteredGuardians.value = [];
+    return;
+  }
+
+  const searchTermLower = guardianSearchTerm.value.toLowerCase();
+  filteredGuardians.value = guardians.value.filter(guardian => {
+    const fullName = `${guardian.first_name} ${guardian.last_name}`.toLowerCase();
+    return fullName.includes(searchTermLower);
+  });
+};
+
+const selectGuardian = (guardian) => {
+  form.value.guardian = guardian.id;
+  guardianSearchTerm.value = `${guardian.first_name} ${guardian.last_name}`;
+  showGuardianResults.value = false;
+};
+
 const form = ref({
   fullName: "",
   guardian: "",
@@ -120,52 +143,42 @@ const closeModal = () => {
           <div class="space-y-4">
             <!-- Full Name -->
             <div>
-              <label for="fullName" class="block text-sm text-gray-600 mb-1"
-                >Full Name</label
-              >
-              <input
-                id="fullName"
-                v-model="form.fullName"
-                type="text"
+              <label for="fullName" class="block text-sm text-gray-600 mb-1">Full Name</label>
+              <input id="fullName" v-model="form.fullName" type="text"
                 class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter Baby's Full Name"
-                required
-              />
+                placeholder="Enter Baby's Full Name" required />
             </div>
 
-            <!-- Guardian Selection -->
-            <div>
-              <label for="guardian" class="block text-sm text-gray-600 mb-1"
-                >Guardian</label
-              >
-              <select
-                v-model="form.guardian"
-                id="guardian"
-                required
+            <!-- Guardian Search -->
+            <div class="relative">
+              <label for="guardianSearch" class="block text-sm text-gray-600 mb-1">Guardian</label>
+              <input id="guardianSearch" v-model="guardianSearchTerm" type="text"
                 class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="" class="hidden">Select Guardian</option>
-                <option
-                  v-for="guardian in guardians"
-                  :key="guardian.id"
-                  :value="guardian.id"
-                >
+                placeholder="Search for guardian..." @input="searchGuardians" @focus="showGuardianResults = true"
+                @blur="setTimeout(() => { showGuardianResults = false }, 200)" required />
+              <input type="hidden" v-model="form.guardian" required />
+
+              <!-- Search Results -->
+              <div v-if="showGuardianResults && filteredGuardians.length > 0"
+                class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                <div v-for="guardian in filteredGuardians" :key="guardian.id" @mousedown="selectGuardian(guardian)"
+                  class="p-2 hover:bg-gray-100 cursor-pointer">
                   {{ guardian.first_name }} {{ guardian.last_name }}
-                </option>
-              </select>
+                </div>
+              </div>
+
+              <!-- No Results Message -->
+              <div v-if="showGuardianResults && guardianSearchTerm && filteredGuardians.length === 0"
+                class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg p-2 text-gray-500">
+                No matching guardians found
+              </div>
             </div>
 
             <!-- Gender Selection -->
             <div>
-              <label for="gender" class="block text-sm text-gray-600 mb-1"
-                >Gender</label
-              >
-              <select
-                id="gender"
-                v-model="form.gender"
-                required
-                class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+              <label for="gender" class="block text-sm text-gray-600 mb-1">Gender</label>
+              <select id="gender" v-model="form.gender" required
+                class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -175,35 +188,18 @@ const closeModal = () => {
 
             <!-- Date of Birth -->
             <div>
-              <label for="dateOfBirth" class="block text-sm text-gray-600 mb-1"
-                >Date of Birth</label
-              >
-              <input
-                id="dateOfBirth"
-                v-model="form.dateOfBirth"
-                type="date"
-                required
-                class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <label for="dateOfBirth" class="block text-sm text-gray-600 mb-1">Date of Birth</label>
+              <input id="dateOfBirth" v-model="form.dateOfBirth" type="date" required
+                class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <!-- Nationality Selection -->
             <div>
-              <label for="nationality" class="block text-sm text-gray-600 mb-1"
-                >Nationality</label
-              >
-              <select
-                id="nationality"
-                v-model="form.nationality"
-                required
-                class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+              <label for="nationality" class="block text-sm text-gray-600 mb-1">Nationality</label>
+              <select id="nationality" v-model="form.nationality" required
+                class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="" class="hidden">Select Nationality</option>
-                <option
-                  v-for="country in nationalities"
-                  :key="country"
-                  :value="country"
-                >
+                <option v-for="country in nationalities" :key="country" :value="country">
                   {{ country }}
                 </option>
               </select>
@@ -212,10 +208,8 @@ const closeModal = () => {
 
           <!-- Submit Button -->
           <div class="mt-8 flex justify-center">
-            <button
-              type="submit"
-              class="cursor-pointer bg-blue-600 text-white px-8 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
+            <button type="submit"
+              class="cursor-pointer bg-blue-600 text-white px-8 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
               Save
             </button>
           </div>

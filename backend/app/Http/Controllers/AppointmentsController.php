@@ -8,6 +8,7 @@ use App\Models\Baby;
 use App\Models\User;
 use App\Http\Resources\AppointmentResource;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AppointmentsController extends Controller
 {
@@ -260,7 +261,7 @@ class AppointmentsController extends Controller
                 
                 $babyData = [
                     'baby_id' => $babyId,
-                    'baby_name' => $baby->first_name . ' ' . $baby->last_name,
+                    'baby_name' => $baby->first_name,
                     'total_appointments' => count($babyAppointments),
                     'by_status' => $statusData
                 ];
@@ -275,6 +276,41 @@ class AppointmentsController extends Controller
             'total_babies' => count($babiesData),
             'data' => $babiesData
         ], 200);
+    }
+
+    /**
+     * Automatically update appointments that have passed to 'Missed' status
+     */
+    public function updateMissedAppointments()
+    {
+        try {
+            $now = Carbon::now();
+
+            $missedAppointments = Appointment::where('status', 'Scheduled')
+                ->where('appointment_date', '<', $now)
+                ->get();
+
+
+            $updatedCount = 0;
+
+            foreach ($missedAppointments as $appointment) {
+                $appointment->update([
+                    'status' => 'Missed',
+                ]);
+                $updatedCount++;
+            }
+
+            return response()->json([
+                'message' => 'Missed appointments updated successfully',
+                'total_updated' => $updatedCount
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update missed appointments',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
 

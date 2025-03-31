@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
 
 use App\Models\Baby;
 use App\Models\User;
@@ -104,6 +105,52 @@ class BabyController extends Controller
         }
 
         return response()->json($guardian->babies);
+    }
+
+    /**
+     * Update the immunization status of all babies.
+     */
+    public function updateImmunizationStatus(): JsonResponse
+    {
+        $babies = Baby::with(['appointments' => function ($query) {
+            $query->whereIn('status', ['Completed', 'Missed'])
+                  ->orderBy('appointment_date', 'desc');
+        }])->get();
+
+        foreach ($babies as $baby) {
+            $latestCompletedAppointment = $baby->appointments
+                ->where('status', 'Completed')
+                ->first();
+
+            $missedAppointments = $baby->appointments
+                ->where('status', 'Missed');
+
+            $status = 'Pending';
+
+            if ($latestCompletedAppointment) {
+                $status = 'Up to date';
+            } elseif ($missedAppointments->count() > 0 && !$latestCompletedAppointment) {
+                $status = 'Overdue';
+            }
+
+            if (
+                $baby->next_appointment_date &&
+                Carbon::parse($baby->next_appointment_date)->isPast() &&
+                !$latestCompletedAppointment
+            ) {
+                $status = 'Overdue';
+            }
+
+            if ($baby->immunization_status !== $status) {
+                $baby->update([
+                    'immunization_status' => $status
+                ]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Immunization statuses updated successfully'
+        ]);
     }
 
 

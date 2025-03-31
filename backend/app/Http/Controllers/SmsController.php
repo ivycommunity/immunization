@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class SmsController extends Controller
 {
     /**
-     * Summary of sendAppointmentReminders
+     * Send appointment reminders with enhanced reminder logic
      */
     public function sendAppointmentReminders() {
         if (!env("TWILIO_SID") || !env("TWILIO_TOKEN") || !env("TWILIO_PHONE")) {
@@ -23,18 +23,16 @@ class SmsController extends Controller
     
         $twilio = new Client(env("TWILIO_SID"), env("TWILIO_TOKEN"));
         
-        $today = Carbon::now()->format('Y-m-d');
+        $now = Carbon::now();
+        $today = $now->format('Y-m-d');
         
-        // Fetch upcoming appointments within 5 days that haven't had a reminder today
-        $appointments = Appointment::where('appointment_date', '>=', Carbon::now())
-            ->where('appointment_date', '<=', Carbon::now()->addDays(5))
+        $appointments = Appointment::where('appointment_date', '>=', $now)
             ->where('status', 'Scheduled')
-            ->where('reminder_sent', false) 
             ->get();
         
         if ($appointments->isEmpty()) {
             return response()->json([
-                "message" => "No upcoming appointments that need reminders today."
+                "message" => "No upcoming appointments that need reminders."
             ], 200);
         }
         
@@ -45,6 +43,14 @@ class SmsController extends Controller
         
         try {
             foreach ($appointments as $appointment) {
+                $appointmentDate = Carbon::parse($appointment->appointment_date);
+                $daysUntilAppointment = ceil($now->floatDiffInDays($appointmentDate));
+                
+                // Skip if reminder conditions are not met
+                if ($daysUntilAppointment > 7 || $daysUntilAppointment < 0) {
+                    continue;
+                }
+                
                 $guardian = User::find($appointment->guardian_id);
                 
                 if (!$guardian || !$guardian->phone_number) {
@@ -53,46 +59,61 @@ class SmsController extends Controller
                 
                 $guardianFullName = $guardian->first_name . " " . $guardian->last_name;
                 
-                $daysUntilAppointment = ceil(Carbon::now()->floatDiffInDays(Carbon::parse($appointment->appointment_date)));
-                
                 if ($daysUntilAppointment == 0) {
-                    $timeContext = "today";
-                } elseif ($daysUntilAppointment == 1) {
-                    $timeContext = "tomorrow";
+                    // Morning of appointment reminder
+                    $messageBody = "Hello {$guardianFullName}, this is a reminder that your child's vaccination appointment is TODAY on " .
+                        $appointmentDate->format('d M Y, h:i A') .
+                        ". Please visit the hospital on time.";
+                    
+                    // Only send if not already sent today
+                    if (!$appointment->morning_reminder_sent) {
+                        $sendReminder = true;
+                        $reminderType = 'morning_reminder_sent';
+                    } else {
+                        $sendReminder = false;
+                    }
                 } else {
-                    $timeContext = "in $daysUntilAppointment days";
+                    // 7-day to 1-day before appointment reminders
+                    $messageBody = "Hello {$guardianFullName}, reminder: Your child's vaccination appointment is " . 
+                        ($daysUntilAppointment == 1 ? "tomorrow" : "in $daysUntilAppointment days") . 
+                        " on " . $appointmentDate->format('d M Y, h:i A') .
+                        ". Please visit the hospital on time.";
+                    
+                    // Only send if not already sent for this day
+                    $sendReminder = true;
+                    $reminderType = 'reminder_sent';
                 }
                 
-                $messageBody = "Hello {$guardianFullName}, reminder: Your child's vaccination appointment is $timeContext on " .
-                    Carbon::parse($appointment->appointment_date)->format('d M Y, h:i A') .
-                    ". Please visit the hospital on time.";
-                
-                try {
-                    $message = $twilio->messages->create(
-                        $guardian->phone_number,
-                        [
-                            "body" => $messageBody,
-                            "from" => env("TWILIO_PHONE")
-                        ]
-                    );
-                    
-                    $appointment->reminder_sent = true;
-                    $appointment->reminder_count = $appointment->reminder_count + 1;
-                    $appointment->save();
-                    
-                    $remindersSent[] = [
-                        "appointment_id" => $appointment->id,
-                        "guardian_id" => $guardian->id,
-                        "days_until_appointment" => $daysUntilAppointment,
-                        "reminder_count" => $appointment->reminder_count
-                    ];
-                    
-                } catch (\Exception $e) {
-                    $errors[] = [
-                        "appointment_id" => $appointment->id,
-                        "guardian_id" => $guardian->id,
-                        "error" => $e->getMessage()
-                    ];
+                if ($sendReminder) {
+                    try {
+                        $message = $twilio->messages->create(
+                            $guardian->phone_number,
+                            [
+                                "body" => $messageBody,
+                                "from" => env("TWILIO_PHONE")
+                            ]
+                        );
+                        
+                        // Update reminder tracking
+                        $appointment->$reminderType = true;
+                        $appointment->reminder_count = $appointment->reminder_count + 1;
+                        $appointment->save();
+                        
+                        $remindersSent[] = [
+                            "appointment_id" => $appointment->id,
+                            "guardian_id" => $guardian->id,
+                            "days_until_appointment" => $daysUntilAppointment,
+                            "reminder_type" => $reminderType,
+                            "reminder_count" => $appointment->reminder_count
+                        ];
+                        
+                    } catch (\Exception $e) {
+                        $errors[] = [
+                            "appointment_id" => $appointment->id,
+                            "guardian_id" => $guardian->id,
+                            "error" => $e->getMessage()
+                        ];
+                    }
                 }
             }
             

@@ -13,8 +13,8 @@
     const router = useRouter()
 
     const userData = ref({ first_name: "", last_name: "", email: "", phone_number: "" });
-
-    if (store.isAuthenticated) {
+    if(!store.isAuthenticated) router.push({ name: "userLogin" });
+    else {
         userData.value = JSON.parse(localStorage.getItem('user_data') || "{}");
     }
 
@@ -26,16 +26,13 @@
 
     const handleLogout = async () => {
         isLoading.value = true;
-        console.log("is loading is on -> value : ", isLoading.value);
         try {
-            await new Promise(resolve => setTimeout(resolve, 5000));
             await store.logout();
             router.push({ name: "userWelcome" });
         } catch (error) {
             router.push(`/user/error/${error.response ? error.response.status : '415'}`);
         } finally {
             isLoading.value = false;
-            console.log("is loading is off -> value : ", isLoading);
         }
     };
 </script>
@@ -46,7 +43,11 @@
         topBarMove="false"
         :with-bottom-bar ="true"
     >
-        <profileComponent :user-full-name = "userFullName" :user-email = "userEmail" :user-phone="userPhone_number" />
+        <profileComponent 
+            :user-full-name = "userFullName" 
+            :user-email = "userEmail" 
+            :user-phone="userPhone_number"
+        />
         <settingsMenu/>
         <LogoutButton @click="handleLogout"  text="Logout" :is-loading="isLoading" variant="secondary" class="hover:bg-[#F8F4F8]"/>
     </userLayout>

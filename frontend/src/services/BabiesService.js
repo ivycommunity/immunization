@@ -1,25 +1,13 @@
 import axios from 'axios';
-import { useUserStore } from '@/stores/user';
+import useUserStore from '@/stores/userStore';
+import API from './API';
 
 export default class BabiesService {
   constructor() {
     this.userStore = useUserStore();
-    this.api = axios.create({
-      baseURL: '/api',
-      withCredentials: true
-    });
-    
-    // Add request interceptor to automatically add auth token
-    this.api.interceptors.request.use(config => {
-      const token = this.userStore.token;
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
+    this.api = API;
   }
-  
-  // Get all babies
+
   async getAllBabies() {
     try {
       const response = await this.api.get('/babies');
@@ -29,8 +17,7 @@ export default class BabiesService {
       throw error;
     }
   }
-  
-  // Get a specific baby
+
   async getBaby(id) {
     try {
       const response = await this.api.get(`/babies/${id}`);
@@ -40,18 +27,17 @@ export default class BabiesService {
       throw error;
     }
   }
-  // Get a specific baby
+
   async getBabyByGuardian(guardian_id) {
     try {
-      const response = await this.api.get(`/babies/${guardian_id}`);
+      const response = await this.api.get(`/guardians/${guardian_id}/babies`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching baby ${id}:`, error);
+      console.error(`Error fetching baby for guardian ${guardian_id}:`, error);
       throw error;
     }
   }
-  
-  // Create a new baby
+
   async createBaby(babyData) {
     try {
       const response = await this.api.post('/babies', babyData);
@@ -61,8 +47,7 @@ export default class BabiesService {
       throw error;
     }
   }
-  
-  // Update a baby
+
   async updateBaby(id, babyData) {
     try {
       const response = await this.api.put(`/babies/${id}`, babyData);
@@ -72,8 +57,7 @@ export default class BabiesService {
       throw error;
     }
   }
-  
-  // Delete a baby
+
   async deleteBaby(id) {
     try {
       const response = await this.api.delete(`/babies/${id}`);

@@ -7,6 +7,7 @@
         },
         link:{
             type: String,
+            default: '#'
         },
         illustrationIcon:{
             type: String,

@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import Topbar from './topbar.vue';
 import bottomBar from '@/components/User/BottomNavBar.vue';
+import { ArrowLeftIcon } from '@heroicons/vue/24/solid';
 
 // Props
 const props = defineProps({
@@ -16,7 +17,7 @@ const props = defineProps({
     type: [Boolean, String], // Accept both Boolean and String (from parent)
     default: true,
   },
-  bactTo: {
+  backTo: {
     type:  String, // Accept both Boolean and String (from parent)
   },
   className: {
@@ -38,12 +39,17 @@ const move = computed(() => props.topBarMove === true || props.topBarMove === 't
 <!-- ${props.withBottomBar ? 'pb-16 ' : 'overflow-y-auto scrollbar-hide'} -->
 <template>
   <div class="default-layout relative h-screen flex flex-col">
-    <Topbar :title="topBartitle" :user="userData" :move="move" :back-to="bactTo" class="fixed top-0 left-0 w-full z-10" />
+    <div>
+      <Topbar :title="topBartitle" :user="userData" :move="move" :back-to="backTo" class="fixed top-0 left-0 w-full z-10" />
+      <div @click="$router.push(`${backTo}`)" v-if="backTo && backTo.trim() !== '' && !withBottomBar" class="z-10 absolute top-4 left-4">
+        <ArrowLeftIcon class="w-6 h-6 text-[#432C81]" />
+      </div>
+    </div>
     <main 
       :class="`
           w-full 
           mx-auto
-          mt-[64px]
+          mt-[80px]
           lg:mt-0
           lg:pt-[8%]
           px-4
@@ -54,7 +60,7 @@ const move = computed(() => props.topBarMove === true || props.topBarMove === 't
           xl:max-w-6xl 
           2xl:max-w-7xl 
           flex-1
-          ${props.withBottomBar ? 'pb-20 overflow-y-auto scrollbar-hide' : ''}
+          ${props.withBottomBar ? 'pb-20 scrollbar-hide' : ''}
           ${className}`"
       >
       <slot></slot>

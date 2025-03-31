@@ -77,7 +77,3 @@ const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
 </script>
-
-<style scoped>
-/* Add any additional styles if needed */
-</style>

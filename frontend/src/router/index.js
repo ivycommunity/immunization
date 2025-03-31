@@ -24,8 +24,12 @@ import AddBaby from '@/views/Hospital/AddBaby.vue'
 import { useAuthStore } from '@/stores/auth'
 import homePage from '@/views/User_dashboard/home/homePage.vue'
 import userProfile from "@/views/User_dashboard/settings/profile.vue";
-import vaccineRecord from '@/views/User_dashboard/home/vaccineRecordPage.vue'
-
+import vaccinationAppointment from '@/views/User_dashboard/home/AppointmentPage.vue'
+import userAccount from '@/views/User_dashboard/settings/userAccount.vue'
+import childrenRecordPage from '@/views/User_dashboard/home/childrenRecordPage.vue'
+import baby from '@/views/User_dashboard/records/baby.vue'
+import vaccinesInfo from '@/views/User_dashboard/home/vaccinesInfo.vue'
+import test from '@/views/User_dashboard/error/test.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -78,6 +82,11 @@ const router = createRouter({
       component: userWelcome,
     },
     {
+      path: '/user/test',
+      name: 'test',
+      component: test,
+    },
+    {
       path: '/user/login',
       name: 'userLogin',
       component: userLoginForm,
@@ -98,14 +107,34 @@ const router = createRouter({
       component: userHomePage,
     },
     {
-      path: '/user/reccords/vaccination',
-      name: 'vaccineRecord',
-      component: vaccineRecord,
+      path: '/user/records/vaccination-chart',
+      name: 'vaccinesInfo',
+      component: vaccinesInfo,
+    },
+    {
+      path: '/user/records/vaccination',
+      name: 'vaccinationAppointment',
+      component: vaccinationAppointment,
+    },
+    {
+      path: '/user/records/babies',
+      name: 'childrenRecord',
+      component: childrenRecordPage,
+    },
+    {
+      path: '/user/records/babies/:id',
+      name: 'baby',
+      component: baby,
     },
     {
       path: '/user/profile',
       name: 'userProfile',
       component: userProfile,
+    },
+    {
+      path: '/user/profile/account',
+      name: 'userAccount',
+      component: userAccount,
     },
     {
       path: '/user/error/:errorCode?',

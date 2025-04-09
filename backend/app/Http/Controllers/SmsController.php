@@ -8,6 +8,7 @@ use Twilio\Rest\Client;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Models\Baby;
 
 class SmsController extends Controller
 {
@@ -136,4 +137,61 @@ class SmsController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Send patient ID notification to the guardian
+     */
+   public function sendPatientIdNotification($babyId)
+   {
+       if (!env("TWILIO_SID") || !env("TWILIO_TOKEN") || !env("TWILIO_PHONE")) {
+           return response()->json([
+               "error" => "Twilio credentials not configured."
+           ], 500);
+       }
+   
+       try {
+           $baby = Baby::find($babyId);
+           
+           if (!$baby) {
+               return response()->json([
+                   "error" => "Baby record not found."
+               ], 404);
+           }
+           
+           $guardian = User::find($baby->guardian_id);
+           
+           if (!$guardian || !$guardian->phone_number) {
+               return response()->json([
+                   "error" => "Guardian not found or phone number not available."
+               ], 404);
+           }
+           
+           $twilio = new Client(env("TWILIO_SID"), env("TWILIO_TOKEN"));
+           
+           $guardianFullName = $guardian->first_name . " " . $guardian->last_name;
+           $messageBody = "Hello {$guardianFullName}, your child's record has been created successfully. " .
+                          "The patient ID is: {$baby->patient_id}. Please keep this ID for future reference.";
+           
+           $message = $twilio->messages->create(
+               $guardian->phone_number,
+               [
+                   "body" => $messageBody,
+                   "from" => env("TWILIO_PHONE")
+               ]
+           );
+           
+           return response()->json([
+               "message" => "Patient ID notification sent successfully.",
+               "baby_id" => $baby->id,
+               "patient_id" => $baby->patient_id,
+               "guardian_id" => $guardian->id
+           ], 200);
+           
+       } catch (\Exception $e) {
+           return response()->json([
+               "message" => "Failed to send patient ID notification",
+               "error" => $e->getMessage()
+           ], 500);
+       }
+   }
 }

@@ -194,4 +194,107 @@ class SmsController extends Controller
            ], 500);
        }
    }
+
+/**
+ * Send notifications for missed appointments
+ * 
+ * @return \Illuminate\Http\JsonResponse
+ */
+public function sendMissedAppointmentNotifications()
+{
+    if (!env("TWILIO_SID") || !env("TWILIO_TOKEN") || !env("TWILIO_PHONE")) {
+        return response()->json([
+            "error" => "Twilio credentials not configured."
+        ], 500);
+    }
+
+    $twilio = new Client(env("TWILIO_SID"), env("TWILIO_TOKEN"));
+    
+    $now = Carbon::now();
+    $today = $now->format('Y-m-d');
+    
+    // Get appointments that were recently marked as missed and haven't been notified yet
+    $missedAppointments = Appointment::where('status', 'Missed')
+        ->where(function ($query) {
+            $query->where('missed_notification_sent', false)
+                  ->orWhereNull('missed_notification_sent');
+        })
+        ->get();
+    
+    if ($missedAppointments->isEmpty()) {
+        return response()->json([
+            "message" => "No missed appointments that need notifications."
+        ], 200);
+    }
+    
+    $notificationsSent = [];
+    $errors = [];
+    
+    DB::beginTransaction();
+    
+    try {
+        foreach ($missedAppointments as $appointment) {
+            $guardian = User::find($appointment->guardian_id);
+            $baby = Baby::find($appointment->baby_id);
+            
+            if (!$guardian || !$guardian->phone_number || !$baby) {
+                continue;
+            }
+            
+            $guardianFullName = $guardian->first_name . " " . $guardian->last_name;
+            $appointmentDate = Carbon::parse($appointment->appointment_date)->format('d M Y, h:i A');
+            
+            // Craft the message
+            $messageBody = "Hello {$guardianFullName}, we noticed that your child {$baby->first_name}'s vaccination appointment scheduled for {$appointmentDate} was missed. Please contact the hospital to reschedule this important appointment.";
+            
+            try {
+                $message = $twilio->messages->create(
+                    $guardian->phone_number,
+                    [
+                        "body" => $messageBody,
+                        "from" => env("TWILIO_PHONE")
+                    ]
+                );
+                
+                // Update notification tracking
+                $appointment->missed_notification_sent = true;
+                $appointment->save();
+                
+                $notificationsSent[] = [
+                    "appointment_id" => $appointment->id,
+                    "guardian_id" => $guardian->id,
+                    "baby_id" => $baby->id,
+                    "appointment_date" => $appointmentDate
+                ];
+                
+            } catch (\Exception $e) {
+                $errors[] = [
+                    "appointment_id" => $appointment->id,
+                    "guardian_id" => $guardian->id,
+                    "error" => $e->getMessage()
+                ];
+            }
+        }
+        
+        DB::commit();
+        
+        return response()->json([
+            "message" => "Missed appointment notification process completed.",
+            "date" => $today,
+            "notifications_sent" => count($notificationsSent),
+            "notifications_detail" => $notificationsSent,
+            "errors" => count($errors) > 0 ? $errors : null
+        ], 200);
+        
+    } catch (\Exception $e) {
+        DB::rollBack();
+        
+        return response()->json([
+            "message" => "Failed to process missed appointment notifications",
+            "error" => $e->getMessage()
+        ], 500);
+    }
+}
+
+
 }

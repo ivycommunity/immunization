@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Baby;
 use App\Models\User;
@@ -40,8 +41,64 @@ class BabyController extends Controller
             'nationality' => 'required|string|max:255',
         ]);
 
+        //Generate a unique 6-digit patient ID
+        $patientId = $this->generateUniquePatientId();
+        $validatedData['patient_id'] = $patientId;
+
         $baby = Baby::create($validatedData);
-        return response()->json($baby, 201);
+
+        $notificationResult = $this->notifyGuardianAboutPatientId($baby);
+
+        return response()->json([
+            'baby' => $baby,
+            'notification_sent' => $notificationResult['success'],
+            'notification_message' => $notificationResult['message']
+        ], 201);
+    }
+
+    /**
+     * Generate a unique 6-digit patient ID.
+     */
+    private function generateUniquePatientId()
+    {
+        do {
+            $patientId = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+
+            $exists = Baby::where('patient_id', $patientId)->exists();
+        } while ($exists);
+        return $patientId;
+    }
+
+    /**
+     * Notify the guardian about the generated patient ID.
+     */
+    private function notifyGuardianAboutPatientId(Baby $baby){
+        try {
+            $smsController = new SmsController();
+            $response = $smsController->sendPatientIdNotification($baby->id);
+
+            $responseData = json_decode($response->getContent(), true);
+
+            if ($response->getStatusCode() == 200) {
+                return [
+                    'success' => true,
+                    'message' => 'Patient ID notification sent successfully'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => $responseData['error'] ?? 'Failed to send notification'
+                ];
+            }
+        }catch (\Exception $e) {
+            // Log the error or handle it as needed
+            Log::error('Failed to send patient ID notification: ' . $e->getMessage());
+
+            return [
+                'success' => false,
+                'message' => 'Failed to send notification: ' . $e->getMessage()
+            ];
+        }
     }
 
     /**

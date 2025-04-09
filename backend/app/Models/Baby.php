@@ -11,6 +11,7 @@ class Baby extends Model
     use HasFactory;
 
     protected $fillable = [
+        'patient_id',
         'first_name', 
         'guardian_id', 
         'gender', 

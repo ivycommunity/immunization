@@ -22,12 +22,25 @@ Schedule::call(function () {
         ->update(['reminder_sent' => false]);
 })->dailyAt('00:01');
 
+
 Schedule::call(function () {
     $appointmentController = new AppointmentsController();
     $appointmentController->updateMissedAppointments();
 })->hourly()->between('8:00', '20:00');
 
 Schedule::call(function () {
+    $affected = Appointment::where('status', 'Missed')
+        ->where('missed_notification_sent', true)
+        ->update(['missed_notification_sent' => false]);
+})->dailyAt('00:01');
+
+Schedule::call(function () {
     $babyController = new BabyController();
     $babyController->updateImmunizationStatus();
 })->everyTwoHours();
+
+// New scheduler task for missed appointment notifications
+Schedule::call(function () {
+    $smsController = new SmsController();
+    $smsController->sendMissedAppointmentNotifications();
+})->hourly()->between('8:00', '20:00');

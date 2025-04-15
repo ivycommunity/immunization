@@ -169,14 +169,6 @@ class AppointmentsController extends Controller
      */
     public function getBabyVaccinationHistory($babyId)
     {
-        $user = auth()->guard()->user();
-
-        if (!$user || !in_array($user->role, ['admin', 'nurse', 'doctor'])) {
-            return response()->json([
-                'message'=> 'Unauthorized'
-            ], 403);
-        }
-
         $babyExists = Baby::where('id', $babyId)->exists();
         if (!$babyExists) {
             return response()->json([
@@ -185,9 +177,9 @@ class AppointmentsController extends Controller
         }
 
         $appointments = Appointment::where('baby_id', $babyId)
-                ->with(['baby', 'guardian', 'doctor', 'nurse', 'vaccine'])
-                ->orderBy('appointment_date', 'desc')
-                ->get();
+            ->with(['baby', 'doctor', 'nurse', 'vaccine'])
+            ->orderBy('appointment_date', 'desc')
+            ->get();
         
         $groupedByStatus = $appointments->groupBy('status');
         
@@ -200,8 +192,7 @@ class AppointmentsController extends Controller
         foreach (['Scheduled', 'Completed', 'Missed', 'Cancelled'] as $status) {
             $result['by_status'][$status] = [
                 'count' => isset($groupedByStatus[$status]) ? $groupedByStatus[$status]->count() : 0,
-                'appointments' => isset($groupedByStatus[$status]) ? 
-                    AppointmentResource::collection($groupedByStatus[$status]) : []
+                'appointments' => isset($groupedByStatus[$status]) ? $groupedByStatus[$status] : []
             ];
         }
         
@@ -218,14 +209,6 @@ class AppointmentsController extends Controller
      */
     public function getVaccinationHistoryByGuardian($guardianId)
     {
-        $user = auth()->guard()->user();
-
-        if (!$user || !in_array($user->role, ['admin', 'nurse', 'doctor'])) {
-            return response()->json([
-                'message'=> 'Unauthorized'
-            ], 403);
-        }
-
         $guardianExists = User::where('id', $guardianId)->exists();
         if (!$guardianExists) {
             return response()->json([
@@ -235,9 +218,9 @@ class AppointmentsController extends Controller
 
         // Get all appointments for this guardian
         $appointments = Appointment::where('guardian_id', $guardianId)
-                ->with(['baby', 'guardian', 'doctor', 'nurse', 'vaccine'])
-                ->orderBy('appointment_date', 'desc')
-                ->get();
+            ->with(['baby', 'doctor', 'nurse', 'vaccine'])
+            ->orderBy('appointment_date', 'desc')
+            ->get();
         
         // First group by baby
         $groupedByBaby = $appointments->groupBy('baby_id');
@@ -254,8 +237,7 @@ class AppointmentsController extends Controller
                 foreach (['Scheduled', 'Completed', 'Missed', 'Cancelled'] as $status) {
                     $statusData[$status] = [
                         'count' => isset($groupedByStatus[$status]) ? $groupedByStatus[$status]->count() : 0,
-                        'appointments' => isset($groupedByStatus[$status]) ? 
-                            AppointmentResource::collection($groupedByStatus[$status]) : []
+                        'appointments' => isset($groupedByStatus[$status]) ? $groupedByStatus[$status] : []
                     ];
                 }
                 
@@ -269,13 +251,13 @@ class AppointmentsController extends Controller
                 $babiesData[] = $babyData;
             }
         }
-        
-        return response()->json([
-            'message' => 'Guardian\'s babies vaccination history retrieved successfully',
-            'guardian_id' => $guardianId,
-            'total_babies' => count($babiesData),
-            'data' => $babiesData
-        ], 200);
+    
+    return response()->json([
+        'message' => 'Guardian\'s babies vaccination history retrieved successfully',
+        'guardian_id' => $guardianId,
+        'total_babies' => count($babiesData),
+        'data' => $babiesData,
+    ], 200);
     }
 
     /**

@@ -42,8 +42,8 @@ const props = defineProps({
 // Computed property for dynamic button classes
 const buttonClass = computed(() => {
   const variantClasses = {
-    primary: "bg-[#432C81] text-center text-white",
-    secondary: "text-[#432C81] text-center border border-[#432C81] bg-white",
+    primary: "bg-[#038C7F] text-center text-white",
+    secondary: "text-[#038C7F] text-center border border-[#038C7F] bg-white",
     cancel: "bg-[#D7331D] text-center text-white hover:bg-red-700",
   };
   

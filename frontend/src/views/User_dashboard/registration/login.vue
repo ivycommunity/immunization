@@ -72,7 +72,11 @@ const handleSubmit = async () => {
       
       console.log('API Response:', user);
       
-      router.push({ name: 'userHomePage' });
+      if (user.role === 'nurse' || user.role === 'doctor') {
+        router.push({ name: 'hospital.patients' })
+      } else {
+        router.push({ name: 'userHomePage' });
+      }
     } catch (error) {
       if(error.response.status === 401){
         errors.value.password = "The provided credentials are incorrect. Please try again";

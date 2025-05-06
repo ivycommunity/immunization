@@ -10,7 +10,7 @@
         <p class="text-xl mb-8">
           Easy, reliable, and up-to-date vaccination tracking from birth to adulthood.
         </p>
-        <router-link to="/signin" class="bg-[#04A699] text-[#F8F8FF] px-8 py-3 rounded-lg font-semibold hover:bg-[#038C7F] transition duration-300">
+        <router-link to="/user/login" class="bg-[#04A699] text-[#F8F8FF] px-8 py-3 rounded-lg font-semibold hover:bg-[#038C7F] transition duration-300">
           Get Started
         </router-link>
       </section>

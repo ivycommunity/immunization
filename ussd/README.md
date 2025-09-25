@@ -62,8 +62,8 @@ ussd/
 
 ### Authentication Flow
 ```
-1 -> Enter your phone number or National ID:
-*123*1*254712345678# -> Check status for phone 254712345678
+1 -> Enter your email address:
+*123*1*guardian1@example.com# -> Check status for email guardian1@example.com
 ```
 
 ### Sample Responses
@@ -152,17 +152,16 @@ If your Laravel API endpoints change, update the corresponding function calls in
 Use these credentials to test your USSD system:
 
 #### **Primary Test User:**
-- **Phone Number:** `0700000001`
+- **Email:** `guardian1@example.com`
 - **Password:** `password123`
-- **National ID:** `GID1123456`
 - **Name:** David Okafor
 - **Role:** Guardian
 
 #### **Additional Test Users:**
-- **Phone:** `0700000002` | **Password:** `password123` | **Name:** Amina Yusuf
-- **Phone:** `0700000003` | **Password:** `password123` | **Name:** Samuel Eze
-- **Phone:** `0700000004` | **Password:** `password123` | **Name:** Grace Abubakar
-- **Phone:** `0700000005` | **Password:** `password123` | **Name:** Peter Nwankwo
+- **Email:** `guardian2@example.com` | **Password:** `password123` | **Name:** Amina Yusuf
+- **Email:** `guardian3@example.com` | **Password:** `password123` | **Name:** Samuel Eze
+- **Email:** `guardian4@example.com` | **Password:** `password123` | **Name:** Grace Abubakar
+- **Email:** `guardian5@example.com` | **Password:** `password123` | **Name:** Peter Nwankwo
 
 #### **Test Children Data:**
 Each guardian has children with automatically generated patient IDs and immunization statuses.
@@ -219,26 +218,26 @@ define('API_BASE_URL', 'https://abc123.ngrok.io/api');
 #### **Step 7: Test Your USSD**
 1. Dial your USSD code on your phone
 2. Follow the menu prompts
-3. Use test credentials: `0700000001` / `password123`
+3. Use test credentials: `guardian1@example.com` / `password123`
 
 ### Test Flow Examples
 
 #### **Test Flow 1 - Check Immunization Status:**
 1. Dial `*384*123#`
 2. Select `1` (Check immunization status)
-3. Enter `0700000001` (phone number)
+3. Enter `guardian1@example.com` (email address)
 4. You should see immunization status for David's children
 
 #### **Test Flow 2 - List Children:**
 1. Dial `*384*123#`
 2. Select `2` (List my children)
-3. Enter `0700000001` (phone number)
+3. Enter `guardian1@example.com` (email address)
 4. You should see David's children with patient IDs
 
 #### **Test Flow 3 - View Vaccination History:**
 1. Dial `*384*123#`
 2. Select `3` (View vaccination history)
-3. Enter `0700000001` (phone number)
+3. Enter `guardian1@example.com` (email address)
 4. You should see vaccination history
 
 #### **Test Flow 4 - Health Facilities:**
@@ -252,7 +251,7 @@ define('API_BASE_URL', 'https://abc123.ngrok.io/api');
 2. ✅ Test error scenarios (invalid credentials, network issues)
 3. ✅ Verify phone number formatting
 4. ✅ Test with different user roles
-5. ✅ Test all phone number formats (0700000001, +254700000001, 254700000001)
+5. ✅ Test with different email addresses (guardian1@example.com, guardian2@example.com, etc.)
 
 ## Troubleshooting
 

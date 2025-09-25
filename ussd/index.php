@@ -27,19 +27,19 @@ try {
         $response = buildMainMenu();
     } else if ($text == "1") {
         // Check immunization status - request credentials
-        $response = "CON Enter your phone number or National ID:\n";
+        $response = "CON Enter your email address:\n";
         $response .= "0. Back to main menu";
     } else if ($text == "2") {
         // List children - request credentials
-        $response = "CON Enter your phone number or National ID:\n";
+        $response = "CON Enter your email address:\n";
         $response .= "0. Back to main menu";
     } else if ($text == "3") {
         // View vaccination history - request credentials
-        $response = "CON Enter your phone number or National ID:\n";
+        $response = "CON Enter your email address:\n";
         $response .= "0. Back to main menu";
     } else if ($text == "4") {
         // Schedule appointment - request credentials
-        $response = "CON Enter your phone number or National ID:\n";
+        $response = "CON Enter your email address:\n";
         $response .= "0. Back to main menu";
     } else if ($text == "5") {
         // Health facilities
@@ -47,20 +47,20 @@ try {
     } else if ($text == "0") {
         // Exit
         $response = EXIT_MESSAGE;
-    } else if (preg_match('/^1\*[0-9+\s]+$/', $text)) {
-        // User entered phone/ID for immunization status check
+    } else if (preg_match('/^1\*[a-zA-Z0-9@._-]+$/', $text)) {
+        // User entered email for immunization status check
         $userInput = trim($textArray[1]);
         $response = checkImmunizationStatus($userInput, $phoneNumber);
-    } else if (preg_match('/^2\*[0-9+\s]+$/', $text)) {
-        // User entered phone/ID for listing children
+    } else if (preg_match('/^2\*[a-zA-Z0-9@._-]+$/', $text)) {
+        // User entered email for listing children
         $userInput = trim($textArray[1]);
         $response = listChildren($userInput, $phoneNumber);
-    } else if (preg_match('/^3\*[0-9+\s]+$/', $text)) {
-        // User entered phone/ID for vaccination history
+    } else if (preg_match('/^3\*[a-zA-Z0-9@._-]+$/', $text)) {
+        // User entered email for vaccination history
         $userInput = trim($textArray[1]);
         $response = getVaccinationHistory($userInput, $phoneNumber);
-    } else if (preg_match('/^4\*[0-9+\s]+$/', $text)) {
-        // User entered phone/ID for appointment scheduling
+    } else if (preg_match('/^4\*[a-zA-Z0-9@._-]+$/', $text)) {
+        // User entered email for appointment scheduling
         $userInput = trim($textArray[1]);
         $response = scheduleAppointment($userInput, $phoneNumber);
     } else {
@@ -95,31 +95,17 @@ function buildMainMenu()
 /**
  * Authenticate user and get API token
  */
-function authenticateUser($phoneNumber, $nationalId = null)
+function authenticateUser($email, $password = null)
 {
     $loginData = [
-        'phone_number' => cleanPhoneNumber($phoneNumber),
-        'password' => $nationalId ?: cleanPhoneNumber($phoneNumber)
+        'email' => $email,
+        'password' => $password ?: 'password123' // Default password for testing
     ];
 
     $response = makeApiCall('POST', '/login', $loginData);
 
     if ($response && isset($response['token'])) {
         return $response['token'];
-    }
-
-    // Try with national ID as phone number
-    if ($nationalId) {
-        $loginData = [
-            'phone_number' => $nationalId,
-            'password' => $nationalId
-        ];
-
-        $response = makeApiCall('POST', '/login', $loginData);
-
-        if ($response && isset($response['token'])) {
-            return $response['token'];
-        }
     }
 
     return null;

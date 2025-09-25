@@ -2,7 +2,7 @@
 // Simple local server for USSD testing
 // Run with: php local_server.php
 
-$host = '0.0.0.0';
+$host = '127.0.0.1';
 $port = 8080;
 
 echo "Starting USSD server on http://{$host}:{$port}\n";

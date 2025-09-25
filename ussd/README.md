@@ -179,13 +179,13 @@ Each guardian has children with automatically generated patient IDs and immuniza
 #### **Step 2: Start Your Laravel API**
 ```bash
 cd backend
-php artisan serve --host=0.0.0.0 --port=8000
+php artisan serve
 ```
 
 #### **Step 3: Start Your USSD Server**
 ```bash
 cd ussd
-php -S 0.0.0.0:8080
+php local_server.php
 ```
 
 #### **Step 4: Expose Services with Ngrok**

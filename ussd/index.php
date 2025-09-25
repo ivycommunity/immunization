@@ -1,80 +1,60 @@
 <?php
-// Advanced USSD Immunization Management System
-// Enhanced version with better error handling and session management
-
 require_once 'config.php';
 
-// Read the variables sent via POST from our USSD gateway
 $sessionId   = $_POST["sessionId"];
 $serviceCode = $_POST["serviceCode"];
 $phoneNumber = $_POST["phoneNumber"];
 $text        = $_POST["text"];
 
-// Initialize response
 $response = "";
 
-// Parse the text input to determine menu level and selection
 $textArray = explode('*', $text);
 $level = count($textArray);
 
-// Start session management
 session_start();
 $sessionKey = 'ussd_' . $sessionId;
 
 try {
     if ($text == "") {
-        // Main menu - first request
         $response = buildMainMenu();
     } else if ($text == "1") {
-        // Check immunization status - request credentials
         $response = "CON Enter your email address:\n";
         $response .= "0. Back to main menu";
     } else if ($text == "2") {
-        // List children - request credentials
         $response = "CON Enter your email address:\n";
         $response .= "0. Back to main menu";
     } else if ($text == "3") {
-        // View vaccination history - request credentials
         $response = "CON Enter your email address:\n";
         $response .= "0. Back to main menu";
     } else if ($text == "4") {
-        // Health facilities
         $response = getHealthFacilities();
     } else if ($text == "0") {
-        // Exit
         $response = EXIT_MESSAGE;
     } else if (preg_match('/^1\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email for immunization status check - ask for password
         $userEmail = trim($textArray[1]);
         $response = "CON Enter your password:\n";
         $response .= "0. Back to main menu";
     } else if (preg_match('/^2\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email for listing children - ask for password
         $userEmail = trim($textArray[1]);
         $response = "CON Enter your password:\n";
         $response .= "0. Back to main menu";
     } else if (preg_match('/^3\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email for vaccination history - ask for password
         $userEmail = trim($textArray[1]);
         $response = "CON Enter your password:\n";
         $response .= "0. Back to main menu";
     } else if (preg_match('/^1\*[a-zA-Z0-9@._-]+\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email and password for immunization status check
         $userEmail = trim($textArray[1]);
         $userPassword = trim($textArray[2]);
         $response = checkImmunizationStatus($userEmail, $userPassword, $phoneNumber);
     } else if (preg_match('/^2\*[a-zA-Z0-9@._-]+\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email and password for listing children
         $userEmail = trim($textArray[1]);
         $userPassword = trim($textArray[2]);
         $response = listChildren($userEmail, $userPassword, $phoneNumber);
     } else if (preg_match('/^3\*[a-zA-Z0-9@._-]+\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email and password for vaccination history
         $userEmail = trim($textArray[1]);
         $userPassword = trim($textArray[2]);
         $response = getVaccinationHistory($userEmail, $userPassword, $phoneNumber);
     } else {
-        // Invalid input
         $response = INVALID_INPUT . "\n";
         $response .= "0. Back to main menu";
     }
@@ -83,7 +63,6 @@ try {
     error_log("USSD Error: " . $e->getMessage());
 }
 
-// Echo the response back to the USSD gateway
 header('Content-type: text/plain');
 echo $response;
 
@@ -208,7 +187,6 @@ function listChildren($userEmail, $userPassword, $sessionPhone)
     }
 
     $response = "END Your Children:\n\n";
-
     foreach ($children as $index => $child) {
         $patientId = $child['patient_id'] ?? 'N/A';
         $dob = $child['date_of_birth'] ?? 'Unknown';
@@ -333,7 +311,6 @@ function makeApiCall($method, $endpoint, $data = null, $token = null)
     }
 
     if ($httpCode >= 200 && $httpCode < 300) {
-        // Clean the response - remove any non-JSON characters
         $response = trim($response);
         if (strpos($response, '+') === 0) {
             $response = substr($response, 1);
@@ -350,10 +327,8 @@ function makeApiCall($method, $endpoint, $data = null, $token = null)
  */
 function cleanPhoneNumber($phone)
 {
-    // Remove any non-numeric characters except +
     $phone = preg_replace('/[^0-9+]/', '', $phone);
 
-    // Add country code if missing
     if (!str_starts_with($phone, '+')) {
         if (str_starts_with($phone, '0')) {
             $phone = '+254' . substr($phone, 1);
@@ -368,7 +343,7 @@ function cleanPhoneNumber($phone)
 }
 
 /**
- * Log USSD session for debugging
+ * Log USSD session for debugging.
  */
 function logUssdSession($sessionId, $phoneNumber, $text, $response)
 {

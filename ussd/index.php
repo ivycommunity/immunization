@@ -294,7 +294,7 @@ function getHealthFacilities()
         $response .= "   Services: " . $facility['services'] . "\n\n";
     }
 
-    $response .= "0. Back to main menu";
+    $response .= "";
     return $response;
 }
 

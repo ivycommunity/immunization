@@ -47,16 +47,4 @@ $HEALTH_FACILITIES = [
         'phone' => '+254-41-123-4567',
         'services' => 'Full immunization services'
     ],
-    [
-        'name' => 'District Hospital',
-        'location' => 'Kisumu',
-        'phone' => '+254-57-123-4567',
-        'services' => 'Basic immunization services'
-    ],
-    [
-        'name' => 'Community Health Center',
-        'location' => 'Nakuru',
-        'phone' => '+254-51-123-4567',
-        'services' => 'Basic immunization services'
-    ]
 ];

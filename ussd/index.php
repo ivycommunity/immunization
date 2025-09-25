@@ -48,21 +48,45 @@ try {
         // Exit
         $response = EXIT_MESSAGE;
     } else if (preg_match('/^1\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email for immunization status check
-        $userInput = trim($textArray[1]);
-        $response = checkImmunizationStatus($userInput, $phoneNumber);
+        // User entered email for immunization status check - ask for password
+        $userEmail = trim($textArray[1]);
+        $response = "CON Enter your password:\n";
+        $response .= "0. Back to main menu";
     } else if (preg_match('/^2\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email for listing children
-        $userInput = trim($textArray[1]);
-        $response = listChildren($userInput, $phoneNumber);
+        // User entered email for listing children - ask for password
+        $userEmail = trim($textArray[1]);
+        $response = "CON Enter your password:\n";
+        $response .= "0. Back to main menu";
     } else if (preg_match('/^3\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email for vaccination history
-        $userInput = trim($textArray[1]);
-        $response = getVaccinationHistory($userInput, $phoneNumber);
+        // User entered email for vaccination history - ask for password
+        $userEmail = trim($textArray[1]);
+        $response = "CON Enter your password:\n";
+        $response .= "0. Back to main menu";
     } else if (preg_match('/^4\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email for appointment scheduling
-        $userInput = trim($textArray[1]);
-        $response = scheduleAppointment($userInput, $phoneNumber);
+        // User entered email for appointment scheduling - ask for password
+        $userEmail = trim($textArray[1]);
+        $response = "CON Enter your password:\n";
+        $response .= "0. Back to main menu";
+    } else if (preg_match('/^1\*[a-zA-Z0-9@._-]+\*[a-zA-Z0-9@._-]+$/', $text)) {
+        // User entered email and password for immunization status check
+        $userEmail = trim($textArray[1]);
+        $userPassword = trim($textArray[2]);
+        $response = checkImmunizationStatus($userEmail, $userPassword, $phoneNumber);
+    } else if (preg_match('/^2\*[a-zA-Z0-9@._-]+\*[a-zA-Z0-9@._-]+$/', $text)) {
+        // User entered email and password for listing children
+        $userEmail = trim($textArray[1]);
+        $userPassword = trim($textArray[2]);
+        $response = listChildren($userEmail, $userPassword, $phoneNumber);
+    } else if (preg_match('/^3\*[a-zA-Z0-9@._-]+\*[a-zA-Z0-9@._-]+$/', $text)) {
+        // User entered email and password for vaccination history
+        $userEmail = trim($textArray[1]);
+        $userPassword = trim($textArray[2]);
+        $response = getVaccinationHistory($userEmail, $userPassword, $phoneNumber);
+    } else if (preg_match('/^4\*[a-zA-Z0-9@._-]+\*[a-zA-Z0-9@._-]+$/', $text)) {
+        // User entered email and password for appointment scheduling
+        $userEmail = trim($textArray[1]);
+        $userPassword = trim($textArray[2]);
+        $response = scheduleAppointment($userEmail, $userPassword, $phoneNumber);
     } else {
         // Invalid input
         $response = INVALID_INPUT . "\n";
@@ -95,11 +119,11 @@ function buildMainMenu()
 /**
  * Authenticate user and get API token
  */
-function authenticateUser($email, $password = null)
+function authenticateUser($email, $password)
 {
     $loginData = [
         'email' => $email,
-        'password' => $password ?: 'password123' // Default password for testing
+        'password' => $password
     ];
 
     $response = makeApiCall('POST', '/login', $loginData);
@@ -114,9 +138,9 @@ function authenticateUser($email, $password = null)
 /**
  * Check immunization status
  */
-function checkImmunizationStatus($userInput, $sessionPhone)
+function checkImmunizationStatus($userEmail, $userPassword, $sessionPhone)
 {
-    $token = authenticateUser($userInput);
+    $token = authenticateUser($userEmail, $userPassword);
 
     if (!$token) {
         return AUTH_ERROR;
@@ -154,9 +178,9 @@ function checkImmunizationStatus($userInput, $sessionPhone)
 /**
  * List user's children
  */
-function listChildren($userInput, $sessionPhone)
+function listChildren($userEmail, $userPassword, $sessionPhone)
 {
-    $token = authenticateUser($userInput);
+    $token = authenticateUser($userEmail, $userPassword);
 
     if (!$token) {
         return AUTH_ERROR;
@@ -195,9 +219,9 @@ function listChildren($userInput, $sessionPhone)
 /**
  * Get vaccination history
  */
-function getVaccinationHistory($userInput, $sessionPhone)
+function getVaccinationHistory($userEmail, $userPassword, $sessionPhone)
 {
-    $token = authenticateUser($userInput);
+    $token = authenticateUser($userEmail, $userPassword);
 
     if (!$token) {
         return AUTH_ERROR;
@@ -235,9 +259,9 @@ function getVaccinationHistory($userInput, $sessionPhone)
 /**
  * Schedule appointment (simplified version)
  */
-function scheduleAppointment($userInput, $sessionPhone)
+function scheduleAppointment($userEmail, $userPassword, $sessionPhone)
 {
-    $token = authenticateUser($userInput);
+    $token = authenticateUser($userEmail, $userPassword);
 
     if (!$token) {
         return AUTH_ERROR;

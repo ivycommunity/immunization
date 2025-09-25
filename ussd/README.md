@@ -63,7 +63,8 @@ ussd/
 ### Authentication Flow
 ```
 1 -> Enter your email address:
-*123*1*guardian1@example.com# -> Check status for email guardian1@example.com
+*123*1*guardian1@example.com# -> Enter your password:
+*123*1*guardian1@example.com*password123# -> Check status for email guardian1@example.com
 ```
 
 ### Sample Responses
@@ -226,19 +227,22 @@ define('API_BASE_URL', 'https://abc123.ngrok.io/api');
 1. Dial `*384*123#`
 2. Select `1` (Check immunization status)
 3. Enter `guardian1@example.com` (email address)
-4. You should see immunization status for David's children
+4. Enter `password123` (password)
+5. You should see immunization status for David's children
 
 #### **Test Flow 2 - List Children:**
 1. Dial `*384*123#`
 2. Select `2` (List my children)
 3. Enter `guardian1@example.com` (email address)
-4. You should see David's children with patient IDs
+4. Enter `password123` (password)
+5. You should see David's children with patient IDs
 
 #### **Test Flow 3 - View Vaccination History:**
 1. Dial `*384*123#`
 2. Select `3` (View vaccination history)
 3. Enter `guardian1@example.com` (email address)
-4. You should see vaccination history
+4. Enter `password123` (password)
+5. You should see vaccination history
 
 #### **Test Flow 4 - Health Facilities:**
 1. Dial `*384*123#`

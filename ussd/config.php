@@ -2,7 +2,7 @@
 // USSD Configuration File
 
 // API Configuration
-define('API_BASE_URL', 'https://5ac740d9c418.ngrok-free.app/api'); // Update this to your Laravel API URL
+define('API_BASE_URL', 'http://127.0.0.1:8000/api'); // Update this to your Laravel API URL
 define('API_TIMEOUT', 30); // API request timeout in seconds
 
 // USSD Configuration
@@ -24,8 +24,7 @@ $MENU_OPTIONS = [
         '1' => 'Check immunization status',
         '2' => 'List my children',
         '3' => 'View vaccination history',
-        '4' => 'Schedule appointment',
-        '5' => 'Health facilities',
+        '4' => 'Health facilities',
         '0' => 'Exit'
     ],
     'auth' => [

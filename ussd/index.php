@@ -38,10 +38,6 @@ try {
         $response = "CON Enter your email address:\n";
         $response .= "0. Back to main menu";
     } else if ($text == "4") {
-        // Schedule appointment - request credentials
-        $response = "CON Enter your email address:\n";
-        $response .= "0. Back to main menu";
-    } else if ($text == "5") {
         // Health facilities
         $response = getHealthFacilities();
     } else if ($text == "0") {
@@ -62,11 +58,6 @@ try {
         $userEmail = trim($textArray[1]);
         $response = "CON Enter your password:\n";
         $response .= "0. Back to main menu";
-    } else if (preg_match('/^4\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email for appointment scheduling - ask for password
-        $userEmail = trim($textArray[1]);
-        $response = "CON Enter your password:\n";
-        $response .= "0. Back to main menu";
     } else if (preg_match('/^1\*[a-zA-Z0-9@._-]+\*[a-zA-Z0-9@._-]+$/', $text)) {
         // User entered email and password for immunization status check
         $userEmail = trim($textArray[1]);
@@ -82,11 +73,6 @@ try {
         $userEmail = trim($textArray[1]);
         $userPassword = trim($textArray[2]);
         $response = getVaccinationHistory($userEmail, $userPassword, $phoneNumber);
-    } else if (preg_match('/^4\*[a-zA-Z0-9@._-]+\*[a-zA-Z0-9@._-]+$/', $text)) {
-        // User entered email and password for appointment scheduling
-        $userEmail = trim($textArray[1]);
-        $userPassword = trim($textArray[2]);
-        $response = scheduleAppointment($userEmail, $userPassword, $phoneNumber);
     } else {
         // Invalid input
         $response = INVALID_INPUT . "\n";
@@ -168,10 +154,34 @@ function checkImmunizationStatus($userEmail, $userPassword, $sessionPhone)
         $response .= "Child: " . $child['first_name'] . "\n";
         $response .= "Patient ID: " . $patientId . "\n";
         $response .= "Status: " . $status . "\n";
-        $response .= "Next Appointment: " . $nextAppointment . "\n\n";
+        $response .= "Next Appointment: " . $nextAppointment . "\n";
+
+        // Get completed vaccines for this child
+        $vaccinationHistory = makeApiCall('GET', '/appointments/baby/vaccination-history/' . $child['id'], null, $token);
+
+        if ($vaccinationHistory && isset($vaccinationHistory['data']['by_status']['Completed']['appointments'])) {
+            $completedVaccines = $vaccinationHistory['data']['by_status']['Completed']['appointments'];
+
+            if (!empty($completedVaccines)) {
+                $response .= "Done: ";
+                $vaccineNames = [];
+                foreach ($completedVaccines as $appointment) {
+                    if (isset($appointment['vaccine']['vaccine_name'])) {
+                        $vaccineNames[] = $appointment['vaccine']['vaccine_name'];
+                    }
+                }
+                $response .= implode(', ', $vaccineNames) . "\n";
+            } else {
+                $response .= "Done: None\n";
+            }
+        } else {
+            $response .= "Done: None\n";
+        }
+
+        $response .= "\n";
     }
 
-    $response .= "0. Back to main menu";
+    $response .= "";
     return $response;
 }
 
@@ -212,7 +222,7 @@ function listChildren($userEmail, $userPassword, $sessionPhone)
         $response .= "   Status: " . $status . "\n\n";
     }
 
-    $response .= "0. Back to main menu";
+    $response .= "";
     return $response;
 }
 
@@ -252,53 +262,7 @@ function getVaccinationHistory($userEmail, $userPassword, $sessionPhone)
         $response .= "\n";
     }
 
-    $response .= "0. Back to main menu";
-    return $response;
-}
-
-/**
- * Schedule appointment (simplified version)
- */
-function scheduleAppointment($userEmail, $userPassword, $sessionPhone)
-{
-    $token = authenticateUser($userEmail, $userPassword);
-
-    if (!$token) {
-        return AUTH_ERROR;
-    }
-
-    $guardianId = getUserGuardianId($token);
-    if (!$guardianId) {
-        return "END No guardian account found.";
-    }
-
-    // Get user's children for appointment scheduling
-    $children = makeApiCall('GET', '/guardians/' . $guardianId . '/babies', null, $token);
-
-    if (!$children || empty($children)) {
-        return "END No children found. Please register a child first.";
-    }
-
-    $response = "END To schedule an appointment:\n\n";
-    $response .= "Call: +254-20-123-4567\n";
-    $response .= "Or visit the nearest health facility\n\n";
-
-    $response .= "Your children:\n";
-    foreach ($children as $index => $child) {
-        $response .= ($index + 1) . ". " . $child['first_name'] . " (ID: " . $child['patient_id'] . ")\n";
-    }
-
-    $response .= "\nAvailable vaccines:\n";
-
-    // Get available vaccines
-    $vaccines = makeApiCall('GET', '/vaccines', null, $token);
-    if ($vaccines && isset($vaccines['vaccines'])) {
-        foreach (array_slice($vaccines['vaccines'], 0, 5) as $vaccine) {
-            $response .= "- " . $vaccine['vaccine_name'] . "\n";
-        }
-    }
-
-    $response .= "\n0. Back to main menu";
+    $response .= "";
     return $response;
 }
 
@@ -369,6 +333,11 @@ function makeApiCall($method, $endpoint, $data = null, $token = null)
     }
 
     if ($httpCode >= 200 && $httpCode < 300) {
+        // Clean the response - remove any non-JSON characters
+        $response = trim($response);
+        if (strpos($response, '+') === 0) {
+            $response = substr($response, 1);
+        }
         return json_decode($response, true);
     }
 
